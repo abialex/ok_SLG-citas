@@ -12,6 +12,7 @@ import controller.App;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -102,22 +104,25 @@ public class CitaModificarController implements Initializable {
                     alert.setContentText("Esa hora está al máximo de atenciones");
                     alert.showAndWait();
                 }
-            }else{
+            } else {
                 alert.setHeaderText(null);
-                    alert.setTitle(null);
-                    alert.setContentText("El Dr. está ocupado a las "+listCitaOcupada.get(0).getHoraatencion().getHora()+":00 "+listCitaOcupada.get(0).getHoraatencion().getAbreviatura());
-                    alert.showAndWait();
+                alert.setTitle(null);
+                alert.setContentText("El Dr. está ocupado a las " + listCitaOcupada.get(0).getHoraatencion().getHora() + ":00 " + listCitaOcupada.get(0).getHoraatencion().getAbreviatura());
+                alert.showAndWait();
             }
         }
     }
 
     @FXML
     void eliminarCita() {
-        /*
-        oAlertConfimarController = (AlertConfirmarController) mostrarVentana(AlertConfirmarController.class, "/fxml/AlertConfirmar");
-        oAlertConfimarController.setController(this);
-        oAlertConfimarController.setMensaje(" ¿Está seguro de eliminar \n la cita de\n" + " " + Cita.getPaciente().getPersona().getNombres_apellidos() + "?");
-        lockedPantalla();*/
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Info");
+        alert.setContentText("¿Desea eliminar al paciente: " + Cita.getNombrepaciente() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            eliminar();
+        }
     }
 
     public void eliminar() {
