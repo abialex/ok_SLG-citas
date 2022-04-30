@@ -127,7 +127,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <JFXTextField fx:id="jtfnombrepaciente" labelFloat="true" promptText="Buscar por nombre o DNI">
+                                <JFXTextField fx:id="jtfnombrepaciente" labelFloat="true" promptText="Nombre del paciente">
                                     <GridPane.margin>
                                         <Insets bottom="-15.0" left="5.0" right="5.0" />
                                     </GridPane.margin>

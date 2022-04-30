@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -54,6 +55,7 @@ public class CitaAgregarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initRestricciones();
     }
 
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
@@ -81,6 +83,21 @@ public class CitaAgregarController implements Initializable {
             citaControol.actualizarListMesCita();
             table.refresh();
             cerrar();
+        }
+    }
+
+    void initRestricciones() {
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
+    }
+
+    void SoloNumerosEnteros2(KeyEvent event) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (!Character.isDigit(key)) {
+            event.consume();
+        }
+        if (o.getText().length() >= 2) {
+            event.consume();
         }
     }
 
