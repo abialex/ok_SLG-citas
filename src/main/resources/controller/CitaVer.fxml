@@ -23,7 +23,7 @@
     <children>
         <BorderPane layoutX="173.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <center>
-                <GridPane BorderPane.alignment="CENTER">
+                <GridPane style="-fx-background-color: #337ab7;" BorderPane.alignment="CENTER">
                     <columnConstraints>
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -43,22 +43,22 @@
                                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="520.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <JFXComboBox fx:id="jcbDoctor1" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox1" promptText="Doctor 1">
+                                <JFXComboBox fx:id="jcbDoctor1" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox1" promptText="Doctor 1" style="-fx-background-color: #ffffff;" unFocusColor="WHITE">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor2" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox2" promptText="Doctor 2" GridPane.columnIndex="1">
+                                <JFXComboBox fx:id="jcbDoctor2" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox2" promptText="Doctor 2" style="-fx-background-color: #ffffff;" unFocusColor="WHITE" GridPane.columnIndex="1">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor3" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox3" promptText="Doctor 3" GridPane.columnIndex="2">
+                                <JFXComboBox fx:id="jcbDoctor3" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox3" promptText="Doctor 3" style="-fx-background-color: #ffffff; -fx-text-fill: white;" unFocusColor="WHITE" GridPane.columnIndex="2">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor4" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox4" promptText="Doctor 4" GridPane.columnIndex="3">
+                                <JFXComboBox fx:id="jcbDoctor4" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox4" promptText="Doctor 4" style="-fx-background-color: #ffffff;" unFocusColor="WHITE" GridPane.columnIndex="3">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
@@ -166,7 +166,7 @@
                 </GridPane>
             </bottom>
          <top>
-            <GridPane prefHeight="41.0" prefWidth="1240.0" style="-fx-background-color: #337ab7;" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="32.0" prefWidth="1240.0" style="-fx-background-color: #337ab7;" BorderPane.alignment="CENTER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="400.0" />
@@ -213,7 +213,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
                   </GridPane>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                  <HBox alignment="CENTER" prefHeight="22.0" prefWidth="647.0" GridPane.columnIndex="1">
                      <children>
                             <Label text="CITAS DEL " textFill="WHITE">
                                 <font>
