@@ -99,7 +99,7 @@ public class ImprimirHorarioController implements Initializable {
                 url = Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, jcbSemana.getSelectionModel().getSelectedItem());
                 File file = new File(url);
                 try {
-                    Desktop.getDesktop().open(file);
+                     Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
                 } catch (IOException ex) {
                     Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -111,15 +111,15 @@ public class ImprimirHorarioController implements Initializable {
                 url = Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem(), lc);
                 File file = new File(url);
                 try {
-                    Desktop.getDesktop().open(file);
+                    Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
                 } catch (IOException ex) {
                     Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {
-            jcbDoctor.setStyle("-fx-border-color: red");
+                jcbDoctor.setStyle("-fx-border-color: red");
+            }
         }
-    }
 
     @FXML
     void cerrar() {
