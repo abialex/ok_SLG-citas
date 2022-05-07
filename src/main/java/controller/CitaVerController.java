@@ -617,6 +617,7 @@ public class CitaVerController implements Initializable {
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) mostrarVentana(CitaAgregarController.class, "CitaAgregar");
                     oCitaAgregarController.setController(odc, table);
                     oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha);
+                    oCitaAgregarController.set00();
                     lockedPantalla();
                 }
 

@@ -58,6 +58,10 @@ public class CitaAgregarController implements Initializable {
         initRestricciones();
     }
 
+    public void set00() {
+        jtfminuto.setText("00");
+    }
+
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
         this.table = table;
         this.citaControol = odc;
