@@ -21,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -45,19 +46,21 @@ public class ImprimirHorarioController implements Initializable {
     @FXML
     private Label lblHoy;
 
+    @FXML
+    private DatePicker dpFecha;
     CitaVerController odc;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarDoctor();
         cargarSemana();
-        lblHoy.setText("HOY: " + LocalDate.now());
+        //lblHoy.setText("HOY: " + LocalDate.now());
     }
 
     void cargarSemana() {
-        String dia="MAÑANA";
-        if(LocalDate.now().getDayOfWeek().getValue()==6){
-            dia="PASADO MAÑANA (LUNES)";
+        String dia = "MAÑANA";
+        if (LocalDate.now().getDayOfWeek().getValue() == 6) {
+            dia = "PASADO MAÑANA (LUNES)";
         }
         ObservableList<String> SEMANA = FXCollections.observableArrayList("HOY", dia, "ESTA SEMANA", "PRÓXIMA SEMANA");
         jcbSemana.setItems(SEMANA);
@@ -92,14 +95,13 @@ public class ImprimirHorarioController implements Initializable {
             if (jcbSemana.getSelectionModel().getSelectedItem().equals("HOY") || jcbSemana.getSelectionModel().getSelectedItem().equals("MAÑANA") || jcbSemana.getSelectionModel().getSelectedItem().equals("PASADO MAÑANA (LUNES)")) {
                 if (jcbSemana.getSelectionModel().getSelectedItem().equals("MAÑANA")) {
                     lc = lc.plusDays(1);
-                }
-                else if(jcbSemana.getSelectionModel().getSelectedItem().equals("PASADO MAÑANA (LUNES)")){
+                } else if (jcbSemana.getSelectionModel().getSelectedItem().equals("PASADO MAÑANA (LUNES)")) {
                     lc = lc.plusDays(2);
                 }
                 url = Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, jcbSemana.getSelectionModel().getSelectedItem());
                 File file = new File(url);
                 try {
-                     Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
+                    Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
                 } catch (IOException ex) {
                     Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -117,9 +119,21 @@ public class ImprimirHorarioController implements Initializable {
                 }
             }
         } else {
-                jcbDoctor.setStyle("-fx-border-color: red");
+            jcbDoctor.setStyle("-fx-border-color: red");
+        }
+    }
+
+    @FXML
+    void imprimirDoctores() {
+        if (dpFecha.getValue() != null) {
+            String url = Citapdf.ImprimirCitaDoctores(dpFecha.getValue());
+            try {
+                Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
+            } catch (IOException ex) {
+                Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
 
     @FXML
     void cerrar() {

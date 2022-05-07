@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
  * @author alexis
  */
 @Entity
-public class SettingsDoctor {
+public class SettingsDoctor implements Comparable<SettingsDoctor> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class SettingsDoctor {
         this.doctor = doctor;
         this.name = name;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -63,4 +63,8 @@ public class SettingsDoctor {
         this.name = name;
     }
 
+    @Override
+    public int compareTo(SettingsDoctor setdoc) {
+        return this.name.compareTo(setdoc.getName());
+    }
 }

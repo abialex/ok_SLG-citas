@@ -8,6 +8,7 @@ import Entidades.Cita;
 import Entidades.Doctor;
 
 import Entidades.HoraAtencion;
+import EntidadesSettings.SettingsDoctor;
 
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
@@ -39,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.VerticalAlignment;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 
 /**
@@ -204,7 +206,7 @@ public class Citapdf {
                 + " order by minuto asc").getResultList();
         int volumen = 115;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha +"_"+tipo+".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha + "_" + tipo + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -293,7 +295,7 @@ public class Citapdf {
         // Tabla Doctor
         Table tableSemana = new Table(new float[]{volumen * 0.5f, volumen * 4.5f});
         tableSemana.addCell(new Cell().add(new Paragraph("Hora").setFont(bold).addStyle(styleTextCenter)));
-        tableSemana.addCell(new Cell().add(new Paragraph(tipo+"\n" + fecha.plusDays(0)).setFont(bold).addStyle(styleTextCenter)));
+        tableSemana.addCell(new Cell().add(new Paragraph(tipo + "\n" + fecha.plusDays(0)).setFont(bold).addStyle(styleTextCenter)));
 
         for (HoraAtencion ohora : listHoraatencion) {
             tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
@@ -324,6 +326,156 @@ public class Citapdf {
                     TableHoraDia.addCell(getCell("", styleTextLeft9, styleCell, subrayadoNo));
                     TableHoraDia.addCell(getCell("", styleTextLeft9, styleCell, subrayadoNo));
                     TableHoraDia.addCell(getCell("", styleTextLeft9, styleCell, subrayadoNo));
+
+                }
+                tableSemana.addCell(new Cell().add(TableHoraDia));
+
+            }
+        }
+
+        /* Cuerpo del documentos*/
+        document.add(Cabecera);
+        document.add(tableSemana);
+
+        document.close();
+        /*----Fin Cuerpo del documentos-----*/
+
+        return urlWrite;
+    }
+
+    public static String ImprimirCitaDoctores(LocalDate fecha) {
+        List<HoraAtencion> listHoraatencion = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion ASC").setMaxResults(10).getResultList();
+        List<Cita> listCita = App.jpa.createQuery("select p from Cita p  where "
+                + " fechacita =" + "'" + fecha.toString() + "'"
+                + " order by minuto asc").getResultList();
+        List<SettingsDoctor> listsettings = App.jpa.createQuery("select p from SettingsDoctor p ").getResultList();
+        int volumen = 115;
+        PdfWriter writer = null;
+        String urlWrite = "Pdf\\cita_de_doctores_" + fecha + ".pdf";
+        try {
+            writer = new PdfWriter(urlWrite);
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(new Label(), "agregue la carpeta Pdf");
+        }
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+        document.setMargins(10, 10, 10, 10);
+
+        style2 evento = new style2(document);
+        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, evento);
+        PdfFont bold = null, font = null;
+        try {
+            /*--------styles-------------*/
+            font = PdfFontFactory.createFont(FontConstants.TIMES_BOLD);
+            bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+        } catch (IOException ex) {
+            Logger.getLogger(Citapdf.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /*---------------------Color----------*/
+        Color prueba = new DeviceRgb(0, 204, 204);
+        Color colorAzul = new DeviceRgb(255, 178, 102);
+        Color colorSubtitulo = Color.BLACK;
+        Color colorNegro = new DeviceRgb(0, 204, 204);
+        Color colorRojo = Color.RED;
+        Color colorBlanco = Color.WHITE;
+
+        /*----------------Style letras---------*/
+        Style styleCell = new Style().setBorder(Border.NO_BORDER);
+        Style styleTextRight = new Style().setTextAlignment(TextAlignment.RIGHT).setFontSize(10f);
+        Style styleTextLeft = new Style().setTextAlignment(TextAlignment.LEFT).setFontSize(10f);
+        Style styleTextCenter = new Style().setTextAlignment(TextAlignment.CENTER).setFontSize(8f);
+        Style styleTextLeft7 = new Style().setTextAlignment(TextAlignment.LEFT).setFontSize(7.5f);
+        Style styleTextCenterRojo = new Style().setTextAlignment(TextAlignment.CENTER).setFontSize(13f).setFontColor(colorRojo).setFont(bold);
+        Style styleTextCenterVertical = new Style().setVerticalAlignment(VerticalAlignment.MIDDLE);
+        Style styleTextCenter8 = new Style().setTextAlignment(TextAlignment.CENTER).setFontSize(8f).setFont(bold);
+        Style styleTextCenter13 = new Style().setTextAlignment(TextAlignment.CENTER).setFontSize(13f);
+        /*----------------Border--------------*/
+        Border subrayado = new SolidBorder(0.5f);
+        Border subrayadoNo = Border.NO_BORDER;
+
+        /*-----------------Palabras default-----------*/
+        String palabra1 = "desc.";
+        String palabra2 = "no presenta";
+
+        /*----------------Palabras vacías-------------*/
+        Paragraph palabraEnBlancoLimpio = new Paragraph(".").setFontColor(colorBlanco);
+        Paragraph palabraEnBlanco = new Paragraph(".").setFontColor(colorBlanco).setBorderBottom(new SolidBorder(0.5f));
+        /*---------FIN----Palabras vacías-------------*/
+
+ /* Contenido del documento  página 1*/
+        //table raya
+        Table TableRayas = new Table(new float[]{volumen * 5});
+        Cell cellraya = new Cell().add(palabraEnBlanco).addStyle(styleTextLeft).addStyle(styleCell);
+        TableRayas.addCell(cellraya);
+        //Cabecera
+        Table CabeceraParrafo1 = new Table(new float[]{volumen * 0.5f, volumen * 0.7f});
+        CabeceraParrafo1.addCell(getCell("Inicio:", styleTextRight, styleCell, subrayadoNo));
+        CabeceraParrafo1.addCell(getCell(fecha + "", styleTextCenter, styleCell, subrayado));
+
+        Table CabeceraParrafo2 = new Table(new float[]{volumen * 0.5f, volumen * 0.7f});
+        CabeceraParrafo2.addCell(getCell("Fin:", styleTextRight, styleCell, subrayadoNo));
+        CabeceraParrafo2.addCell(getCell(fecha + "", styleTextCenter, styleCell, subrayado));
+
+        Image imgUp = null;
+        try {
+            imgUp = new Image(ImageDataFactory.create("images\\logoUp.png"));
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Citapdf.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Cell cellimagUp = new Cell().add(imgUp.setAutoScale(true)).setBorder(Border.NO_BORDER);
+        /* new SolidBorder(Color.BLACK,1*/
+
+        Table TableHC = new Table(new float[]{volumen * 5});
+        TableHC.addCell(new Cell().add(CabeceraParrafo1).addStyle(styleCell));
+        TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
+
+        Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
+        Cabecera.addCell(getCell("DOCTORES", styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
+        Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
+        Cabecera.setMarginBottom(2.5f);
+
+        //Fin Cabecera
+        // Tabla Doctor
+        Table tableSemana = new Table(new float[]{volumen * 0.5f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f});
+        tableSemana.addCell(new Cell().add(new Paragraph("Hora").setFont(bold).addStyle(styleTextCenter)));
+        Collections.sort(listsettings);
+        int tamanio = listsettings.size();
+        for (int i = 0; i < 5 - tamanio; i++) {
+            listsettings.add(new SettingsDoctor(new Doctor("NINGUNO"), "Z"));
+        }
+        for (SettingsDoctor settingsDoctor : listsettings) {
+            tableSemana.addCell(new Cell().add(new Paragraph(settingsDoctor.getDoctor().getNombredoctor()).setFont(bold).addStyle(styleTextCenter)));
+        }
+
+        for (HoraAtencion ohora : listHoraatencion) {
+            tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
+            for (SettingsDoctor settingsDoctor : listsettings) {
+                Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
+                boolean aux = true;
+                for (Cita cita : listCita) {
+                    if (cita.getDoctor().equals(settingsDoctor.getDoctor()) && cita.getHoraatencion() == ohora) {
+                        aux = false;
+                        if (cita.getNombrepaciente() != null) {
+                            String datos = cita.getNombrepaciente();
+                            if (datos.length() > 15) {
+                                datos = datos.substring(0, 15);
+                                datos = datos + "...";
+                            }
+                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+
+                        } else {
+                            TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));
+                        }
+
+                    }
+                }
+                if (aux) {
+                    TableHoraDia.addCell(getCell("", styleTextLeft7, styleCell, subrayadoNo));
+                    TableHoraDia.addCell(getCell("", styleTextLeft7, styleCell, subrayadoNo));
+                    TableHoraDia.addCell(getCell("", styleTextLeft7, styleCell, subrayadoNo));
+                    TableHoraDia.addCell(getCell("", styleTextLeft7, styleCell, subrayadoNo));
 
                 }
                 tableSemana.addCell(new Cell().add(TableHoraDia));
