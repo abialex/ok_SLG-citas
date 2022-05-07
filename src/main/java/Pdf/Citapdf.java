@@ -204,7 +204,7 @@ public class Citapdf {
                 + " order by minuto asc").getResultList();
         int volumen = 115;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha +"_"+tipo+".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
