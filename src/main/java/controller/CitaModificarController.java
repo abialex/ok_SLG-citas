@@ -88,7 +88,7 @@ public class CitaModificarController implements Initializable {
                     + "and  fechacita= " + " '" + Cita.getFechacita() + "' "
                     + "and  iddoctor= " + Cita.getDoctor().getIddoctor()).getResultList();
             if (listCitaOcupada.isEmpty()) {
-                if (listCita4.size() < 4) {
+                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == Cita.getHoraatencion()) {
                     Cita.setHoraatencion(jcbHora.getSelectionModel().getSelectedItem());
                     Cita.setMinuto(jtfminuto.getText());
                     Cita.setRazon(jtfrazon.getText());
