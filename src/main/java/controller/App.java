@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.StageStyle;
@@ -100,7 +101,8 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-    static void CrearArchivos(){
+
+    static void CrearArchivos() {
         File carpetaImages = new File("Archivos paciente");
         if (!carpetaImages.exists()) {
             carpetaImages.mkdirs();
@@ -121,26 +123,11 @@ public class App extends Application {
             Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
         }
         Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
         Stage stage = new Stage();//creando la base vací
         stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
         stage.initOwner(this.stage);
         stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
         stage.show();
         return loader.getController();
     }
