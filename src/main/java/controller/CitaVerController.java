@@ -11,6 +11,8 @@ import EntidadesSettings.SettingsDoctor;
 import Pdf.Citapdf;
 
 import Util.FileImagUtil;
+import Util.HttpMethods;
+import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import controller.App;
@@ -18,11 +20,16 @@ import controllerDoctor.DoctorVerController;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -113,13 +120,16 @@ public class CitaVerController implements Initializable {
     String colorYellow = "-fx-background-color: #337ab7; -fx-border-color: #000000";
     Doctor doctorNinguno;
     List<Cita> listCitaRaiz;
-    List<SettingsDoctor> listdc=new ArrayList<>();
+    List<SettingsDoctor> listdc = new ArrayList<>();
+    List<Doctor> listDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
+    HttpMethods http = new HttpMethods();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
-        listdc = App.jpa.createQuery("select p from SettingsDoctor p ").getResultList();
+        listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
+        listDoctorG = http.getList(Doctor.class, "DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -136,9 +146,14 @@ public class CitaVerController implements Initializable {
 
     }
 
+    <T> String DsELETEobject(Class<T> generico, String id) {
+        String response = http.DeleteObject(generico, "deleteSettingsDoctor", id);
+        return response;
+    }
+
     @FXML
     void updateListHoraatencion() {
-        List<HoraAtencion> olistHoraatencion = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion ASC").setMaxResults(10).getResultList();
+        List<HoraAtencion> olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         listHoraatencion.clear();
         for (HoraAtencion oDoc : olistHoraatencion) {
             listHoraatencion.add(oDoc);
@@ -157,29 +172,8 @@ public class CitaVerController implements Initializable {
 
     }
 
-    void cargarSettingsDoctor() {
-        //1- poniendo a ninguno pordefcto
-        //2- si existe el doctor configurado y está activo: aparece en el combo box
-        jcbDoctor1.getSelectionModel().select(doctorNinguno);
-        jcbDoctor2.getSelectionModel().select(doctorNinguno);
-        jcbDoctor3.getSelectionModel().select(doctorNinguno);
-        jcbDoctor4.getSelectionModel().select(doctorNinguno);
-        for (SettingsDoctor settingsDoctor : listdc) {
-            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
-                jcbDoctor1.getSelectionModel().select(settingsDoctor.getDoctor());
-            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
-                jcbDoctor2.getSelectionModel().select(settingsDoctor.getDoctor());
-            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
-                jcbDoctor3.getSelectionModel().select(settingsDoctor.getDoctor());
-            } else if (settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
-                jcbDoctor4.getSelectionModel().select(settingsDoctor.getDoctor());
-            }
-        }
-    }
-
     public void cargarDoctor() {
         stoperActualizarComboBox = false;
-        List<Doctor> listDoctorG = App.jpa.createQuery("select p from Doctor p where flag = false and activo = true order by iddoctor asc").getResultList();
         ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
         doctorNinguno = new Doctor();
         doctorNinguno.setIddoctor(-1);
@@ -196,6 +190,42 @@ public class CitaVerController implements Initializable {
         stoperActualizarComboBox = true;
     }
 
+    void cargarSettingsDoctor() {
+        //1- poniendo a ninguno pordefcto
+        //2- si existe el doctor configurado y está activo: aparece en el combo box
+        jcbDoctor1.getSelectionModel().select(doctorNinguno);
+        jcbDoctor2.getSelectionModel().select(doctorNinguno);
+        jcbDoctor3.getSelectionModel().select(doctorNinguno);
+        jcbDoctor4.getSelectionModel().select(doctorNinguno);
+        for (SettingsDoctor settingsDoctor : listdc) {
+            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+                for (Doctor doctor : listDoctorG) {
+                    if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
+                        jcbDoctor1.getSelectionModel().select(doctor);
+                    }
+                }
+            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+                for (Doctor doctor : listDoctorG) {
+                    if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
+                        jcbDoctor2.getSelectionModel().select(doctor);
+                    }
+                }
+            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+                for (Doctor doctor : listDoctorG) {
+                    if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
+                        jcbDoctor3.getSelectionModel().select(doctor);
+                    }
+                }
+            } else if (settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+                for (Doctor doctor : listDoctorG) {
+                    if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
+                        jcbDoctor4.getSelectionModel().select(doctor);
+                    }
+                }
+            }
+        }
+    }
+
     void cargarMes() {
         ObservableList<String> MES = FXCollections.observableArrayList("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SETIEMBRE",
                 "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
@@ -205,8 +235,8 @@ public class CitaVerController implements Initializable {
 
     @FXML
     public void actualizarListMesCita() {
-        listCitaRaiz = App.jpa.createQuery("select p from Cita p where EXTRACT(year from fechacita)=" + jcbAnio.getSelectionModel().getSelectedItem()
-                + " order by minuto asc").getResultList();
+        //actualiza las citas que tego cada vez que agrego, elimino o modifico
+        listCitaRaiz = http.getCitaByFecha(Cita.class, "GetListCitasByFecha", jcbAnio.getSelectionModel().getSelectedItem());
     }
 
     void cargarAnio() {
@@ -267,25 +297,19 @@ public class CitaVerController implements Initializable {
                     if (doctor != doctorNinguno) {
                         if (oDoctorSettings.getDoctor() != doctor) {
                             oDoctorSettings.setDoctor(doctor);
-                            App.jpa.getTransaction().begin();  
-                            App.jpa.persist(oDoctorSettings);
-                            App.jpa.getTransaction().commit();
+                            http.UpdateObject(SettingsDoctor.class, oDoctorSettings, "UpdateSettingsDoctor");
                         }
                     } else {
-                        App.jpa.getTransaction().begin();
-                        App.jpa.remove(oDoctorSettings);
-                        App.jpa.getTransaction().commit();
+                        http.DeleteObject(SettingsDoctor.class, "DeleteSettingsDoctor", oDoctorSettings.getId() + "");
                     }
                     break;
                 }
             }
             if (isNuevo) {
                 SettingsDoctor sd = new SettingsDoctor(doctor, jcb.getId());
-                App.jpa.getTransaction().begin();
-                App.jpa.persist(sd);
-                App.jpa.getTransaction().commit();
+                http.AddObject(SettingsDoctor.class, sd, "AddSettingsDoctor");
             }
-            listdc = App.jpa.createQuery("select p from SettingsDoctor p ").getResultList();;
+            listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
         }
     }
 
@@ -482,13 +506,9 @@ public class CitaVerController implements Initializable {
                         setText(null);
                     } else {
                         List<Cita> listCita = new ArrayList<>();
-                        /*listCita = App.jpa.createQuery("select p from Cita p  where "
-                                + "iddoctor=" + jcb.getSelectionModel().getSelectedItem().getIddoctor() + " and "
-                                + "idhoraatencion = " + item.getIdhoraatencion() + " and "
-                                + "fechacita=" + "'" + oFecha.toString() + "'"
-                                + "order by minuto asc").getResultList();*/
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor() == jcb.getSelectionModel().getSelectedItem() && citaRaiz.getHoraatencion() == item
+                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor()
+                                    && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha)) {
                                 listCita.add(citaRaiz);
                             }
@@ -560,27 +580,15 @@ public class CitaVerController implements Initializable {
                         int tamHightImag = 20;
                         int tamWidthImag = 20;
                         List<Cita> listCitaOcupada = new ArrayList<>();
-                        /*  listCitaOcupada = App.jpa.createQuery("select p from Cita p  where "
-                                + "iddoctor=" + jcb.getSelectionModel().getSelectedItem().getIddoctor() + " and "
-                                + "idhoraatencion = " + item.getIdhoraatencion() + " and "
-                                + "fechacita=" + "'" + oFecha.toString() + "' and"
-                                + " razon = 'OCUPADO'"
-                                + "order by minuto asc").getResultList();*/
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor() == jcb.getSelectionModel().getSelectedItem() && citaRaiz.getHoraatencion() == item
+                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCitaOcupada.add(citaRaiz);
                             }
                         }
                         List<Cita> listCita = new ArrayList<>();
-                        /*listCita = App.jpa.createQuery("select p from Cita p  where "
-                                + "iddoctor=" + jcb.getSelectionModel().getSelectedItem().getIddoctor() + " and "
-                                + "idhoraatencion = " + item.getIdhoraatencion() + " and "
-                                + "fechacita=" + "'" + oFecha.toString() + "' and"
-                                + " razon != 'OCUPADO' "
-                                + " order by minuto asc").getResultList();*/
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor() == jcb.getSelectionModel().getSelectedItem() && citaRaiz.getHoraatencion() == item
+                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && !citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCita.add(citaRaiz);
                             }
@@ -625,15 +633,9 @@ public class CitaVerController implements Initializable {
                     ImageView buton = (ImageView) event.getSource();
                     HoraAtencion oHora = (HoraAtencion) buton.getUserData();
                     List<Cita> listCitaOcupada = new ArrayList<>();
-                    /*listCitaOcupada = App.jpa.createQuery("select p from Cita p  where "
-                            + "iddoctor=" + jcb.getSelectionModel().getSelectedItem().getIddoctor() + " and "
-                            + "idhoraatencion = " + oHora.getIdhoraatencion() + " and "
-                            + "fechacita=" + "'" + oFecha.toString() + "' and"
-                            + " razon = 'OCUPADO'"
-                            + "order by minuto asc").getResultList();*/
 
                     for (Cita citaRaiz : listCitaRaiz) {
-                        if (citaRaiz.getDoctor() == jcb.getSelectionModel().getSelectedItem() && citaRaiz.getHoraatencion() == oHora
+                        if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
                                 && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                             listCitaOcupada.add(citaRaiz);
                         }
@@ -641,15 +643,11 @@ public class CitaVerController implements Initializable {
 
                     if (listCitaOcupada.isEmpty()) {
                         Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO");
-                        App.jpa.getTransaction().begin();
-                        App.jpa.persist(ocita);
-                        App.jpa.getTransaction().commit();
+                        http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
                     } else {
-                        App.jpa.getTransaction().begin();
-                        App.jpa.remove(listCitaOcupada.get(0));
-                        App.jpa.getTransaction().commit();
+                        http.DeleteObject(Cita.class, "DeleteCita", listCitaOcupada.get(0).getIdcita()+"");
                         actualizarListMesCita();
                         getTableView().refresh();
                     }

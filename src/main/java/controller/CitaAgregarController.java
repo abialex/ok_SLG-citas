@@ -7,6 +7,7 @@ package controller;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.HoraAtencion;
+import Util.HttpMethods;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.net.URL;
@@ -52,6 +53,7 @@ public class CitaAgregarController implements Initializable {
     Doctor oDoctor;
     LocalDate oFechaCita;
     TableView<HoraAtencion> table;
+    HttpMethods http = new HttpMethods();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,9 +83,7 @@ public class CitaAgregarController implements Initializable {
     void guardarCita() {
         if (isComplete()) {
             Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText());
-            App.jpa.getTransaction().begin();
-            App.jpa.persist(ocita);
-            App.jpa.getTransaction().commit();
+            http.AddObject(Cita.class, ocita, "AddCita");
             citaControol.actualizarListMesCita();
             table.refresh();
             cerrar();
