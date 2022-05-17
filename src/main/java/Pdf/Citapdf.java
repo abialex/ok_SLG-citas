@@ -348,7 +348,7 @@ public class Citapdf {
         List<Cita> listCita = App.jpa.createQuery("select p from Cita p  where "
                 + " fechacita =" + "'" + fecha.toString() + "'"
                 + " order by minuto asc").getResultList();
-        List<SettingsDoctor> listsettings = App.jpa.createQuery("select p from SettingsDoctor p ").getResultList();
+        List<SettingsDoctor> listsettings = App.jpa.createQuery("select p from SettingsDoctor p where name like 'jcbDoctor%'").getResultList();
         int volumen = 115;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_doctores_" + fecha + ".pdf";
