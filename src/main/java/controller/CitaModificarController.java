@@ -35,6 +35,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -74,7 +75,7 @@ public class CitaModificarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         cargarHora();
         initRestricciones();
     }
@@ -82,16 +83,19 @@ public class CitaModificarController implements Initializable {
     @FXML
     void modificarCita() {
         if (isComplete()) {
-            List<Cita> listCitaOcupada = App.jpa.createQuery("select p from Cita p where "
-                    + " idhoraatencion= " + jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion()
-                    + "and  fechacita= " + " '" + oCita.getFechacita() + "' "
-                    + "and  iddoctor= " + oCita.getDoctor().getIddoctor()
-                    + "and razon='OCUPADO'").getResultList();
+            JSONObject citaAtributesJson = new JSONObject();
+            citaAtributesJson.put("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson.put("fechaInicio", oCita.getFechacita());
+            citaAtributesJson.put("razon", "OCUPADO");
+            citaAtributesJson.put("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
 
-            List<Cita> listCita4 = App.jpa.createQuery("select p from Cita p where "
-                    + " idhoraatencion= " + jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion()
-                    + "and  fechacita= " + " '" + oCita.getFechacita() + "' "
-                    + "and  iddoctor= " + oCita.getDoctor().getIddoctor()).getResultList();
+            JSONObject citaAtributesJson4 = new JSONObject();
+            citaAtributesJson4.put("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson4.put("fechaInicio", oCita.getFechacita());
+            citaAtributesJson4.put("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
+            
             if (listCitaOcupada.isEmpty()) {
                 if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHoraatencion()) {
                     oCita.setHoraatencion(jcbHora.getSelectionModel().getSelectedItem());
@@ -159,11 +163,11 @@ public class CitaModificarController implements Initializable {
         jtfDoctor.setText(oCita.getDoctor().getNombredoctor());
         jtfFecha.setText(oCita.getFechacita() + "");
         for (HoraAtencion horaAtencion : listHora) {
-            if(horaAtencion.getIdhoraatencion()==oCita.getHoraatencion().getIdhoraatencion()){
+            if (horaAtencion.getIdhoraatencion() == oCita.getHoraatencion().getIdhoraatencion()) {
                 jcbHora.getSelectionModel().select(horaAtencion);
                 break;
             }
-            
+
         }
         jtfminuto.setText(oCita.getMinuto());
         jtfPaciente.setText(oCita.getNombrepaciente());

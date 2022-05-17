@@ -26,6 +26,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import Pdf.style.style2;
+import Util.HttpMethods;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
 import com.itextpdf.layout.border.SolidBorder;
@@ -40,8 +41,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
+import org.json.JSONObject;
 
 /**
  *
@@ -49,15 +52,17 @@ import javax.swing.JOptionPane;
  */
 public class Citapdf {
 
+    static HttpMethods http = new HttpMethods();
+
     public static String ImprimirCita(Doctor odoctor, LocalDate fecha) {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
-        List<HoraAtencion> listHoraatencion = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion ASC").setMaxResults(10).getResultList();
-        List<Cita> listCita = App.jpa.createQuery("select p from Cita p  where "
-                + "iddoctor=" + odoctor.getIddoctor() + " and "
-                + " fechacita between" + "'" + fechaInicio.toString() + "' and '"
-                + fechaFin.toString() + "'"
-                + " order by minuto asc").getResultList();
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        JSONObject citaAtributesJson = new JSONObject();
+        citaAtributesJson.put("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.put("fechaInicio", fechaInicio.toString());
+        citaAtributesJson.put("fechaFin", fechaFin.toString());
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fechaInicio + "-" + fechaFin + ".pdf";
@@ -162,7 +167,7 @@ public class Citapdf {
                 boolean aux = true;
                 LocalDate fechaCom = fechaInicio.plusDays(i);
                 for (Cita cita : listCita) {
-                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion() == ohora) {
+                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             String datos = cita.getNombrepaciente();
@@ -199,11 +204,11 @@ public class Citapdf {
     }
 
     public static String ImprimirCitaHoy(Doctor odoctor, LocalDate fecha, String tipo) {
-        List<HoraAtencion> listHoraatencion = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion ASC").setMaxResults(10).getResultList();
-        List<Cita> listCita = App.jpa.createQuery("select p from Cita p  where "
-                + "iddoctor=" + odoctor.getIddoctor() + " and "
-                + " fechacita =" + "'" + fecha.toString() + "'"
-                + " order by minuto asc").getResultList();
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        JSONObject citaAtributesJson = new JSONObject();
+        citaAtributesJson.put("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.put("fechaInicio", fecha.toString());
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 115;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha + "_" + tipo + ".pdf";
@@ -304,7 +309,7 @@ public class Citapdf {
                 boolean aux = true;
                 LocalDate fechaCom = fecha.plusDays(i);
                 for (Cita cita : listCita) {
-                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion() == ohora) {
+                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             String datos = cita.getNombrepaciente();
@@ -344,11 +349,18 @@ public class Citapdf {
     }
 
     public static String ImprimirCitaDoctores(LocalDate fecha) {
-        List<HoraAtencion> listHoraatencion = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion ASC").setMaxResults(10).getResultList();
-        List<Cita> listCita = App.jpa.createQuery("select p from Cita p  where "
-                + " fechacita =" + "'" + fecha.toString() + "'"
-                + " order by minuto asc").getResultList();
-        List<SettingsDoctor> listsettings = App.jpa.createQuery("select p from SettingsDoctor p where name like 'jcbDoctor%'").getResultList();
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        JSONObject citaAtributesJson = new JSONObject();
+        citaAtributesJson.put("fechaInicio", fecha.toString());
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);        
+        List<SettingsDoctor> listSettingsAll = http.getList(SettingsDoctor.class, "SettingsDoctorAll");//configurar para solo 5 
+        List<SettingsDoctor> listsettings = new ArrayList<>();
+        for (SettingsDoctor settingsDoctor : listSettingsAll) {
+            if(settingsDoctor.getName().contains("jcbDoctor")){
+                listsettings.add(settingsDoctor);
+            }
+        }
+        
         int volumen = 115;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_doctores_" + fecha + ".pdf";
@@ -455,7 +467,7 @@ public class Citapdf {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
                 boolean aux = true;
                 for (Cita cita : listCita) {
-                    if (cita.getDoctor().equals(settingsDoctor.getDoctor()) && cita.getHoraatencion() == ohora) {
+                    if (cita.getDoctor().getIddoctor()==settingsDoctor.getDoctor().getIddoctor() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             String datos = cita.getNombrepaciente();
@@ -492,6 +504,7 @@ public class Citapdf {
 
         return urlWrite;
     }
+    //doctor id,fechainicio, fecha fin, order by minuto
 
     static Table getTable(String cadena, int volumen, Paragraph palabraEnBlanco, Style styleCell, Style styleTextLeft) {
         Table TablePrincipal = new Table(new float[]{volumen * 5});

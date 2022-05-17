@@ -37,7 +37,8 @@ public class HttpMethods {
     final String url = "http://localhost:8080/";
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
-        Type type = new TypeToken<List<T>>(){}.getType();
+        Type type = new TypeToken<List<T>>() {
+        }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
         HttpRequest requestPosts = HttpRequest.newBuilder()
@@ -57,7 +58,8 @@ public class HttpMethods {
     }
 
     public <T> List<T> getCitaByFecha(Class<T> generico, String metodo, String fecha) {
-        Type type = new TypeToken<List<T>>(){}.getType();
+        Type type = new TypeToken<List<T>>() {
+        }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
 
@@ -71,16 +73,40 @@ public class HttpMethods {
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-          for (T listGenerico : listGenericos) {
+        for (T listGenerico : listGenericos) {
             listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
         }
-        
+
         return listGenericos2;
     }
-    
-    public <T> String AddObject(Class<T> generico, Object objeto, String metodo){
-           T obj=(T) objeto;
-        String jsonResponse=json.toJson(obj);
+
+    public <T> List<T> getCitaFilter(Class<T> generico, String metodo, JSONObject citaAtributesJson) {
+
+        Type type = new TypeToken<List<T>>() {
+        }.getType();
+        List<T> listGenericos = new ArrayList<T>();
+        List<T> listGenericos2 = new ArrayList<T>();
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(citaAtributesJson.toString()))
+                .uri(URI.create(url + metodo)).build();
+        List<SettingsDoctor> LIST;
+        try {
+
+            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            listGenericos = json.fromJson(response.body(), type);
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (T listGenerico : listGenericos) {
+            listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
+        }
+
+        return listGenericos2;
+    }
+
+    public <T> String AddObject(Class<T> generico, Object objeto, String metodo) {
+        T obj = (T) objeto;
+        String jsonResponse = json.toJson(obj);
         HttpRequest requestPosts = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(jsonResponse))
                 .uri(URI.create(url + metodo)).build();
         String responseRPTA = "fail";
@@ -92,12 +118,12 @@ public class HttpMethods {
             Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return responseRPTA;
-        
+
     }
 
-    public <T> String UpdateObject(Class<T> generico,Object objeto, String metodo) {
-        T obj=(T) objeto;
-        String jsonResponse=json.toJson(obj);
+    public <T> String UpdateObject(Class<T> generico, Object objeto, String metodo) {
+        T obj = (T) objeto;
+        String jsonResponse = json.toJson(obj);
         HttpRequest requestPosts = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(jsonResponse))
                 .uri(URI.create(url + metodo)).build();
         String responseRPTA = "fail";
@@ -110,7 +136,7 @@ public class HttpMethods {
         }
         return responseRPTA;
     }
-    
+
     public <T> String DeleteObject(Class<T> generico, String metodo, String var) {
         HttpRequest requestPosts = HttpRequest.newBuilder()
                 .DELETE()
@@ -125,6 +151,5 @@ public class HttpMethods {
         }
         return "ok";
     }
-
 
 }

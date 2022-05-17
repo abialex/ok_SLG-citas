@@ -6,6 +6,7 @@ package controller;
 
 import Entidades.Doctor;
 import Pdf.Citapdf;
+import Util.HttpMethods;
 import com.jfoenix.controls.JFXComboBox;
 import controller.App;
 import java.awt.Desktop;
@@ -49,6 +50,7 @@ public class ImprimirHorarioController implements Initializable {
     @FXML
     private DatePicker dpFecha;
     CitaVerController odc;
+    HttpMethods http = new HttpMethods();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -68,7 +70,7 @@ public class ImprimirHorarioController implements Initializable {
     }
 
     public void cargarDoctor() {
-        List<Doctor> listDoctorG = App.jpa.createQuery("select p from Doctor p where flag = false and activo = true").getResultList();
+        List<Doctor> listDoctorG = http.getList(Doctor.class, "DoctorAll");
         ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
         Doctor doctorNinguno;
         doctorNinguno = new Doctor();

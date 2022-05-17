@@ -5,6 +5,7 @@
 package controllerDoctor;
 
 import Entidades.Doctor;
+import Util.HttpMethods;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
@@ -80,6 +81,7 @@ public class DoctorVerController implements Initializable {
     Doctor oDoctorEliminar;
     int indexEliminar;
     CitaVerController oCitaVerController;
+    HttpMethods http = new HttpMethods();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,7 +92,7 @@ public class DoctorVerController implements Initializable {
 
     @FXML
     void updateListDoctor() {
-        List<Doctor> olistDoc = App.jpa.createQuery("select p from Doctor p where flag = false order by iddoctor ASC").setMaxResults(10).getResultList();
+        List<Doctor> olistDoc = http.getList(Doctor.class, "DoctorAll");
         listDoctor.clear();
         for (Doctor oDoc : olistDoc) {
             listDoctor.add(oDoc);
@@ -102,10 +104,8 @@ public class DoctorVerController implements Initializable {
         if (jtfNombres.getText().length() != 0) {
             Doctor odoctor = new Doctor();
             odoctor.setNombredoctor(jtfNombres.getText());
-            odoctor.setActivo(true);
-            App.jpa.getTransaction().begin();
-            App.jpa.persist(odoctor);
-            App.jpa.getTransaction().commit();
+            odoctor.setActivo(true);         
+            http.AddObject(Doctor.class, odoctor, "AddDoctor");
             updateListDoctor();
             this.oCitaVerController.cargarDoctor();
         }
@@ -139,9 +139,8 @@ public class DoctorVerController implements Initializable {
                     JFXCheckBox check = (JFXCheckBox) event.getSource();
                     Doctor odoc = (Doctor) check.getUserData();
                     odoc.setActivo(check.isSelected());
-                    App.jpa.getTransaction().begin();
-                    App.jpa.persist(odoc);
-                    App.jpa.getTransaction().commit();
+
+                    http.UpdateObject(Doctor.class, odoc, "AddDoctor");
                     oCitaVerController.cargarDoctor();
                 }
 
@@ -194,9 +193,7 @@ public class DoctorVerController implements Initializable {
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
                             doc.setNombredoctor(check.getText());
-                            App.jpa.getTransaction().begin();
-                            App.jpa.persist(doc);
-                            App.jpa.getTransaction().commit();
+                            http.UpdateObject(Doctor.class, doc, "AddDoctor");
                             updateListDoctor();
                             oCitaVerController.cargarDoctor();
                         }
@@ -283,10 +280,7 @@ public class DoctorVerController implements Initializable {
     public void eliminar() {
         if (indexEliminar != -1) {
             oDoctorEliminar.setFlag(true);
-            App.jpa.getTransaction().begin();
-            App.jpa.persist(oDoctorEliminar);
-            App.jpa.getTransaction().commit();
-            listDoctor.remove(indexEliminar);
+            http.DeleteObject(Doctor.class, "DeleteDoctor", oDoctorEliminar.getIddoctor()+"");
             updateListDoctor();
         }
     }
