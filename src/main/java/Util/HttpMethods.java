@@ -10,9 +10,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import controller.CitaVerController;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -34,15 +40,23 @@ public class HttpMethods {
 
     Gson json = new Gson();
     HttpClient httpclient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    final String url = "http://localhost:8080/";
+    final String url = "http://localhost:5000/";//;
+    String address = "NADA";
+    final String DATA = "data";
+    final String ADDRESS = "address";
+
+    public HttpMethods() {
+        address = getMACAddress();
+    }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
         Type type = new TypeToken<List<T>>() {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
-        HttpRequest requestPosts = HttpRequest.newBuilder()
-                .GET()
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
         try {
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
@@ -63,8 +77,11 @@ public class HttpMethods {
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
 
-        HttpRequest requestPosts = HttpRequest.newBuilder().GET()
-                .uri(URI.create(url + metodo + "/" + fecha)).build();
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address);
+        Objson.addProperty("fecha", fecha);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
+                .uri(URI.create(url + metodo)).build();
         List<SettingsDoctor> LIST;
         try {
 
@@ -80,8 +97,8 @@ public class HttpMethods {
         return listGenericos2;
     }
 
-    public <T> List<T> getCitaFilter(Class<T> generico, String metodo, JSONObject citaAtributesJson) {
-
+    public <T> List<T> getCitaFilter(Class<T> generico, String metodo, JsonObject citaAtributesJson) {
+        citaAtributesJson.addProperty(ADDRESS, address);
         Type type = new TypeToken<List<T>>() {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
@@ -92,7 +109,6 @@ public class HttpMethods {
         try {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
             listGenericos = json.fromJson(response.body(), type);
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,7 +123,10 @@ public class HttpMethods {
     public <T> String AddObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
-        HttpRequest requestPosts = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(jsonResponse))
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address+"");
+        Objson.addProperty(DATA, jsonResponse);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
         String responseRPTA = "fail";
         try {
@@ -124,7 +143,10 @@ public class HttpMethods {
     public <T> String UpdateObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
-        HttpRequest requestPosts = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(jsonResponse))
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address);
+        Objson.addProperty(DATA, jsonResponse);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
         String responseRPTA = "fail";
         try {
@@ -138,10 +160,11 @@ public class HttpMethods {
     }
 
     public <T> String DeleteObject(Class<T> generico, String metodo, String var) {
-        HttpRequest requestPosts = HttpRequest.newBuilder()
-                .DELETE()
-                .uri(URI.create(url + metodo + "/" + var)).build();
-        List<SettingsDoctor> LIST;
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address);
+        Objson.addProperty("id", var);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
+                .uri(URI.create(url + metodo)).build();
         try {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
@@ -150,6 +173,42 @@ public class HttpMethods {
             Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "ok";
+    }
+
+    public String getOsName() {
+        String os = "";
+        os = System.getProperty("os.name");
+        return os;
+    }
+
+    public String getMACAddress() {
+
+        try {
+            InetAddress ipAddress = InetAddress.getLocalHost();
+            NetworkInterface networkInterface;
+            networkInterface = NetworkInterface
+                    .getByInetAddress(ipAddress);
+            byte[] macAddressBytes = networkInterface.getHardwareAddress();
+            StringBuilder macAddressBuilder = new StringBuilder();
+            for (int macAddressByteIndex = 0; macAddressByteIndex < macAddressBytes.length; macAddressByteIndex++) {
+                String macAddressHexByte = String.format("%02X",
+                        macAddressBytes[macAddressByteIndex]);
+                macAddressBuilder.append(macAddressHexByte);
+
+                if (macAddressByteIndex != macAddressBytes.length - 1) {
+                    macAddressBuilder.append(":");
+                }
+
+            }
+            return macAddressBuilder.toString();
+        } catch (SocketException ex) {
+            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, null, ex);
+            return "ERROR ADDRESS";
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, null, ex);
+            return "ERROR ADDRESS";
+        }
+
     }
 
 }
