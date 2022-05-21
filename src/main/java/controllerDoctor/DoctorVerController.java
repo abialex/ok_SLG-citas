@@ -107,7 +107,7 @@ public class DoctorVerController implements Initializable {
             odoctor.setActivo(true);         
             http.AddObject(Doctor.class, odoctor, "AddDoctor");
             updateListDoctor();
-            this.oCitaVerController.cargarDoctor();
+            this.oCitaVerController.UpdatecargarDoctor();
         }
     }
 
@@ -140,8 +140,8 @@ public class DoctorVerController implements Initializable {
                     Doctor odoc = (Doctor) check.getUserData();
                     odoc.setActivo(check.isSelected());
 
-                    http.UpdateObject(Doctor.class, odoc, "AddDoctor");
-                    oCitaVerController.cargarDoctor();
+                    http.UpdateObject(Doctor.class, odoc, "UpdateDoctor");
+                    oCitaVerController.UpdatecargarDoctor();
                 }
 
             };
@@ -193,9 +193,9 @@ public class DoctorVerController implements Initializable {
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
                             doc.setNombredoctor(check.getText());
-                            http.UpdateObject(Doctor.class, doc, "AddDoctor");
+                            http.UpdateObject(Doctor.class, doc, "UpdateDoctor");
                             updateListDoctor();
-                            oCitaVerController.cargarDoctor();
+                            oCitaVerController.UpdatecargarDoctor();
                         }
                     }
                     if (event.getCode() == (KeyCode.ESCAPE)) {
@@ -280,7 +280,7 @@ public class DoctorVerController implements Initializable {
     public void eliminar() {
         if (indexEliminar != -1) {
             oDoctorEliminar.setFlag(true);
-            http.DeleteObject(Doctor.class, "DeleteDoctor", oDoctorEliminar.getIddoctor()+"");
+            http.UpdateObject(Doctor.class, oDoctorEliminar, "UpdateDoctor");
             updateListDoctor();
         }
     }

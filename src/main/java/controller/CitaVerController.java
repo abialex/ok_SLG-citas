@@ -119,7 +119,7 @@ public class CitaVerController implements Initializable {
     String colorBlue = "-fx-background-color:BLUE; -fx-border-color: #000000";
     String colorYellow = "-fx-background-color: #337ab7; -fx-border-color: #000000";
     Doctor doctorNinguno;
-    List<Cita> listCitaRaiz;
+    List<Cita> listCitaRaiz = new ArrayList<>();
     List<SettingsDoctor> listdc = new ArrayList<>();
     List<Doctor> listDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
@@ -135,20 +135,16 @@ public class CitaVerController implements Initializable {
         tableDoctor2.setItems(listHoraatencion);
         tableDoctor3.setItems(listHoraatencion);
         tableDoctor4.setItems(listHoraatencion);
-
+        
         oFecha = LocalDate.now();
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         cargarMes();
         cargarAnio();
+        actualizarListMesCita();
         changueMes();
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
         initTable();
 
-    }
-
-    <T> String DsELETEobject(Class<T> generico, String id) {
-        String response = http.DeleteObject(generico, "deleteSettingsDoctor", id);
-        return response;
     }
 
     @FXML
@@ -170,6 +166,11 @@ public class CitaVerController implements Initializable {
         actualizarListMesCita();
         refreshTable();
 
+    }
+
+    public void UpdatecargarDoctor() {
+        listDoctorG = http.getList(Doctor.class, "DoctorAll");
+        cargarDoctor();
     }
 
     public void cargarDoctor() {
@@ -243,7 +244,6 @@ public class CitaVerController implements Initializable {
         ObservableList<String> ANIO = FXCollections.observableArrayList("2022", "2023", "2024", "2025");
         jcbAnio.setItems(ANIO);
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
-        actualizarListMesCita();
     }
 
     @FXML
