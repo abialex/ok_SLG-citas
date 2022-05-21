@@ -94,7 +94,7 @@ public class CitaModificarController implements Initializable {
             citaAtributesJson4.put("iddoctor", oCita.getDoctor().getIddoctor());
             citaAtributesJson4.put("fechaInicio", oCita.getFechacita());
             citaAtributesJson4.put("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
-            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
+            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson4);
             
             if (listCitaOcupada.isEmpty()) {
                 if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHoraatencion()) {
