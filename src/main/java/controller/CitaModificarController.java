@@ -7,6 +7,7 @@ package controller;
 import Entidades.Cita;
 import Entidades.HoraAtencion;
 import Util.HttpMethods;
+import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
@@ -35,7 +36,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -83,17 +83,17 @@ public class CitaModificarController implements Initializable {
     @FXML
     void modificarCita() {
         if (isComplete()) {
-            JSONObject citaAtributesJson = new JSONObject();
-            citaAtributesJson.put("iddoctor", oCita.getDoctor().getIddoctor());
-            citaAtributesJson.put("fechaInicio", oCita.getFechacita());
-            citaAtributesJson.put("razon", "OCUPADO");
-            citaAtributesJson.put("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            JsonObject citaAtributesJson = new JsonObject();
+            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita()+"");
+            citaAtributesJson.addProperty("razon", "OCUPADO");
+            citaAtributesJson.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
 
-            JSONObject citaAtributesJson4 = new JSONObject();
-            citaAtributesJson4.put("iddoctor", oCita.getDoctor().getIddoctor());
-            citaAtributesJson4.put("fechaInicio", oCita.getFechacita());
-            citaAtributesJson4.put("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            JsonObject citaAtributesJson4 = new JsonObject();
+            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita()+"");
+            citaAtributesJson4.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson4);
             
             if (listCitaOcupada.isEmpty()) {

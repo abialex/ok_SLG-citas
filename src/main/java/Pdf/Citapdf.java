@@ -27,6 +27,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import Pdf.style.style2;
 import Util.HttpMethods;
+import com.google.gson.JsonObject;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
 import com.itextpdf.layout.border.SolidBorder;
@@ -44,7 +45,6 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
-import org.json.JSONObject;
 
 /**
  *
@@ -58,10 +58,10 @@ public class Citapdf {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
-        JSONObject citaAtributesJson = new JSONObject();
-        citaAtributesJson.put("iddoctor", odoctor.getIddoctor());
-        citaAtributesJson.put("fechaInicio", fechaInicio.toString());
-        citaAtributesJson.put("fechaFin", fechaFin.toString());
+        JsonObject citaAtributesJson = new JsonObject();
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.addProperty("fechaInicio", fechaInicio.toString());
+        citaAtributesJson.addProperty("fechaFin", fechaFin.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
@@ -205,9 +205,9 @@ public class Citapdf {
 
     public static String ImprimirCitaHoy(Doctor odoctor, LocalDate fecha, String tipo) {
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
-        JSONObject citaAtributesJson = new JSONObject();
-        citaAtributesJson.put("iddoctor", odoctor.getIddoctor());
-        citaAtributesJson.put("fechaInicio", fecha.toString());
+        JsonObject citaAtributesJson = new JsonObject();
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 115;
         PdfWriter writer = null;
@@ -350,8 +350,8 @@ public class Citapdf {
 
     public static String ImprimirCitaDoctores(LocalDate fecha) {
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
-        JSONObject citaAtributesJson = new JSONObject();
-        citaAtributesJson.put("fechaInicio", fecha.toString());
+        JsonObject citaAtributesJson = new JsonObject();
+        citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);        
         List<SettingsDoctor> listSettingsAll = http.getList(SettingsDoctor.class, "SettingsDoctorAll");//configurar para solo 5 
         List<SettingsDoctor> listsettings = new ArrayList<>();
