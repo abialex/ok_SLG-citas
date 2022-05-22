@@ -2,7 +2,9 @@ package controller;
 
 import Util.JPAUtil;
 import controllerVistaEtc.CargandoVistaController;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,7 +32,6 @@ public class App extends Application {
     private double x = 0;
     private double y = 0;
     CitaVerController oCitaVerController;
-    public static Stage stagePrincpal;
     CargandoVistaController oCargandoVistaController;
     Stage stage;
 
@@ -39,11 +40,7 @@ public class App extends Application {
         @Override
         public void run() {
             Platform.runLater(() -> {
-                try {
-                    procesoMostrar();
-                } catch (IOException ex) {
-                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                procesoMostrar();
             });
         }
     }
@@ -56,11 +53,30 @@ public class App extends Application {
         new Proceso().start();
     }
 
-    void procesoMostrar() throws IOException {
-        stagePrincpal = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("VerPaciente.fxml"));
+    void procesoMostrar() {
+        FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(App.class.getResource("CitaVer.fxml"));
-        Parent root = fxmlLoader.load();
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException ex) {
+            File file =new File("error.txt");
+            String content=ex.toString();
+               try {
+            if(!file.exists()){
+             
+                    file.createNewFile();
+                
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.close();
+            } catch (IOException ex1) {
+                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
         scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/css/bootstrap3.css").toExternalForm());
         oCitaVerController = (CitaVerController) fxmlLoader.getController(); //esto depende de (1)
@@ -125,7 +141,6 @@ public class App extends Application {
         Stage stage = new Stage();//creando la base vací
         stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
-        stage.initOwner(this.stage);
         stage.setScene(scene);
         stage.show();
         return loader.getController();
