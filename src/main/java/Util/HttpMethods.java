@@ -40,13 +40,17 @@ public class HttpMethods {
 
     Gson json = new Gson();
     HttpClient httpclient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    final String url = "http://localhost:5000/";//;
+    final String url = "http://54.85.70.148:5000/";//;
     String address = "NADA";
+    String nombreDispositivo = "NADA";
     final String DATA = "data";
     final String ADDRESS = "address";
+    final String NOMBREDISPOSITIVO = "nombreDispositivo";
 
     public HttpMethods() {
+        nombreDispositivo = getNombrePc();
         address = getMACAddress();
+        System.out.println(address);
     }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
@@ -56,6 +60,7 @@ public class HttpMethods {
         List<T> listGenericos2 = new ArrayList<T>();
         JsonObject Objson = new JsonObject();
         Objson.addProperty(ADDRESS, address);
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
         try {
@@ -79,6 +84,7 @@ public class HttpMethods {
 
         JsonObject Objson = new JsonObject();
         Objson.addProperty(ADDRESS, address);
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Objson.addProperty("fecha", fecha);
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
@@ -99,6 +105,7 @@ public class HttpMethods {
 
     public <T> List<T> getCitaFilter(Class<T> generico, String metodo, JsonObject citaAtributesJson) {
         citaAtributesJson.addProperty(ADDRESS, address);
+        citaAtributesJson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Type type = new TypeToken<List<T>>() {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
@@ -124,7 +131,8 @@ public class HttpMethods {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
         JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address+"");
+        Objson.addProperty(ADDRESS, address + "");
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Objson.addProperty(DATA, jsonResponse);
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
@@ -145,6 +153,7 @@ public class HttpMethods {
         String jsonResponse = json.toJson(obj);
         JsonObject Objson = new JsonObject();
         Objson.addProperty(ADDRESS, address);
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Objson.addProperty(DATA, jsonResponse);
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
@@ -162,6 +171,7 @@ public class HttpMethods {
     public <T> String DeleteObject(Class<T> generico, String metodo, String var) {
         JsonObject Objson = new JsonObject();
         Objson.addProperty(ADDRESS, address);
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Objson.addProperty("id", var);
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
                 .uri(URI.create(url + metodo)).build();
@@ -209,6 +219,17 @@ public class HttpMethods {
             return "ERROR ADDRESS";
         }
 
+    }
+
+    String getNombrePc() {
+        String nombrepc = "sin nombre";
+        try {
+            nombrepc = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            System.out.println(e.toString());
+
+        }
+        return nombrepc;
     }
 
 }
