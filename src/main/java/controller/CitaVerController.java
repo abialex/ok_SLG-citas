@@ -217,7 +217,7 @@ public class CitaVerController implements Initializable {
                         jcbDoctor3.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
                 for (Doctor doctor : listDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor4.getSelectionModel().select(doctor);
