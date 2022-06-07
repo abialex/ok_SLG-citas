@@ -103,7 +103,7 @@ public class ImprimirHorarioController implements Initializable {
                 url = Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, jcbSemana.getSelectionModel().getSelectedItem());
                 File file = new File(url);
                 try {
-                    Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
+                    Desktop.getDesktop().open(file);
                 } catch (IOException ex) {
                     Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -115,7 +115,7 @@ public class ImprimirHorarioController implements Initializable {
                 url = Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem(), lc);
                 File file = new File(url);
                 try {
-                    Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
+                    Desktop.getDesktop().open(file);
                 } catch (IOException ex) {
                     Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -128,15 +128,15 @@ public class ImprimirHorarioController implements Initializable {
     @FXML
     void imprimirDoctores() {
         if (dpFecha.getValue() != null) {
-            String url = Citapdf.ImprimirCitaDoctores(dpFecha.getValue());
+                File file = new File( Citapdf.ImprimirCitaDoctores(dpFecha.getValue()));
             try {
-                Runtime.getRuntime().exec("explorer.exe /select," + url.trim());
+                  Desktop.getDesktop().open(file);
             } catch (IOException ex) {
                 Logger.getLogger(ImprimirHorarioController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
+    
     @FXML
     void cerrar() {
         odc.lockedPantalla();
