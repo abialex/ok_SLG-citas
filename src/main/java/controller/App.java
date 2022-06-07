@@ -53,6 +53,11 @@ public class App extends Application {
         new Proceso().start();
     }
 
+    @Override
+    public void stop() {
+        oCitaVerController.stop();
+    }
+
     void procesoMostrar() {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(App.class.getResource("CitaVer.fxml"));
@@ -60,21 +65,21 @@ public class App extends Application {
         try {
             root = fxmlLoader.load();
         } catch (IOException ex) {
-            File file =new File("error.txt");
-            String content=ex.toString();
-               try {
-            if(!file.exists()){
-             
+            File file = new File("error.txt");
+            String content = ex.toString();
+            try {
+                if (!file.exists()) {
+
                     file.createNewFile();
-                
-            }
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(content);
-            bw.close();
-            } catch (IOException ex1) {
-                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex1);
+
                 }
+                FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(content);
+                bw.close();
+            } catch (IOException ex1) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         scene = new Scene(root);

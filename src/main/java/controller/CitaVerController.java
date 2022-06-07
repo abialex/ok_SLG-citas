@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -75,7 +76,7 @@ import javafx.util.Callback;
  *
  * @author alexis
  */
-public class CitaVerController implements Initializable {
+public class CitaVerController implements Initializable, Runnable {
 
     @FXML
     private AnchorPane ap;
@@ -124,6 +125,22 @@ public class CitaVerController implements Initializable {
     List<Doctor> listDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
+    Thread h1;
+
+    @Override
+    public void run() {
+        Thread ct = Thread.currentThread();
+        while (ct == h1) {
+            Platform.runLater(() -> {
+                reconsulta();
+            });
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,7 +152,7 @@ public class CitaVerController implements Initializable {
         tableDoctor2.setItems(listHoraatencion);
         tableDoctor3.setItems(listHoraatencion);
         tableDoctor4.setItems(listHoraatencion);
-        
+
         oFecha = LocalDate.now();
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         cargarMes();
@@ -143,6 +160,14 @@ public class CitaVerController implements Initializable {
         actualizarListMesCita();
         changueMes();
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
+        initTable();
+        h1 = new Thread(this);
+        h1.start();
+
+    }
+
+    void reconsulta() {
+        actualizarListMesCita();
         initTable();
 
     }
@@ -647,7 +672,7 @@ public class CitaVerController implements Initializable {
                         actualizarListMesCita();
                         getTableView().refresh();
                     } else {
-                        http.DeleteObject(Cita.class, "DeleteCita", listCitaOcupada.get(0).getIdcita()+"");
+                        http.DeleteObject(Cita.class, "DeleteCita", listCitaOcupada.get(0).getIdcita() + "");
                         actualizarListMesCita();
                         getTableView().refresh();
                     }
@@ -949,5 +974,9 @@ public class CitaVerController implements Initializable {
     @FXML
     void cerrar() {
         ((Stage) ap.getScene().getWindow()).close();
+    }
+
+    void stop() {
+        h1.stop();
     }
 }
