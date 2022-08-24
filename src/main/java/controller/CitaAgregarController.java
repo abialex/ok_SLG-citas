@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -46,7 +47,10 @@ public class CitaAgregarController implements Initializable {
     private JFXTextField jtfHora, jtfminuto;
 
     @FXML
-    private JFXTextField jtfrazon, jtfnombrepaciente;
+    private JFXTextField jtfrazon, jtfnombrepaciente, jtftelefono;
+
+    @FXML
+    private Label lblAMPM;
 
     CitaVerController citaControol;
     HoraAtencion horaAtencion;
@@ -77,12 +81,13 @@ public class CitaAgregarController implements Initializable {
         jtfDoctor.setText(doc.getNombredoctor());
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora.getHora());
+        lblAMPM.setText(oHora.getAbreviatura());
     }
 
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText());
+            Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText());
             http.AddObject(Cita.class, ocita, "AddCita");
             citaControol.actualizarListMesCita();
             table.refresh();
@@ -92,6 +97,7 @@ public class CitaAgregarController implements Initializable {
 
     void initRestricciones() {
         jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
     }
 
     void SoloNumerosEnteros2(KeyEvent event) {
@@ -101,6 +107,17 @@ public class CitaAgregarController implements Initializable {
             event.consume();
         }
         if (o.getText().length() >= 2) {
+            event.consume();
+        }
+    }
+
+    void SoloNumerosEnteros9(KeyEvent event) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (!Character.isDigit(key)) {
+            event.consume();
+        }
+        if (o.getText().length() >= 9) {
             event.consume();
         }
     }

@@ -63,7 +63,7 @@ public class HoraAtencion {
 
     @Override
     public String toString() {
-        return this.hora+" "+this.abreviatura;// Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return this.hora;// Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
 }

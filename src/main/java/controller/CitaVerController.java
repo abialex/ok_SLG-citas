@@ -26,6 +26,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,12 +66,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -106,7 +110,7 @@ public class CitaVerController implements Initializable, Runnable {
     private JFXComboBox<String> jcbAnio;
 
     @FXML
-    private Label lblfecha;
+    private Label lblfecha, lblAMPM;
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
@@ -136,7 +140,7 @@ public class CitaVerController implements Initializable, Runnable {
             });
 
             try {
-                Thread.sleep(30000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
             }
         }
@@ -295,18 +299,18 @@ public class CitaVerController implements Initializable, Runnable {
     void setFecha(ActionEvent event) {
         if (btn != null) {
             //evaluando el button seleccionado anteriormente
-            btn.setStyle(colorDefault);
+            //btn.setStyle(colorDefault);
             LocalDate locald = (LocalDate) btn.getUserData();
             if (locald.getDayOfWeek().getValue() == 7) {
-                btn.setStyle(colorRed);
+                //btn.setStyle(colorRed);
             }
             if (locald.equals(LocalDate.now())) {
-                btn.setStyle(colorPlomo);
+                //btn.setStyle(colorPlomo);
             }
         }
         JFXButton buton = (JFXButton) event.getSource();
         btn = buton;
-        buton.setStyle(colorYellow);
+        //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
@@ -372,15 +376,17 @@ public class CitaVerController implements Initializable, Runnable {
             JFXButton bt = new JFXButton();
             bt.setUserData(fechaCita);
             bt.addEventHandler(ActionEvent.ACTION, event -> setFecha(event));
-            bt.setStyle(colorDefault);
+            bt.getStyleClass().clear();
+            bt.getStyleClass().add("button-forma1");
             int diaSemana = fechaCita.getDayOfWeek().getValue();
-            if (diaSemana == 7) {
-                bt.setStyle(colorRed);
-            }
+            /*if (diaSemana == 7) {
+               bt.setStyle(colorRed);
+            }*/
             if (fechaCita.equals(fechaNow)) {
-                bt.setStyle(colorPlomo);
+                bt.getStyleClass().clear();
+                bt.getStyleClass().add("button-forma1-seleccionado");
             }
-
+            /*
             bt.focusedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
@@ -391,31 +397,31 @@ public class CitaVerController implements Initializable, Runnable {
                         if (btn != null) {
                             LocalDate locald = (LocalDate) btn.getUserData();
                             if (locald.getDayOfWeek().getValue() == 7) {
-                                btn.setStyle(colorRed);
+                               // btn.setStyle(colorRed);
                             }
                             if (locald.equals(fechaNow)) {
                                 btn.setStyle(colorPlomo);
                             }
                             if (locald.equals(oFecha)) {
-                                btn.setStyle(colorYellow);
+                               // btn.setStyle(colorYellow);
                             }
                         }
 
                     } else {
                         bt.setStyle(colorDefault);
                         if (diaSemana == 7) {
-                            bt.setStyle(colorRed);
+                            //bt.setStyle(colorRed);
                         }
                         if (fechaCita.equals(fechaNow)) {
-                            bt.setStyle(colorPlomo);
+                            //bt.setStyle(colorPlomo);
                         }
                         if (fechaCita.equals(oFecha)) {
-                            bt.setStyle(colorYellow);
+                            //bt.setStyle(colorYellow);
                         }
                     }
                 }
-            });
-            bt.setText("" + i);
+            });*/
+            bt.setText(i < 10 ? "0" + i : "" + i);
             FlowPane.setMargin(bt, new Insets(2, 4, 2, 4));
             if (diaSemana != 7) {
                 fpDias.getChildren().add(bt);
@@ -504,12 +510,19 @@ public class CitaVerController implements Initializable, Runnable {
                         setGraphic(null);
                         setText(null);
                     } else {
+
                         Label label = new Label();
                         label.setFont(new Font("Times New Roman Bold", 13));
+                        LocalTime time = LocalTime.now();
+                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                            setStyle("-fx-background-color:#334ccc");
+                        }
                         label.setStyle("-fx-text-fill: white");
+
                         label.setText(item.getHora() + " " + item.getAbreviatura());
                         setGraphic(label);
                         setText("");
+
                     }
                 }
             };
@@ -539,7 +552,7 @@ public class CitaVerController implements Initializable, Runnable {
                             }
                         }
                         FlowPane fp = new FlowPane();
-                        fp.setStyle("-fx-background-color: #b2caf7");
+                        //fp.setStyle("-fx-background-color: #b2caf7");
                         boolean isOcupado = false;
                         double tam = 48.16;
                         for (Cita cita : listCita) {
@@ -548,20 +561,24 @@ public class CitaVerController implements Initializable, Runnable {
                                 Label ocupadoLabel = new Label("OCUPADO");
                                 ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));
                                 ocupadoLabel.setStyle("-fx-text-fill: red");
-                                fp.setStyle("-fx-background-color: #b2caf7");
+                                //fp.setStyle("-fx-background-color: #b2caf7");
                                 fp.setAlignment(Pos.CENTER);
 
                                 fp.getChildren().add(ocupadoLabel);
                                 break;
                             }
                             JFXButton button = new JFXButton();
+                            Tooltip tooltipCelular = new Tooltip("Celular: "+(cita.getCelular()==null? "sin número":cita.getCelular()));
+                            tooltipCelular.setShowDelay(Duration.seconds(0.2));
+                            button.setTooltip(tooltipCelular);
                             button.setUserData(cita);
                             button.setPrefWidth(110);
-                            button.setStyle("-fx-font-size: 10; "
+                            button.getStyleClass().add("button-forma2");
+                            /*button.setStyle("-fx-font-size: 10; "
                                     + "-fx-background-color:#06007d;"
                                     + " -fx-border-color:#000000; "
                                     + "-fx-text-fill: white; "
-                                    + " -fx-cursor: hand;");
+                                    + " -fx-cursor: hand;");*/
                             button.setMaxHeight(9);
                             button.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
                             button.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
@@ -571,7 +588,11 @@ public class CitaVerController implements Initializable, Runnable {
                         fp.setMinHeight(tam);
                         setGraphic(fp);
                         setText(null);
-                        setStyle("-fx-pref-height: 0px; -fx-background-color: #b2caf7");
+                        setStyle("-fx-pref-height: 0px;   -fx-background-color:  linear-gradient(from 41px 39px to 50px 50px, reflect,  #b7cdf7 30%, #bfd5ff  47%);");
+                        LocalTime time = LocalTime.now();
+                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                            setStyle("-fx-background-color:#334ccc");
+                        }
                     }
                 }
 
@@ -619,16 +640,20 @@ public class CitaVerController implements Initializable, Runnable {
                             }
                         }
 
-                        ImageView addIcon = newImage("add-2.png", tamHightImag, tamWidthImag, item);
+                        Button addIcon = new Button();
+                        addIcon.setText("+");
+                        addIcon.setUserData(item);
+                        addIcon.getStyleClass().add("button-formacircle-green");
                         addIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarAgregar(event, getTableView()));
-                        addIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagModificarMoved(event));
-                        addIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagModificarFuera(event));
+
                         addIcon.setVisible(listCitaOcupada.isEmpty() && listCita.size() < 4);
 
-                        ImageView editIcon2 = newImage("block-2.png", tamHightImag, tamWidthImag, item);
+                        Button editIcon2 = new Button();
+                        editIcon2.setText("x");
+                        editIcon2.setUserData(item);
+                        editIcon2.getStyleClass().add("button-formacircle-red");
                         editIcon2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> guardarEliminarBloqueo(event, addIcon));
-                        editIcon2.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagBlockMoved(event));
-                        editIcon2.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagBlockFuera(event));
+
                         editIcon2.setVisible(listCita.isEmpty());
 
                         VBox managebtn = new VBox(addIcon, editIcon2);
@@ -639,12 +664,17 @@ public class CitaVerController implements Initializable, Runnable {
                                 setGraphic(managebtn);
                             }
                         }
+                        LocalTime time = LocalTime.now();
+                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                            setStyle("-fx-background-color:#334ccc");
+                        }
                         setText(null);
+
                     }
                 }
 
                 void mostrarAgregar(MouseEvent event, TableView<HoraAtencion> table) {
-                    ImageView buton = (ImageView) event.getSource();
+                    Button buton = (Button) event.getSource();
                     HoraAtencion oHora = (HoraAtencion) buton.getUserData();
 
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) mostrarVentana(CitaAgregarController.class, "CitaAgregar");
@@ -654,9 +684,8 @@ public class CitaVerController implements Initializable, Runnable {
                     lockedPantalla();
                 }
 
-                void guardarEliminarBloqueo(MouseEvent event, ImageView addicon) {
-                    ImageView buton = (ImageView) event.getSource();
-                    HoraAtencion oHora = (HoraAtencion) buton.getUserData();
+                void guardarEliminarBloqueo(MouseEvent event, Button addicon) {
+                    HoraAtencion oHora = (HoraAtencion) addicon.getUserData();
                     List<Cita> listCitaOcupada = new ArrayList<>();
 
                     for (Cita citaRaiz : listCitaRaiz) {
@@ -667,7 +696,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO");
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO","empty");
                         http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
@@ -794,9 +823,10 @@ public class CitaVerController implements Initializable, Runnable {
             Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
         }
         Scene scene = new Scene(root);//instancia el controlador (!)
+        scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
         Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.initOwner(((Stage) ap.getScene().getWindow()));
         stage.setScene(scene);
         root.setOnMousePressed(new EventHandler<MouseEvent>() {

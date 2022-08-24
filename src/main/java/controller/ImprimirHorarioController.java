@@ -85,6 +85,7 @@ public class ImprimirHorarioController implements Initializable {
 
     void setController(CitaVerController odc) {
         this.odc = odc;
+        this.dpFecha.setValue(LocalDate.now().plusDays(1));
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 

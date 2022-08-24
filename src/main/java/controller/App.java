@@ -20,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import javax.persistence.EntityManager;
 
@@ -83,6 +84,7 @@ public class App extends Application {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/bootstrap3.css").toExternalForm());
         oCitaVerController = (CitaVerController) fxmlLoader.getController(); //esto depende de (1)
         //oCitaVerController.setStagePrincipall(stage);
@@ -102,7 +104,7 @@ public class App extends Application {
         });
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setOnCloseRequest(event -> {
         });
         stage.show();
@@ -145,6 +147,7 @@ public class App extends Application {
         Scene scene = new Scene(root);//instancia el controlador (!)
         Stage stage = new Stage();//creando la base vací
         stage.initStyle(StageStyle.UNDECORATED);
+        
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
         stage.setScene(scene);
         stage.show();

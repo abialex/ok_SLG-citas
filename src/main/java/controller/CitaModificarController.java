@@ -29,6 +29,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -62,7 +63,10 @@ public class CitaModificarController implements Initializable {
     private JFXTextField jtfPaciente;
 
     @FXML
-    private JFXTextField jtfrazon;
+    private JFXTextField jtfrazon, jtftelefono;
+
+    @FXML
+    private Label lblAMPM;
 
     CitaVerController oCitaVerController;
     Cita oCita;
@@ -81,26 +85,32 @@ public class CitaModificarController implements Initializable {
     }
 
     @FXML
+    void changueHora() {
+        lblAMPM.setText(jcbHora.getSelectionModel().getSelectedItem().getAbreviatura());
+    }
+
+    @FXML
     void modificarCita() {
         if (isComplete()) {
             JsonObject citaAtributesJson = new JsonObject();
             citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
-            citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita()+"");
+            citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
             citaAtributesJson.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
             citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
-            citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita()+"");
+            citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson4.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson4);
-            
+
             if (listCitaOcupada.isEmpty()) {
                 if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHoraatencion()) {
                     oCita.setHoraatencion(jcbHora.getSelectionModel().getSelectedItem());
                     oCita.setMinuto(jtfminuto.getText());
                     oCita.setRazon(jtfrazon.getText());
+                    oCita.setCelular(jtftelefono.getText());
                     http.UpdateObject(Cita.class, oCita, "UpdateCita");
                     oCitaVerController.actualizarListMesCita();
                     table.refresh();
@@ -165,6 +175,7 @@ public class CitaModificarController implements Initializable {
         for (HoraAtencion horaAtencion : listHora) {
             if (horaAtencion.getIdhoraatencion() == oCita.getHoraatencion().getIdhoraatencion()) {
                 jcbHora.getSelectionModel().select(horaAtencion);
+                lblAMPM.setText(oCita.getHoraatencion().getAbreviatura());
                 break;
             }
 
@@ -172,10 +183,12 @@ public class CitaModificarController implements Initializable {
         jtfminuto.setText(oCita.getMinuto());
         jtfPaciente.setText(oCita.getNombrepaciente());
         jtfrazon.setText(oCita.getRazon());
+        jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
     }
 
     void initRestricciones() {
         jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
     }
 
     void SoloNumerosEnteros2(KeyEvent event) {
@@ -185,6 +198,17 @@ public class CitaModificarController implements Initializable {
             event.consume();
         }
         if (o.getText().length() >= 2) {
+            event.consume();
+        }
+    }
+
+    void SoloNumerosEnteros9(KeyEvent event) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (!Character.isDigit(key)) {
+            event.consume();
+        }
+        if (o.getText().length() >= 9) {
             event.consume();
         }
     }
