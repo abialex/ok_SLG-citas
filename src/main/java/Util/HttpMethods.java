@@ -40,7 +40,7 @@ public class HttpMethods {
 
     Gson json = new Gson();
     HttpClient httpclient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    final String url = "http://54.85.70.148:5000/";//;
+    final String url = "http://137.184.76.88:5000/";//;
     String address = "NADA";
     String nombreDispositivo = "NADA";
     final String DATA = "data";
@@ -183,12 +183,6 @@ public class HttpMethods {
             Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "ok";
-    }
-
-    public String getOsName() {
-        String os = "";
-        os = System.getProperty("os.name");
-        return os;
     }
 
     public String getMACAddress() {

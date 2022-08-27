@@ -104,13 +104,10 @@ public class CitaVerController implements Initializable, Runnable {
     private JFXComboBox<Doctor> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
 
     @FXML
-    private JFXComboBox<String> jcbMes;
+    private JFXComboBox<String> jcbMes, jcbAnio;
 
     @FXML
-    private JFXComboBox<String> jcbAnio;
-
-    @FXML
-    private Label lblfecha, lblAMPM;
+    private Label lblfecha;
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
@@ -568,7 +565,7 @@ public class CitaVerController implements Initializable, Runnable {
                                 break;
                             }
                             JFXButton button = new JFXButton();
-                            Tooltip tooltipCelular = new Tooltip("Celular: "+(cita.getCelular()==null? "sin número":cita.getCelular()));
+                            Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
                             tooltipCelular.setShowDelay(Duration.seconds(0.2));
                             button.setTooltip(tooltipCelular);
                             button.setUserData(cita);
@@ -680,7 +677,6 @@ public class CitaVerController implements Initializable, Runnable {
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) mostrarVentana(CitaAgregarController.class, "CitaAgregar");
                     oCitaAgregarController.setController(odc, table);
                     oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha);
-                    oCitaAgregarController.set00();
                     lockedPantalla();
                 }
 
@@ -696,7 +692,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO","empty");
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty");
                         http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
@@ -812,41 +808,7 @@ public class CitaVerController implements Initializable, Runnable {
         ImageView imag = (ImageView) event.getSource();
         imag.setImage(new Image(getClass().getResource("/imagenes/doctor-2.png").toExternalForm()));
     }
-
-    public Object mostrarVentana(Class generico, String nameFXML) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
-        }
-        Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
-        Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.initOwner(((Stage) ap.getScene().getWindow()));
-        stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.show();
-        return loader.getController();
-    }
-
+    
     public int numeroDeDiasMes(String mes) {
         int numeroDias = -1;
         switch (mes) {
@@ -1000,13 +962,48 @@ public class CitaVerController implements Initializable, Runnable {
         }
         return nombreDia;
     }
+    
+       public Object mostrarVentana(Class generico, String nameFXML) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
+        }
+        Scene scene = new Scene(root);//instancia el controlador (!)
+        scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
+        Stage stage = new Stage();//creando la base vací
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initOwner(((Stage) ap.getScene().getWindow()));
+        stage.setScene(scene);
+        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                x = event.getX();
+                y = event.getY();
+            }
+        });
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.setX(event.getScreenX() - x);
+                stage.setY(event.getScreenY() - y);
+            }
+        });
+        stage.show();
+        return loader.getController();
+    }
+
+
+    void stop() {
+        h1.stop();
+    }
 
     @FXML
     void cerrar() {
         ((Stage) ap.getScene().getWindow()).close();
-    }
-
-    void stop() {
-        h1.stop();
     }
 }

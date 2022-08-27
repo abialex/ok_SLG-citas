@@ -38,13 +38,7 @@ public class CitaAgregarController implements Initializable {
     private AnchorPane ap;
 
     @FXML
-    private JFXTextField jtfDoctor;
-
-    @FXML
-    private JFXTextField jtfFecha;
-
-    @FXML
-    private JFXTextField jtfHora, jtfminuto;
+    private JFXTextField jtfDoctor, jtfFecha, jtfHora, jtfminuto;
 
     @FXML
     private JFXTextField jtfrazon, jtfnombrepaciente, jtftelefono;
@@ -64,8 +58,9 @@ public class CitaAgregarController implements Initializable {
         initRestricciones();
     }
 
-    public void set00() {
-        jtfminuto.setText("00");
+    void initRestricciones() {
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
     }
 
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
@@ -82,6 +77,7 @@ public class CitaAgregarController implements Initializable {
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora.getHora());
         lblAMPM.setText(oHora.getAbreviatura());
+        jtfminuto.setText("00");
     }
 
     @FXML
@@ -93,11 +89,6 @@ public class CitaAgregarController implements Initializable {
             table.refresh();
             cerrar();
         }
-    }
-
-    void initRestricciones() {
-        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
-        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
     }
 
     void SoloNumerosEnteros2(KeyEvent event) {

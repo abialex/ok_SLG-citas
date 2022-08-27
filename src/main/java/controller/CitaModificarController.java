@@ -51,19 +51,10 @@ public class CitaModificarController implements Initializable {
     private JFXTextField jtfDoctor;
 
     @FXML
-    private JFXTextField jtfFecha;
+    private JFXTextField jtfFecha, jtfminuto, jtfPaciente, jtfrazon, jtftelefono;
 
     @FXML
     private JFXComboBox<HoraAtencion> jcbHora;
-
-    @FXML
-    private JFXTextField jtfminuto;
-
-    @FXML
-    private JFXTextField jtfPaciente;
-
-    @FXML
-    private JFXTextField jtfrazon, jtftelefono;
 
     @FXML
     private Label lblAMPM;
@@ -79,9 +70,19 @@ public class CitaModificarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         cargarHora();
         initRestricciones();
+    }
+
+    void initRestricciones() {
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
+    }
+
+    void setController(CitaVerController odc, TableView<HoraAtencion> table) {
+        this.table = table;
+        this.oCitaVerController = odc;
+        ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
     @FXML
@@ -162,12 +163,6 @@ public class CitaModificarController implements Initializable {
         jcbHora.setItems(listhora);
     }
 
-    void setController(CitaVerController odc, TableView<HoraAtencion> table) {
-        this.table = table;
-        this.oCitaVerController = odc;
-        ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
-    }
-
     void setCita(Cita oCita) {
         this.oCita = oCita;
         jtfDoctor.setText(oCita.getDoctor().getNombredoctor());
@@ -184,11 +179,6 @@ public class CitaModificarController implements Initializable {
         jtfPaciente.setText(oCita.getNombrepaciente());
         jtfrazon.setText(oCita.getRazon());
         jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
-    }
-
-    void initRestricciones() {
-        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
-        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
     }
 
     void SoloNumerosEnteros2(KeyEvent event) {
@@ -213,12 +203,6 @@ public class CitaModificarController implements Initializable {
         }
     }
 
-    @FXML
-    void cerrar() {
-        oCitaVerController.lockedPantalla();
-        ((Stage) ap.getScene().getWindow()).close();
-    }
-
     boolean isComplete() {
         boolean aux = true;
         if (jtfminuto.getText().trim().length() == 0) {
@@ -236,6 +220,12 @@ public class CitaModificarController implements Initializable {
         }
 
         return aux;
+    }
+
+    @FXML
+    void cerrar() {
+        oCitaVerController.lockedPantalla();
+        ((Stage) ap.getScene().getWindow()).close();
     }
 
     public Object mostrarVentana(Class generico, String nameFXML) {
