@@ -8,6 +8,7 @@ import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.HoraAtencion;
 import Util.HttpMethods;
+import Util.UtilClass;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.net.URL;
@@ -46,12 +47,13 @@ public class CitaAgregarController implements Initializable {
     @FXML
     private Label lblAMPM;
 
-    CitaVerController citaControol;
+    CitaVerController oCitaVerController;
     HoraAtencion horaAtencion;
     Doctor oDoctor;
     LocalDate oFechaCita;
     TableView<HoraAtencion> table;
     HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass=new UtilClass();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -59,13 +61,13 @@ public class CitaAgregarController implements Initializable {
     }
 
     void initRestricciones() {
-        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
-        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
         this.table = table;
-        this.citaControol = odc;
+        this.oCitaVerController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
@@ -85,31 +87,9 @@ public class CitaAgregarController implements Initializable {
         if (isComplete()) {
             Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText());
             http.AddObject(Cita.class, ocita, "AddCita");
-            citaControol.actualizarListMesCita();
+            oCitaVerController.actualizarListMesCita();
             table.refresh();
             cerrar();
-        }
-    }
-
-    void SoloNumerosEnteros2(KeyEvent event) {
-        JFXTextField o = (JFXTextField) event.getSource();
-        char key = event.getCharacter().charAt(0);
-        if (!Character.isDigit(key)) {
-            event.consume();
-        }
-        if (o.getText().length() >= 2) {
-            event.consume();
-        }
-    }
-
-    void SoloNumerosEnteros9(KeyEvent event) {
-        JFXTextField o = (JFXTextField) event.getSource();
-        char key = event.getCharacter().charAt(0);
-        if (!Character.isDigit(key)) {
-            event.consume();
-        }
-        if (o.getText().length() >= 9) {
-            event.consume();
         }
     }
 
@@ -141,7 +121,7 @@ public class CitaAgregarController implements Initializable {
 
     @FXML
     void cerrar() {
-        citaControol.lockedPantalla();
+        oCitaVerController.lockedPantalla();
         ((Stage) ap.getScene().getWindow()).close();
     }
 

@@ -7,6 +7,7 @@ package controller;
 import Entidades.Cita;
 import Entidades.HoraAtencion;
 import Util.HttpMethods;
+import Util.UtilClass;
 import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -67,6 +68,7 @@ public class CitaModificarController implements Initializable {
     private double y = 0;
     List<HoraAtencion> listHora = new ArrayList<>();
     HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass=new UtilClass(x, y);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -75,8 +77,8 @@ public class CitaModificarController implements Initializable {
     }
 
     void initRestricciones() {
-        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
-        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros9(event));
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
@@ -181,27 +183,6 @@ public class CitaModificarController implements Initializable {
         jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
     }
 
-    void SoloNumerosEnteros2(KeyEvent event) {
-        JFXTextField o = (JFXTextField) event.getSource();
-        char key = event.getCharacter().charAt(0);
-        if (!Character.isDigit(key)) {
-            event.consume();
-        }
-        if (o.getText().length() >= 2) {
-            event.consume();
-        }
-    }
-
-    void SoloNumerosEnteros9(KeyEvent event) {
-        JFXTextField o = (JFXTextField) event.getSource();
-        char key = event.getCharacter().charAt(0);
-        if (!Character.isDigit(key)) {
-            event.consume();
-        }
-        if (o.getText().length() >= 9) {
-            event.consume();
-        }
-    }
 
     boolean isComplete() {
         boolean aux = true;
@@ -227,38 +208,4 @@ public class CitaModificarController implements Initializable {
         oCitaVerController.lockedPantalla();
         ((Stage) ap.getScene().getWindow()).close();
     }
-
-    public Object mostrarVentana(Class generico, String nameFXML) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
-        }
-        Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
-        Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initOwner(((Stage) ap.getScene().getWindow()));
-        stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.show();
-        return loader.getController();
-    }
-
 }

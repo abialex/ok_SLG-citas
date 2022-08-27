@@ -12,6 +12,7 @@ import Pdf.Citapdf;
 
 import Util.FileImagUtil;
 import Util.HttpMethods;
+import Util.UtilClass;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -127,6 +128,7 @@ public class CitaVerController implements Initializable, Runnable {
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
     Thread h1;
+    UtilClass oUtilClass= new UtilClass(x, y);
 
     @Override
     public void run() {
@@ -596,7 +598,7 @@ public class CitaVerController implements Initializable, Runnable {
                 void modificarCita(ActionEvent event, TableView<HoraAtencion> table) {
                     JFXButton buton = (JFXButton) event.getSource();
                     Cita oCita = (Cita) buton.getUserData();
-                    CitaModificarController oCitaModificarController = (CitaModificarController) mostrarVentana(CitaModificarController.class, "CitaModificar");
+                    CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class, "CitaModificar",ap);
                     oCitaModificarController.setController(odc, table);
                     oCitaModificarController.setCita(oCita);
                     lockedPantalla();
@@ -674,7 +676,7 @@ public class CitaVerController implements Initializable, Runnable {
                     Button buton = (Button) event.getSource();
                     HoraAtencion oHora = (HoraAtencion) buton.getUserData();
 
-                    CitaAgregarController oCitaAgregarController = (CitaAgregarController) mostrarVentana(CitaAgregarController.class, "CitaAgregar");
+                    CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar",ap);
                     oCitaAgregarController.setController(odc, table);
                     oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha);
                     lockedPantalla();
@@ -730,14 +732,14 @@ public class CitaVerController implements Initializable, Runnable {
 
     @FXML
     void mostrarImprimir() {
-        ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) mostrarVentana(CitaAgregarController.class, "ImprimirHorario");
+        ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) oUtilClass.mostrarVentana(CitaAgregarController.class, "ImprimirHorario",ap);
         oImprimirHorarioController.setController(odc);
         lockedPantalla();
     }
 
     @FXML
     void mostrarDoctor() {
-        DoctorVerController oRegistrarController = (DoctorVerController) mostrarVentana(DoctorVerController.class, "DoctorVer");
+        DoctorVerController oRegistrarController = (DoctorVerController) oUtilClass.mostrarVentana(DoctorVerController.class, "DoctorVer",ap);
         oRegistrarController.setController(odc);
         lockedPantalla();
     }
@@ -962,7 +964,7 @@ public class CitaVerController implements Initializable, Runnable {
         }
         return nombreDia;
     }
-    
+
        public Object mostrarVentana(Class generico, String nameFXML) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(generico.getResource(nameFXML + ".fxml"));

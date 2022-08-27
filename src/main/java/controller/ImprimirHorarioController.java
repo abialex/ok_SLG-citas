@@ -49,7 +49,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     private DatePicker dpFecha;
-    CitaVerController odc;
+    CitaVerController oCitaVerController;
     HttpMethods http = new HttpMethods();
 
     @Override
@@ -84,7 +84,7 @@ public class ImprimirHorarioController implements Initializable {
     }
 
     void setController(CitaVerController odc) {
-        this.odc = odc;
+        this.oCitaVerController = odc;
         this.dpFecha.setValue(LocalDate.now().plusDays(1));
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
@@ -140,7 +140,7 @@ public class ImprimirHorarioController implements Initializable {
     
     @FXML
     void cerrar() {
-        odc.lockedPantalla();
+        oCitaVerController.lockedPantalla();
         ((Stage) ap.getScene().getWindow()).close();
     }
 
