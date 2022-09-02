@@ -40,17 +40,18 @@ public class HttpMethods {
 
     Gson json = new Gson();
     HttpClient httpclient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    final String url = "http://137.184.76.88:5000/";//;
+    String url = "http://localhost:5000/";//;
     String address = "NADA";
     String nombreDispositivo = "NADA";
     final String DATA = "data";
     final String ADDRESS = "address";
     final String NOMBREDISPOSITIVO = "nombreDispositivo";
+    UtilClass oUtilClass=new UtilClass();
 
     public HttpMethods() {
         nombreDispositivo = getNombrePc();
         address = getMACAddress();
-        System.out.println(address);
+        url=oUtilClass.leerTXT("server.txt");
     }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {

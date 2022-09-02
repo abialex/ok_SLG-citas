@@ -5,6 +5,9 @@
 package Util;
 
 import com.jfoenix.controls.JFXTextField;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +34,7 @@ public class UtilClass {
         this.x = x;
         this.y = y;
     }
-    
+
     public UtilClass() {
     }
 
@@ -69,7 +72,7 @@ public class UtilClass {
         stage.show();
         return loader.getController();
     }
-    
+
     public void lockedPantalla(AnchorPane ap) {
         if (ap.isDisable()) {
             ap.setDisable(false);
@@ -77,8 +80,7 @@ public class UtilClass {
             ap.setDisable(true);
         }
     }
-    
-    
+
     public void SoloNumerosEnteros2(KeyEvent event) {
         JFXTextField o = (JFXTextField) event.getSource();
         char key = event.getCharacter().charAt(0);
@@ -89,7 +91,7 @@ public class UtilClass {
             event.consume();
         }
     }
-    
+
     public void SoloNumerosEnteros9(KeyEvent event) {
         JFXTextField o = (JFXTextField) event.getSource();
         char key = event.getCharacter().charAt(0);
@@ -101,4 +103,23 @@ public class UtilClass {
         }
     }
 
+    public String leerTXT(String direccion) {
+        String temp = "";
+        try {
+            BufferedReader bf;
+            bf = new BufferedReader(new FileReader(direccion));
+
+            String bfRead;
+            while ((bfRead = bf.readLine()) != null) {
+                temp = temp + bfRead;
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex.toString());
+        }
+        return temp;
+
+    }
 }
