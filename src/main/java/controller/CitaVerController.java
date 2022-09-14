@@ -560,8 +560,8 @@ public class CitaVerController implements Initializable, Runnable {
                         for (Cita cita : listCita) {
                             isOcupado = cita.getNombrepaciente() == null;
                             if (isOcupado) {
-                                Label ocupadoLabel = new Label("OCUPADO");
-                                ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));
+                                Label ocupadoLabel = new Label("OCUPADO - "+cita.getLugar().getNombrelugar());
+                                ocupadoLabel.setFont(new Font("Times New Roman Bold", 15));
                                 ocupadoLabel.setStyle("-fx-text-fill: red");
                                 //fp.setStyle("-fx-background-color: #b2caf7");
                                 fp.setAlignment(Pos.CENTER);
@@ -569,23 +569,24 @@ public class CitaVerController implements Initializable, Runnable {
                                 fp.getChildren().add(ocupadoLabel);
                                 break;
                             }
-                            JFXButton button = new JFXButton();
-                            Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
-                            tooltipCelular.setShowDelay(Duration.seconds(0.2));
-                            button.setTooltip(tooltipCelular);
-                            button.setUserData(cita);
-                            button.setPrefWidth(110);
-                            button.getStyleClass().add("button-forma2");
-                            /*button.setStyle("-fx-font-size: 10; "
-                                    + "-fx-background-color:#06007d;"
-                                    + " -fx-border-color:#000000; "
-                                    + "-fx-text-fill: white; "
-                                    + " -fx-cursor: hand;");*/
-                            button.setMaxHeight(9);
-                            button.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
-                            button.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
-                            FlowPane.setMargin(button, new Insets(1, 1, 1, 1));
-                            fp.getChildren().add(button);
+                            JFXButton buttonCita = new JFXButton();
+                            buttonCita.setUserData(cita);
+                            buttonCita.setPrefWidth(110);
+                            buttonCita.getStyleClass().add("button-forma2");
+                            buttonCita.setMaxHeight(9);
+                            buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
+                            buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
+                            if (cita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
+                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
+                                buttonCita.setDisable(true);
+
+                            } else {
+                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
+                                tooltipCelular.setShowDelay(Duration.seconds(0.2));
+                                buttonCita.setTooltip(tooltipCelular);
+                            }
+                            FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
+                            fp.getChildren().add(buttonCita);
                         }
                         fp.setMinHeight(tam);
                         setGraphic(fp);
@@ -641,6 +642,21 @@ public class CitaVerController implements Initializable, Runnable {
                                 listCita.add(citaRaiz);
                             }
                         }
+                        
+                        boolean isCitaEnOtroLugar=false;
+                        for (Cita horacita : listCita){
+                            if(horacita.getLugar().getIdlugar()!=oAddress.getLugar().getIdlugar()){
+                                isCitaEnOtroLugar=true;
+                                break;
+                            }
+                        }
+                        boolean isOcupadoEnOtroLugar=false;
+                        for (Cita horacitaocupada : listCitaOcupada){
+                            if(horacitaocupada.getLugar().getIdlugar()!=oAddress.getLugar().getIdlugar()){
+                                isOcupadoEnOtroLugar=true;
+                                break;
+                            }
+                        }
 
                         Button addIcon = new Button();
                         addIcon.setText("+");
@@ -648,7 +664,7 @@ public class CitaVerController implements Initializable, Runnable {
                         addIcon.getStyleClass().add("button-formacircle-green");
                         addIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarAgregar(event, getTableView()));
 
-                        addIcon.setVisible(listCitaOcupada.isEmpty() && listCita.size() < 4);
+                        addIcon.setVisible(listCitaOcupada.isEmpty() && listCita.size() < 4 && !isCitaEnOtroLugar);
 
                         Button editIcon2 = new Button();
                         editIcon2.setText("x");
@@ -656,7 +672,7 @@ public class CitaVerController implements Initializable, Runnable {
                         editIcon2.getStyleClass().add("button-formacircle-red");
                         editIcon2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> guardarEliminarBloqueo(event, addIcon));
 
-                        editIcon2.setVisible(listCita.isEmpty());
+                        editIcon2.setVisible(listCita.isEmpty() && !isOcupadoEnOtroLugar);
 
                         VBox managebtn = new VBox(addIcon, editIcon2);
                         managebtn.setStyle("-fx-alignment:center");
@@ -697,7 +713,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty");
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty",oAddress.getLugar());
                         http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();

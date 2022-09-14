@@ -66,12 +66,13 @@ public class Cita {
         this.lugar = lugar;
     }
 
-    public Cita(Doctor doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, String celular) {
+    public Cita(Doctor doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, String celular, Lugar lugar) {
         this.doctor = doctor;
         this.horaatencion = horaatencion;
         this.fechacita = fechacita;
         this.razon = razon;
         this.celular = celular;
+        this.lugar = lugar;
     }
 
     public int getIdcita() {
