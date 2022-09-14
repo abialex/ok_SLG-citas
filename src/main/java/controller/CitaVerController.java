@@ -560,8 +560,8 @@ public class CitaVerController implements Initializable, Runnable {
                         for (Cita cita : listCita) {
                             isOcupado = cita.getNombrepaciente() == null;
                             if (isOcupado) {
-                                Label ocupadoLabel = new Label("OCUPADO - "+cita.getLugar().getNombrelugar());
-                                ocupadoLabel.setFont(new Font("Times New Roman Bold", 15));
+                                Label ocupadoLabel = new Label("OCUPADO");
+                                ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));
                                 ocupadoLabel.setStyle("-fx-text-fill: red");
                                 //fp.setStyle("-fx-background-color: #b2caf7");
                                 fp.setAlignment(Pos.CENTER);
@@ -650,13 +650,7 @@ public class CitaVerController implements Initializable, Runnable {
                                 break;
                             }
                         }
-                        boolean isOcupadoEnOtroLugar=false;
-                        for (Cita horacitaocupada : listCitaOcupada){
-                            if(horacitaocupada.getLugar().getIdlugar()!=oAddress.getLugar().getIdlugar()){
-                                isOcupadoEnOtroLugar=true;
-                                break;
-                            }
-                        }
+
 
                         Button addIcon = new Button();
                         addIcon.setText("+");
@@ -672,7 +666,7 @@ public class CitaVerController implements Initializable, Runnable {
                         editIcon2.getStyleClass().add("button-formacircle-red");
                         editIcon2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> guardarEliminarBloqueo(event, addIcon));
 
-                        editIcon2.setVisible(listCita.isEmpty() && !isOcupadoEnOtroLugar);
+                        editIcon2.setVisible(listCita.isEmpty());
 
                         VBox managebtn = new VBox(addIcon, editIcon2);
                         managebtn.setStyle("-fx-alignment:center");
