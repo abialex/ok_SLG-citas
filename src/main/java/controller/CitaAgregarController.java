@@ -4,6 +4,7 @@
  */
 package controller;
 
+import Entidades.Address;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.HoraAtencion;
@@ -51,6 +52,7 @@ public class CitaAgregarController implements Initializable {
     HoraAtencion horaAtencion;
     Doctor oDoctor;
     LocalDate oFechaCita;
+    Address oAddress;
     TableView<HoraAtencion> table;
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass=new UtilClass();
@@ -71,10 +73,11 @@ public class CitaAgregarController implements Initializable {
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    void setPersona(HoraAtencion oHora, Doctor doc, LocalDate oFecha) {
+    void setPersona(HoraAtencion oHora, Doctor doc, LocalDate oFecha, Address oAddress) {
         this.horaAtencion = oHora;
         this.oDoctor = doc;
         this.oFechaCita = oFecha;
+        this.oAddress=oAddress;
         jtfDoctor.setText(doc.getNombredoctor());
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora.getHora());
@@ -85,7 +88,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText());
+            Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oAddress.getLugar());
             http.AddObject(Cita.class, ocita, "AddCita");
             oCitaVerController.actualizarListMesCita();
             table.refresh();

@@ -131,6 +131,7 @@ public class CitaVerController implements Initializable, Runnable {
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
     Address oAddress = new Address();
+
     @Override
     public void run() {
         Thread ct = Thread.currentThread();
@@ -680,7 +681,7 @@ public class CitaVerController implements Initializable, Runnable {
 
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
-                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha);
+                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oAddress);
                     lockedPantalla();
                 }
 

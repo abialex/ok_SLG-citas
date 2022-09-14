@@ -55,7 +55,7 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(Doctor doctor, String pacientenombr, HoraAtencion horaatencion, LocalDate fechacita, String razon, String minuto, String celular) {
+    public Cita(Doctor doctor, String pacientenombr, HoraAtencion horaatencion, LocalDate fechacita, String razon, String minuto, String celular,Lugar lugar) {
         this.doctor = doctor;
         this.nombrepaciente = pacientenombr;
         this.horaatencion = horaatencion;
@@ -63,6 +63,7 @@ public class Cita {
         this.razon = razon;
         this.minuto = minuto;
         this.celular = celular;
+        this.lugar = lugar;
     }
 
     public Cita(Doctor doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, String celular) {
