@@ -6,6 +6,7 @@ package controllerDoctor;
 
 import Entidades.Doctor;
 import Util.HttpMethods;
+import Util.UtilClass;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
@@ -33,6 +34,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,17 +73,15 @@ public class DoctorVerController implements Initializable {
     @FXML
     private TableColumn<Doctor, Doctor> columnEstado;
 
-    @FXML
-    private TableColumn<Doctor, Doctor> columnActivo;
-
     ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
     private double x = 0;
     private double y = 0;
-    DoctorVerController odc = this;
+    DoctorVerController oDoctorVerController = this;
     Doctor oDoctorEliminar;
     int indexEliminar;
-    CitaVerController oCitaVerController;
+    public CitaVerController oCitaVerController;
     HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass=new UtilClass(x, y);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,50 +104,17 @@ public class DoctorVerController implements Initializable {
         if (jtfNombres.getText().length() != 0) {
             Doctor odoctor = new Doctor();
             odoctor.setNombredoctor(jtfNombres.getText());
-            odoctor.setActivo(true);         
+            odoctor.setActivo(true);
             http.AddObject(Doctor.class, odoctor, "AddDoctor");
             updateListDoctor();
             this.oCitaVerController.UpdatecargarDoctor();
+            jtfNombres.setText("");
         }
     }
 
     void initTableView() {
         columnNombres.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
         columnEstado.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-        columnActivo.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-
-        columnActivo.setCellFactory(column -> {
-            TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
-                @Override
-                protected void updateItem(Doctor item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                        setText("");
-                    } else {
-                        JFXCheckBox checkbox = new JFXCheckBox();
-                        checkbox.setUserData(item);
-                        checkbox.setStyle("-fx-alignment: center; -fx-max-width:999; -fx-cursor: hand;");
-                        checkbox.addEventHandler(ActionEvent.ACTION, event -> changueActivo(event));
-                        checkbox.setSelected(item.isActivo());
-                        setGraphic(checkbox);
-                        setText(null);
-                    }
-                }
-
-                void changueActivo(ActionEvent event) {
-                    JFXCheckBox check = (JFXCheckBox) event.getSource();
-                    Doctor odoc = (Doctor) check.getUserData();
-                    odoc.setActivo(check.isSelected());
-
-                    http.UpdateObject(Doctor.class, odoc, "UpdateDoctor");
-                    oCitaVerController.UpdatecargarDoctor();
-                }
-
-            };
-
-            return cell;
-        });
 
         columnNombres.setCellFactory(column -> {
             TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
@@ -158,23 +125,23 @@ public class DoctorVerController implements Initializable {
                         setGraphic(null);
                         setText("");
                     } else {
-                        JFXTextField field = new JFXTextField();
-                        field.setUserData(item);
-                        field.setText(item.getNombredoctor());
-                        field.setEditable(false);
-                        field.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
-                        field.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
-                        field.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                        Label olabel = new Label();
+                        olabel.setStyle("-fx-text-fill: white");
+                        olabel.setUserData(item);
+                        olabel.setText(item.getNombredoctor());
+                        //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
+                        //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
+                        olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
                             @Override
                             public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
                                 if (newPropertyValue) {
-                                    field.setStyle("-fx-border-color:BLACK;");
+                                    olabel.setStyle("-fx-border-color:WHITE;");
                                 } else {
-                                    field.setStyle("");
+                                    olabel.setStyle("");
                                 }
                             }
                         });
-                        setGraphic(field);
+                        setGraphic(olabel);
                         setText(null);
                     }
                 }
@@ -223,12 +190,18 @@ public class DoctorVerController implements Initializable {
 
                         ImageView editIcon = newImage("delete-1.png", tamHightImag, tamWidthImag, item);
                         editIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarEliminar(event));
-                        editIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagModificarMoved(event));
-                        editIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagModificarFuera(event));
+                        editIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagEliminarMoved(event));
+                        editIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagEliminarFuera(event));
 
-                        HBox managebtn = new HBox(editIcon);
+                        ImageView configIcon = newImage("modify-1.png", tamHightImag, tamWidthImag, item);
+                        configIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarModificar(event));
+                        configIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagModificarMoved(event));
+                        configIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagModificarFuera(event));
+
+                        HBox managebtn = new HBox(configIcon, editIcon);
                         managebtn.setStyle("-fx-alignment:center");
                         HBox.setMargin(editIcon, new Insets(0, 2.75, 0, 2.75));
+                        HBox.setMargin(configIcon, new Insets(0, 2.75, 0, 2.75));
                         setGraphic(managebtn);
                         setText(null);
                     }
@@ -260,15 +233,35 @@ public class DoctorVerController implements Initializable {
                     }
 
                 }
+                
+                void mostrarModificar(MouseEvent event){
+                    ImageView imag = (ImageView) event.getSource();
+                    Doctor odoctor = (Doctor) imag.getUserData();
+                    DoctorModificarController oDoctorModificarController = (DoctorModificarController) oUtilClass.mostrarVentana(DoctorModificarController.class, "DoctorModificar", ap);
+                    oDoctorModificarController.setController(oDoctorVerController,odoctor);
+                    lockedPantalla();
+                    
+                    
+                }
 
-                private void imagModificarMoved(MouseEvent event) {
+                private void imagEliminarMoved(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/delete-2.png").toExternalForm()));
                 }
 
-                private void imagModificarFuera(MouseEvent event) {
+                private void imagEliminarFuera(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/delete-1.png").toExternalForm()));
+                }
+                
+                private void imagModificarMoved(MouseEvent event) {
+                    ImageView imag = (ImageView) event.getSource();
+                    imag.setImage(new Image(getClass().getResource("/imagenes/modify-2.png").toExternalForm()));
+                }
+
+                private void imagModificarFuera(MouseEvent event) {
+                    ImageView imag = (ImageView) event.getSource();
+                    imag.setImage(new Image(getClass().getResource("/imagenes/modify-1.png").toExternalForm()));
                 }
 
             };
