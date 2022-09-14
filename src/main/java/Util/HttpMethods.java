@@ -4,6 +4,7 @@
  */
 package Util;
 
+import Entidades.Address;
 import EntidadesSettings.SettingsDoctor;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -46,12 +47,12 @@ public class HttpMethods {
     final String DATA = "data";
     final String ADDRESS = "address";
     final String NOMBREDISPOSITIVO = "nombreDispositivo";
-    UtilClass oUtilClass=new UtilClass();
+    UtilClass oUtilClass = new UtilClass();
 
     public HttpMethods() {
         nombreDispositivo = getNombrePc();
         address = getMACAddress();
-        url=oUtilClass.leerTXT("server.txt");
+        url = oUtilClass.leerTXT("server.txt");
     }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
@@ -126,6 +127,23 @@ public class HttpMethods {
         }
 
         return listGenericos2;
+    }
+
+    public Address getAddress() {
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty(ADDRESS, address + "");
+        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
+        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
+                .uri(URI.create(url + "GetAddress")).build();
+        Address oAddress = null;
+        try {
+
+            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+            oAddress = json.fromJson(response.body(), Address.class);
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return oAddress;
     }
 
     public <T> String AddObject(Class<T> generico, Object objeto, String metodo) {

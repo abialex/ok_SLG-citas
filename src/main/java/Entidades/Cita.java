@@ -33,6 +33,10 @@ public class Cita {
     @ManyToOne
     private HoraAtencion horaatencion;
 
+    @ManyToOne
+    @JoinColumn(insertable = true, updatable = true, name = "idlugar", nullable = true)
+    private Lugar lugar;
+
     @Column(name = "nombrepaciente", nullable = true)
     private String nombrepaciente;
 
@@ -44,8 +48,8 @@ public class Cita {
 
     @Column(name = "razon", nullable = true)
     private String razon;
-    
-     @Column(name = "celular", nullable = true)
+
+    @Column(name = "celular", nullable = true)
     private String celular;
 
     public Cita() {
@@ -132,5 +136,15 @@ public class Cita {
     public void setCelular(String celular) {
         this.celular = celular;
     }
+
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
+    }
     
+    
+
 }

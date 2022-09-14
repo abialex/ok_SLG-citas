@@ -4,6 +4,7 @@
  */
 package controller;
 
+import Entidades.Address;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.HoraAtencion;
@@ -128,8 +129,8 @@ public class CitaVerController implements Initializable, Runnable {
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
     Thread h1;
-    UtilClass oUtilClass= new UtilClass(x, y);
-
+    UtilClass oUtilClass = new UtilClass(x, y);
+    Address oAddress = new Address();
     @Override
     public void run() {
         Thread ct = Thread.currentThread();
@@ -162,7 +163,8 @@ public class CitaVerController implements Initializable, Runnable {
         cargarAnio();
         actualizarListMesCita();
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
+        oAddress = http.getAddress();
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
         initTable();
         h1 = new Thread(this);
         h1.start();
@@ -190,7 +192,7 @@ public class CitaVerController implements Initializable, Runnable {
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
         actualizarListMesCita();
         refreshTable();
 
@@ -312,7 +314,7 @@ public class CitaVerController implements Initializable, Runnable {
         //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
     }
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
@@ -598,7 +600,7 @@ public class CitaVerController implements Initializable, Runnable {
                 void modificarCita(ActionEvent event, TableView<HoraAtencion> table) {
                     JFXButton buton = (JFXButton) event.getSource();
                     Cita oCita = (Cita) buton.getUserData();
-                    CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class, "CitaModificar",ap);
+                    CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class, "CitaModificar", ap);
                     oCitaModificarController.setController(odc, table);
                     oCitaModificarController.setCita(oCita);
                     lockedPantalla();
@@ -676,7 +678,7 @@ public class CitaVerController implements Initializable, Runnable {
                     Button buton = (Button) event.getSource();
                     HoraAtencion oHora = (HoraAtencion) buton.getUserData();
 
-                    CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar",ap);
+                    CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
                     oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha);
                     lockedPantalla();
@@ -732,14 +734,14 @@ public class CitaVerController implements Initializable, Runnable {
 
     @FXML
     void mostrarImprimir() {
-        ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) oUtilClass.mostrarVentana(CitaAgregarController.class, "ImprimirHorario",ap);
+        ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) oUtilClass.mostrarVentana(CitaAgregarController.class, "ImprimirHorario", ap);
         oImprimirHorarioController.setController(odc);
         lockedPantalla();
     }
 
     @FXML
     void mostrarDoctor() {
-        DoctorVerController oRegistrarController = (DoctorVerController) oUtilClass.mostrarVentana(DoctorVerController.class, "DoctorVer",ap);
+        DoctorVerController oRegistrarController = (DoctorVerController) oUtilClass.mostrarVentana(DoctorVerController.class, "DoctorVer", ap);
         oRegistrarController.setController(odc);
         lockedPantalla();
     }
@@ -810,7 +812,7 @@ public class CitaVerController implements Initializable, Runnable {
         ImageView imag = (ImageView) event.getSource();
         imag.setImage(new Image(getClass().getResource("/imagenes/doctor-2.png").toExternalForm()));
     }
-    
+
     public int numeroDeDiasMes(String mes) {
         int numeroDias = -1;
         switch (mes) {
@@ -965,7 +967,7 @@ public class CitaVerController implements Initializable, Runnable {
         return nombreDia;
     }
 
-       public Object mostrarVentana(Class generico, String nameFXML) {
+    public Object mostrarVentana(Class generico, String nameFXML) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(generico.getResource(nameFXML + ".fxml"));
         Parent root = null;
@@ -998,7 +1000,6 @@ public class CitaVerController implements Initializable, Runnable {
         stage.show();
         return loader.getController();
     }
-
 
     void stop() {
         h1.stop();
