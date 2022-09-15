@@ -71,7 +71,7 @@ public class ImprimirHorarioController implements Initializable {
         jcbDoctor.getSelectionModel().select(doctorNinguno);
     }
 
-    void setController(CitaVerController odc) {
+    public void setController(Object odc) {
         this.oObjetoController = odc;
         this.dpFecha.setValue(LocalDate.now().plusDays(1));
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());

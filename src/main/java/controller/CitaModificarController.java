@@ -80,7 +80,7 @@ public class CitaModificarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    void setController(Object odc, TableView<HoraAtencion> table) {
+    public void setController(Object odc, TableView<HoraAtencion> table) {
         this.table = table;
         this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
@@ -164,7 +164,7 @@ public class CitaModificarController implements Initializable {
         jcbHora.setItems(listhora);
     }
 
-    void setCita(Cita oCita) {
+    public void setCita(Cita oCita) {
         this.oCita = oCita;
         jtfDoctor.setText(oCita.getDoctor().getNombredoctor());
         jtfFecha.setText(oCita.getFechacita() + "");

@@ -67,13 +67,13 @@ public class CitaAgregarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    void setController(CitaVerController odc, TableView<HoraAtencion> table) {
+    public void setController(Object odc, TableView<HoraAtencion> table) {
         this.table = table;
         this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    void setPersona(HoraAtencion oHora, Doctor doc, LocalDate oFecha, Address oAddress) {
+    public void setPersona(HoraAtencion oHora, Doctor doc, LocalDate oFecha, Address oAddress) {
         this.horaAtencion = oHora;
         this.oDoctor = doc;
         this.oFechaCita = oFecha;

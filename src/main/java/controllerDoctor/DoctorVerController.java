@@ -322,7 +322,7 @@ public class DoctorVerController implements Initializable {
         }
     }
 
-    public void setController(CitaVerController odc) {
+    public void setController(Object odc) {
         this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
