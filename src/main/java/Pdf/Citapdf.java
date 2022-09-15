@@ -4,6 +4,7 @@
  */
 package Pdf;
 
+import Entidades.Address;
 import Entidades.Cita;
 import Entidades.Doctor;
 
@@ -467,7 +468,7 @@ public class Citapdf {
         Collections.sort(listsettings);
         int tamanio = listsettings.size();
         for (int i = 0; i < 5 - tamanio; i++) {
-            listsettings.add(new SettingsDoctor(new Doctor("NINGUNO"), "Z"));
+            listsettings.add(new SettingsDoctor(new Doctor("NINGUNO"), "Z",new Address()));
         }
         for (SettingsDoctor settingsDoctor : listsettings) {
             tableSemana.addCell(new Cell().add(new Paragraph(settingsDoctor.getDoctor().getNombredoctor()).setFont(bold).addStyle(styleTextCenter)));

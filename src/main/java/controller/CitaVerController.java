@@ -150,6 +150,7 @@ public class CitaVerController implements Initializable, Runnable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
+        oAddress = http.getAddress();
         listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
         listDoctorG = http.getList(Doctor.class, "DoctorAll");
         cargarDoctor();
@@ -164,7 +165,7 @@ public class CitaVerController implements Initializable, Runnable {
         cargarAnio();
         actualizarListMesCita();
         changueMes();
-        oAddress = http.getAddress();
+
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
         initTable();
         h1 = new Thread(this);
@@ -230,25 +231,25 @@ public class CitaVerController implements Initializable, Runnable {
         jcbDoctor3.getSelectionModel().select(doctorNinguno);
         jcbDoctor4.getSelectionModel().select(doctorNinguno);
         for (SettingsDoctor settingsDoctor : listdc) {
-            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
                 for (Doctor doctor : listDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor1.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
                 for (Doctor doctor : listDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor2.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
                 for (Doctor doctor : listDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor3.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag()) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
                 for (Doctor doctor : listDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor4.getSelectionModel().select(doctor);
@@ -337,7 +338,7 @@ public class CitaVerController implements Initializable, Runnable {
                 }
             }
             if (isNuevo) {
-                SettingsDoctor sd = new SettingsDoctor(doctor, jcb.getId());
+                SettingsDoctor sd = new SettingsDoctor(doctor, jcb.getId(), oAddress);
                 http.AddObject(SettingsDoctor.class, sd, "AddSettingsDoctor");
             }
             listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
@@ -642,15 +643,14 @@ public class CitaVerController implements Initializable, Runnable {
                                 listCita.add(citaRaiz);
                             }
                         }
-                        
-                        boolean isCitaEnOtroLugar=false;
-                        for (Cita horacita : listCita){
-                            if(horacita.getLugar().getIdlugar()!=oAddress.getLugar().getIdlugar()){
-                                isCitaEnOtroLugar=true;
+
+                        boolean isCitaEnOtroLugar = false;
+                        for (Cita horacita : listCita) {
+                            if (horacita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
+                                isCitaEnOtroLugar = true;
                                 break;
                             }
                         }
-
 
                         Button addIcon = new Button();
                         addIcon.setText("+");
@@ -707,7 +707,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty",oAddress.getLugar());
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty", oAddress.getLugar());
                         http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();

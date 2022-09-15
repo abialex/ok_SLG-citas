@@ -4,6 +4,7 @@
  */
 package EntidadesSettings;
 
+import Entidades.Address;
 import Entidades.Doctor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,10 @@ public class SettingsDoctor implements Comparable<SettingsDoctor> {
     @JoinColumn(insertable = true, updatable = true, name = "iddoctor", nullable = false)
     @ManyToOne
     private Doctor doctor;
+    
+    @JoinColumn(insertable = true, updatable = true, name = "idaddress", nullable = false)
+    @ManyToOne
+    private Address address;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -34,9 +39,10 @@ public class SettingsDoctor implements Comparable<SettingsDoctor> {
     public SettingsDoctor() {
     }
 
-    public SettingsDoctor(Doctor doctor, String name) {
+    public SettingsDoctor(Doctor doctor, String name, Address address) {
         this.doctor = doctor;
         this.name = name;
+        this.address = address;
     }
 
     public int getId() {
@@ -62,6 +68,16 @@ public class SettingsDoctor implements Comparable<SettingsDoctor> {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+    
+    
 
     @Override
     public int compareTo(SettingsDoctor setdoc) {
