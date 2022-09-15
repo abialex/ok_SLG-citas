@@ -13,6 +13,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,15 +61,13 @@ public class CitaModificarController implements Initializable {
     @FXML
     private Label lblAMPM;
 
-    CitaVerController oCitaVerController;
+    Object oObjetoController;
     Cita oCita;
     TableView<HoraAtencion> table;
     Alert alert = new Alert(Alert.AlertType.WARNING);
-    private double x = 0;
-    private double y = 0;
     List<HoraAtencion> listHora = new ArrayList<>();
     HttpMethods http = new HttpMethods();
-    UtilClass oUtilClass=new UtilClass(x, y);
+    UtilClass oUtilClass = new UtilClass();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,9 +80,9 @@ public class CitaModificarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    void setController(CitaVerController odc, TableView<HoraAtencion> table) {
+    void setController(Object odc, TableView<HoraAtencion> table) {
         this.table = table;
-        this.oCitaVerController = odc;
+        this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
@@ -115,7 +114,7 @@ public class CitaModificarController implements Initializable {
                     oCita.setRazon(jtfrazon.getText());
                     oCita.setCelular(jtftelefono.getText());
                     http.UpdateObject(Cita.class, oCita, "UpdateCita");
-                    oCitaVerController.actualizarListMesCita();
+                    oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
                     table.refresh();
                     cerrar();
                 } else {
@@ -142,7 +141,7 @@ public class CitaModificarController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             http.DeleteObject(Cita.class, "DeleteCita", oCita.getIdcita() + "");
-            oCitaVerController.actualizarListMesCita();
+            oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
             cerrar();
         }
@@ -183,7 +182,6 @@ public class CitaModificarController implements Initializable {
         jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
     }
 
-
     boolean isComplete() {
         boolean aux = true;
         if (jtfminuto.getText().trim().length() == 0) {
@@ -205,7 +203,7 @@ public class CitaModificarController implements Initializable {
 
     @FXML
     void cerrar() {
-        oCitaVerController.lockedPantalla();
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
     }
 }

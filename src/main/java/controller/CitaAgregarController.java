@@ -48,7 +48,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     private Label lblAMPM;
 
-    CitaVerController oCitaVerController;
+    Object oObjetoController;
     HoraAtencion horaAtencion;
     Doctor oDoctor;
     LocalDate oFechaCita;
@@ -69,7 +69,7 @@ public class CitaAgregarController implements Initializable {
 
     void setController(CitaVerController odc, TableView<HoraAtencion> table) {
         this.table = table;
-        this.oCitaVerController = odc;
+        this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
@@ -90,7 +90,7 @@ public class CitaAgregarController implements Initializable {
         if (isComplete()) {
             Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oAddress.getLugar());
             http.AddObject(Cita.class, ocita, "AddCita");
-            oCitaVerController.actualizarListMesCita();
+            oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
             cerrar();
         }
@@ -124,7 +124,7 @@ public class CitaAgregarController implements Initializable {
 
     @FXML
     void cerrar() {
-        oCitaVerController.lockedPantalla();
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
     }
 

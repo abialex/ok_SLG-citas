@@ -42,7 +42,8 @@ public class DoctorModificarController implements Initializable {
     void modificar() {
         oDoctor.setNombredoctor(jtfNombreDoctor.getText());
         http.UpdateObject(Doctor.class, oDoctor, "UpdateDoctor");
-        oDoctorVerController.oCitaVerController.UpdatecargarDoctor();
+        oDoctorVerController.UpdatecargarDoctor();
+        oDoctorVerController.updateListDoctor();
         cerrar();
     }
 

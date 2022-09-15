@@ -79,9 +79,9 @@ public class DoctorVerController implements Initializable {
     DoctorVerController oDoctorVerController = this;
     Doctor oDoctorEliminar;
     int indexEliminar;
-    public CitaVerController oCitaVerController;
+    Object oObjetoController;
     HttpMethods http = new HttpMethods();
-    UtilClass oUtilClass=new UtilClass(x, y);
+    UtilClass oUtilClass = new UtilClass(x, y);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,7 +107,7 @@ public class DoctorVerController implements Initializable {
             odoctor.setActivo(true);
             http.AddObject(Doctor.class, odoctor, "AddDoctor");
             updateListDoctor();
-            this.oCitaVerController.UpdatecargarDoctor();
+            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
             jtfNombres.setText("");
         }
     }
@@ -162,7 +162,7 @@ public class DoctorVerController implements Initializable {
                             doc.setNombredoctor(check.getText());
                             http.UpdateObject(Doctor.class, doc, "UpdateDoctor");
                             updateListDoctor();
-                            oCitaVerController.UpdatecargarDoctor();
+                            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
                         }
                     }
                     if (event.getCode() == (KeyCode.ESCAPE)) {
@@ -233,15 +233,14 @@ public class DoctorVerController implements Initializable {
                     }
 
                 }
-                
-                void mostrarModificar(MouseEvent event){
+
+                void mostrarModificar(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     Doctor odoctor = (Doctor) imag.getUserData();
                     DoctorModificarController oDoctorModificarController = (DoctorModificarController) oUtilClass.mostrarVentana(DoctorModificarController.class, "DoctorModificar", ap);
-                    oDoctorModificarController.setController(oDoctorVerController,odoctor);
+                    oDoctorModificarController.setController(oDoctorVerController, odoctor);
                     lockedPantalla();
-                    
-                    
+
                 }
 
                 private void imagEliminarMoved(MouseEvent event) {
@@ -253,7 +252,7 @@ public class DoctorVerController implements Initializable {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/delete-1.png").toExternalForm()));
                 }
-                
+
                 private void imagModificarMoved(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/modify-2.png").toExternalForm()));
@@ -311,6 +310,10 @@ public class DoctorVerController implements Initializable {
         return loader.getController();
     }
 
+    public void UpdatecargarDoctor() {
+        oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
+    }
+
     public void lockedPantalla() {
         if (ap.isDisable()) {
             ap.setDisable(false);
@@ -320,13 +323,13 @@ public class DoctorVerController implements Initializable {
     }
 
     public void setController(CitaVerController odc) {
-        this.oCitaVerController = odc;
+        this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
     @FXML
     void cerrar() {
-        oCitaVerController.lockedPantalla();
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
     }
 

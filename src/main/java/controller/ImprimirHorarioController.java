@@ -7,6 +7,7 @@ package controller;
 import Entidades.Doctor;
 import Pdf.Citapdf;
 import Util.HttpMethods;
+import Util.UtilClass;
 import com.jfoenix.controls.JFXComboBox;
 import controller.App;
 import java.awt.Desktop;
@@ -46,8 +47,9 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     private DatePicker dpFecha;
-    CitaVerController oCitaVerController;
+    Object oObjetoController;
     HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass = new UtilClass();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,7 +72,7 @@ public class ImprimirHorarioController implements Initializable {
     }
 
     void setController(CitaVerController odc) {
-        this.oCitaVerController = odc;
+        this.oObjetoController = odc;
         this.dpFecha.setValue(LocalDate.now().plusDays(1));
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
@@ -94,7 +96,7 @@ public class ImprimirHorarioController implements Initializable {
             String url = "";
             if (LocalDate.now().getDayOfWeek().getValue() == 6) {
                 lc = lc.plusDays(2);
-               abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "PASADO MAÑANA"));
+                abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "PASADO MAÑANA"));
             } else {
                 lc = lc.plusDays(1);
                 abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "MAÑANA"));
@@ -117,7 +119,8 @@ public class ImprimirHorarioController implements Initializable {
         }
 
     }
-     @FXML
+
+    @FXML
     void imprimirProximaSemana() {
         if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombredoctor().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
@@ -155,7 +158,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     void cerrar() {
-        oCitaVerController.lockedPantalla();
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
     }
 
