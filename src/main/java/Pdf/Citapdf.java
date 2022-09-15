@@ -165,11 +165,17 @@ public class Citapdf {
             for (int i = 0; i < 6; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.8f});
                 boolean aux = true;
+                boolean UnaVez = true;
                 LocalDate fechaCom = fechaInicio.plusDays(i);
                 for (Cita cita : listCita) {
                     if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
+                            if (UnaVez) {
+                                TableHoraDia.addCell(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo));
+                                UnaVez = false;
+
+                            }
                             String datos = cita.getNombrepaciente();
                             if (datos.length() > 11) {
                                 datos = datos.substring(0, 11);
@@ -307,11 +313,17 @@ public class Citapdf {
             for (int i = 0; i < 1; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 1.115f, volumen * 1.115f, volumen * 1.115f, volumen * 1.115f});
                 boolean aux = true;
+                boolean UnaVez = true;
                 LocalDate fechaCom = fecha.plusDays(i);
+
                 for (Cita cita : listCita) {
                     if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
+                            if (UnaVez) {
+                                TableHoraDia.addCell(new Cell(1, 4).add(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo)).addStyle(styleCell));
+                                UnaVez = false;
+                            }
                             String datos = cita.getNombrepaciente();
                             if (datos.length() > 15) {
                                 datos = datos.substring(0, 15);
@@ -352,15 +364,15 @@ public class Citapdf {
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
-        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);        
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         List<SettingsDoctor> listSettingsAll = http.getList(SettingsDoctor.class, "SettingsDoctorAll");//configurar para solo 5 
         List<SettingsDoctor> listsettings = new ArrayList<>();
         for (SettingsDoctor settingsDoctor : listSettingsAll) {
-            if(settingsDoctor.getName().contains("jcbDoctor")){
+            if (settingsDoctor.getName().contains("jcbDoctor")) {
                 listsettings.add(settingsDoctor);
             }
         }
-        
+
         int volumen = 115;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_doctores_" + fecha + ".pdf";
@@ -466,16 +478,21 @@ public class Citapdf {
             for (SettingsDoctor settingsDoctor : listsettings) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
                 boolean aux = true;
+                boolean UnaVez = true;
                 for (Cita cita : listCita) {
-                    if (cita.getDoctor().getIddoctor()==settingsDoctor.getDoctor().getIddoctor() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
+                    if (cita.getDoctor().getIddoctor() == settingsDoctor.getDoctor().getIddoctor() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
+                            if (UnaVez) {
+                                TableHoraDia.addCell(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo));
+                                UnaVez = false;
+                            }
                             String datos = cita.getNombrepaciente();
-                            if (datos.length() > 15) {
-                                datos = datos.substring(0, 15);
+                            if (datos.length() > 13) {
+                                datos = datos.substring(0, 13);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));
