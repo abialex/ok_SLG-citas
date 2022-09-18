@@ -1,6 +1,10 @@
 package controller;
 
+import Entidades.Address;
+import Perspectiva.CitaVerObservadorController;
+import Util.HttpMethods;
 import Util.JPAUtil;
+import Util.UtilClass;
 import controllerVistaEtc.CargandoVistaController;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import javax.persistence.EntityManager;
@@ -32,9 +37,11 @@ public class App extends Application {
     private static Scene scene;
     private double x = 0;
     private double y = 0;
-    CitaVerController oCitaVerController;
     CargandoVistaController oCargandoVistaController;
     Stage stage;
+    UtilClass oUtilClass = new UtilClass(x, y);
+    HttpMethods http = new HttpMethods();
+    Object oControllerVista;
 
     public class Proceso extends Thread {
 
@@ -47,81 +54,40 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        this.stage = stage;
+    public void start(Stage st) throws IOException {
+        this.stage = st;
         oCargandoVistaController = (CargandoVistaController) mostrarVentana(CargandoVistaController.class, "CargandoVista");
         CrearArchivos();
         new Proceso().start();
     }
 
-    @Override
-    public void stop() {
-        oCitaVerController.stop();
-    }
-
     void procesoMostrar() {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(App.class.getResource("CitaVer.fxml"));
-        Parent root = null;
-        try {
-            root = fxmlLoader.load();
-        } catch (IOException ex) {
-            File file = new File("error.txt");
-            String content = ex.toString();
-            try {
-                if (!file.exists()) {
+        Address oaddress = http.getAddress();
+        if (oaddress.getRol().getRolname().equals("ADMINISTRADOR")) {
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
 
-                    file.createNewFile();
+        } else if (oaddress.getRol().getRolname().equals("ASISTENTA")) {
+            if (oaddress.getLugar().getNombrelugar().equals("HUANTA")) {
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", stage);
 
-                }
-                FileWriter fw = new FileWriter(file);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(content);
-                bw.close();
-            } catch (IOException ex1) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            } else if (oaddress.getLugar().getNombrelugar().equals("HUAMANGA")) {
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", stage);
+
+            } /*else if (oaddress.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
+                //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
+            }*/
+
+        } else if (oaddress.getRol().getRolname().equals("OBSERVADOR")) {
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+
         }
-        scene = new Scene(root);
-        scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add(getClass().getResource("/css/bootstrap3.css").toExternalForm());
-        oCitaVerController = (CitaVerController) fxmlLoader.getController(); //esto depende de (1)
-        //oCitaVerController.setStagePrincipall(stage);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setOnCloseRequest(event -> {
-        });
-        stage.show();
+
         oCargandoVistaController.cerrar();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
-    public static void main(String[] args) {
-        launch();
+    @Override
+    public void stop() {
+        oUtilClass.ejecutarMetodo(oControllerVista, "stop");
     }
 
     static void CrearArchivos() {
@@ -147,11 +113,14 @@ public class App extends Application {
         Scene scene = new Scene(root);//instancia el controlador (!)
         Stage stage = new Stage();//creando la base vací
         stage.initStyle(StageStyle.UNDECORATED);
-        
+
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
         stage.setScene(scene);
         stage.show();
         return loader.getController();
     }
 
+    public static void main(String[] args) {
+        launch();
+    }
 }

@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -56,6 +57,41 @@ public class UtilClass {
         scene.setFill(Color.TRANSPARENT);
 
         stage.initOwner(((Stage) ap.getScene().getWindow()));
+        stage.setScene(scene);
+        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                x = event.getX();
+                y = event.getY();
+            }
+        });
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.setX(event.getScreenX() - x);
+                stage.setY(event.getScreenY() - y);
+            }
+        });
+        stage.show();
+        return loader.getController();
+    }
+
+    public Object mostrarVentana(Class generico, String nameFXML, Stage st) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
+        }
+        Scene scene = new Scene(root);//instancia el controlador (!)
+        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
+        Stage stage = new Stage();//creando la base vací
+        stage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+        stage.initOwner(st);
+        stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
         stage.setScene(scene);
         root.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -124,8 +160,8 @@ public class UtilClass {
         return temp;
 
     }
-    
-        public void ejecutarMetodo(Object obj, String metodo) {
+
+    public void ejecutarMetodo(Object obj, String metodo) {
         try {
             Class[] parametro = null;
             Object[] parametro2 = null;

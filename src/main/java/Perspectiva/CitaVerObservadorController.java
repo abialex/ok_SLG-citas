@@ -2,37 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package controller;
+package Perspectiva;
 
 import Entidades.Address;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.HoraAtencion;
 import EntidadesSettings.SettingsDoctor;
-import Pdf.Citapdf;
-
-import Util.FileImagUtil;
 import Util.HttpMethods;
 import Util.UtilClass;
-import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import controller.App;
+import controller.CitaAgregarController;
+import controller.CitaModificarController;
+import controller.ImprimirHorarioController;
 import controllerDoctor.DoctorVerController;
-import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
-import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -40,8 +29,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,7 +37,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -66,14 +52,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
@@ -82,7 +65,7 @@ import javafx.util.Duration;
  *
  * @author alexis
  */
-public class CitaVerController implements Initializable, Runnable {
+public class CitaVerObservadorController  implements Initializable, Runnable {
 
     @FXML
     private AnchorPane ap;
@@ -113,7 +96,7 @@ public class CitaVerController implements Initializable, Runnable {
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
-    CitaVerController odc = this;
+    CitaVerObservadorController odc = this;
     private double x = 0;
     private double y = 0;
     JFXButton btn;//usado para desmarcar n
@@ -447,7 +430,7 @@ public class CitaVerController implements Initializable, Runnable {
         columnCitas1.setCellFactory(getCellCitas(jcbDoctor1));
         columnCitas1.setGraphic(CitasLabel);
         columnCitas1.setText("");
-        columnEstado1.setCellFactory(getCellEstado(jcbDoctor1));
+//        columnEstado1.setCellFactory(getCellEstado(jcbDoctor1));
     }
 
     void initTableView2() {
@@ -464,7 +447,7 @@ public class CitaVerController implements Initializable, Runnable {
         columnCitas2.setCellFactory(getCellCitas(jcbDoctor2));
         columnCitas2.setGraphic(CitasLabel);
         columnCitas2.setText("");
-        columnEstado2.setCellFactory(getCellEstado(jcbDoctor2));
+//        columnEstado2.setCellFactory(getCellEstado(jcbDoctor2));
     }
 
     void initTableView3() {
@@ -481,7 +464,7 @@ public class CitaVerController implements Initializable, Runnable {
         columnCitas3.setCellFactory(getCellCitas(jcbDoctor3));
         columnCitas3.setGraphic(CitasLabel);
         columnCitas3.setText("");
-        columnEstado3.setCellFactory(getCellEstado(jcbDoctor3));
+//        columnEstado3.setCellFactory(getCellEstado(jcbDoctor3));
     }
 
     void initTableView4() {
@@ -498,7 +481,7 @@ public class CitaVerController implements Initializable, Runnable {
         columnCitas4.setCellFactory(getCellCitas(jcbDoctor4));
         columnCitas4.setGraphic(CitasLabel);
         columnCitas4.setText("");
-        columnEstado4.setCellFactory(getCellEstado(jcbDoctor4));
+//        columnEstado4.setCellFactory(getCellEstado(jcbDoctor4));
     }
 
     Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellHoraAtencion() {
@@ -613,7 +596,7 @@ public class CitaVerController implements Initializable, Runnable {
         };
         return cellHoraAtencion;
     }
-
+/*
     Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Doctor> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellFoctory = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
@@ -742,7 +725,7 @@ public class CitaVerController implements Initializable, Runnable {
         };
         return cellFoctory;
     }
-
+*/
     @FXML
     void mostrarImprimir() {
         ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) oUtilClass.mostrarVentana(CitaAgregarController.class, "ImprimirHorario", ap);
