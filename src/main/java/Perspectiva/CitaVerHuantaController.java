@@ -65,7 +65,7 @@ import javafx.util.Duration;
  *
  * @author alexis
  */
-public class CitaVerHuantaController  implements Initializable, Runnable {
+public class CitaVerHuantaController implements Initializable, Runnable {
 
     @FXML
     private AnchorPane ap;
@@ -559,15 +559,14 @@ public class CitaVerHuantaController  implements Initializable, Runnable {
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
                             buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
-                            buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                             if (cita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
-                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
-                                buttonCita.setDisable(true);
+                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());                         
 
                             } else {
                                 Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
                                 tooltipCelular.setShowDelay(Duration.seconds(0.2));
                                 buttonCita.setTooltip(tooltipCelular);
+                                buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                             }
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);

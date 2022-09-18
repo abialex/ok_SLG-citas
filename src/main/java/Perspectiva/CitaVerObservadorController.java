@@ -65,7 +65,7 @@ import javafx.util.Duration;
  *
  * @author alexis
  */
-public class CitaVerObservadorController  implements Initializable, Runnable {
+public class CitaVerObservadorController implements Initializable, Runnable {
 
     @FXML
     private AnchorPane ap;
@@ -423,7 +423,7 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         CitasLabel.setStyle("-fx-text-fill: white");
         columnHoraAtencion1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
         columnCitas1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        // columnEstado1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
 
         columnHoraAtencion1.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion1.setGraphic(HoraLabel);
@@ -440,7 +440,7 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         CitasLabel.setStyle("-fx-text-fill: white");
         columnHoraAtencion2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
         columnCitas2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        //columnEstado2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
 
         columnHoraAtencion2.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion2.setGraphic(HoraLabel);
@@ -457,7 +457,7 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         CitasLabel.setStyle("-fx-text-fill: white");
         columnHoraAtencion3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
         columnCitas3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        //columnEstado3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
 
         columnHoraAtencion3.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion3.setGraphic(HoraLabel);
@@ -474,7 +474,7 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         CitasLabel.setStyle("-fx-text-fill: white");
         columnHoraAtencion4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
         columnCitas4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        //columnEstado4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
 
         columnHoraAtencion4.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion4.setGraphic(HoraLabel);
@@ -558,17 +558,8 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
-                            buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
-                            if (cita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
-                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
-                                buttonCita.setDisable(true);
+                            buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
 
-                            } else {
-                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
-                                tooltipCelular.setShowDelay(Duration.seconds(0.2));
-                                buttonCita.setTooltip(tooltipCelular);
-                            }
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);
                         }
@@ -596,7 +587,8 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         };
         return cellHoraAtencion;
     }
-/*
+
+    /*
     Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Doctor> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellFoctory = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
@@ -725,21 +717,22 @@ public class CitaVerObservadorController  implements Initializable, Runnable {
         };
         return cellFoctory;
     }
-*/
+     */
+ /*
     @FXML
     void mostrarImprimir() {
         ImprimirHorarioController oImprimirHorarioController = (ImprimirHorarioController) oUtilClass.mostrarVentana(CitaAgregarController.class, "ImprimirHorario", ap);
         oImprimirHorarioController.setController(odc);
         lockedPantalla();
-    }
+    }*/
 
+ /*
     @FXML
     void mostrarDoctor() {
         DoctorVerController oRegistrarController = (DoctorVerController) oUtilClass.mostrarVentana(DoctorVerController.class, "DoctorVer", ap);
         oRegistrarController.setController(odc);
         lockedPantalla();
-    }
-
+    }*/
     public void lockedPantalla() {
         if (ap.isDisable()) {
             ap.setDisable(false);

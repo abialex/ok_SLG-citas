@@ -146,7 +146,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <ImageView fx:id="imgHorario" fitHeight="64.0" fitWidth="70.0" onMouseClicked="#mostrarImprimir" onMouseExited="#imagHorarioFuera" onMouseMoved="#imagHorarioMoved" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                        <ImageView fx:id="imgHorario" fitHeight="64.0" fitWidth="70.0" onMouseClicked="#mostrarImprimir" onMouseExited="#imagHorarioFuera" onMouseMoved="#imagHorarioMoved" pickOnBounds="true" preserveRatio="true" visible="false" GridPane.columnIndex="1">
                            <image>
                               <Image url="@../imagenes/horario-1.png" />
                            </image>

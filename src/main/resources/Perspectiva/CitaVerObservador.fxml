@@ -103,32 +103,20 @@
          <bottom>
             <GridPane prefHeight="85.0" prefWidth="1240.0" BorderPane.alignment="CENTER">
                <columnConstraints>
-                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="230.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="32.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="50.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="650.0" minWidth="10.0" prefWidth="650.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="140.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="207.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1050.0" minWidth="10.0" prefWidth="891.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <FlowPane fx:id="fpDias" alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                  <FlowPane fx:id="fpDias" alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </FlowPane>
-                  <JFXComboBox fx:id="jcbMes" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Mes" styleClass="combobox-forma1" GridPane.columnIndex="3">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin>
-                  </JFXComboBox>
-                  <JFXComboBox fx:id="jcbAnio" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Año" styleClass="combobox-forma1" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin>
-                  </JFXComboBox>
-                  <JFXButton fx:id="btnHoy" onAction="#reiniciar" styleClass="button-forma3" text="Hoy" GridPane.columnIndex="1">
+                  <JFXButton fx:id="btnHoy" onAction="#reiniciar" styleClass="button-forma3" text="Hoy">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -136,32 +124,25 @@
                         <Tooltip contentDisplay="RIGHT" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Volver al dia de hoy" />
                      </tooltip>
                   </JFXButton>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <GridPane GridPane.columnIndex="1">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
                      <children>
-                        <ImageView fx:id="imgHorario" fitHeight="64.0" fitWidth="70.0" onMouseClicked="#mostrarImprimir" onMouseExited="#imagHorarioFuera" onMouseMoved="#imagHorarioMoved" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                           <image>
-                              <Image url="@../imagenes/horario-1.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
-                        <ImageView fx:id="imgDoctor" fitHeight="64.0" fitWidth="70.0" onMouseClicked="#mostrarDoctor" onMouseExited="#imagDoctorFuera" onMouseMoved="#imagDoctorMoved" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../imagenes/doctor-1.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
+                        <JFXComboBox fx:id="jcbMes" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Mes" styleClass="combobox-forma1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </GridPane.margin>
+                        </JFXComboBox>
+                        <JFXComboBox fx:id="jcbAnio" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Año" styleClass="combobox-forma1">
+                           <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </GridPane.margin>
+                        </JFXComboBox>
                      </children>
                   </GridPane>
                </children>
