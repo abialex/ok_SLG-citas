@@ -166,7 +166,7 @@ public class CitaVerController implements Initializable, Runnable {
         actualizarListMesCita();
         changueMes();
 
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - ADMINISTRADOR");
         initTable();
         h1 = new Thread(this);
         h1.start();
@@ -577,15 +577,9 @@ public class CitaVerController implements Initializable, Runnable {
                             buttonCita.setMaxHeight(9);
                             buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
                             buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
-                            if (cita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
-                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
-                                buttonCita.setDisable(true);
-
-                            } else {
-                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
-                                tooltipCelular.setShowDelay(Duration.seconds(0.2));
-                                buttonCita.setTooltip(tooltipCelular);
-                            }
+                            Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
+                            tooltipCelular.setShowDelay(Duration.seconds(0.2));
+                            buttonCita.setTooltip(tooltipCelular);
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);
                         }
