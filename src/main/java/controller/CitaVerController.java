@@ -130,7 +130,7 @@ public class CitaVerController implements Initializable, Runnable {
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    //Address oAddress = new Address();
+    Persona oPersona = new Persona();
 
     @Override
     public void run() {
@@ -173,7 +173,11 @@ public class CitaVerController implements Initializable, Runnable {
         h1.start();
 
     }
-
+    
+    public void setController(Persona opersona){
+        this.oPersona=opersona;   
+    }
+    
     void reconsulta() {
         actualizarListMesCita();
         initTable();
@@ -195,7 +199,7 @@ public class CitaVerController implements Initializable, Runnable {
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + "dela cita");
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersona.getRol().getRolname());
         actualizarListMesCita();
         refreshTable();
 
@@ -352,7 +356,7 @@ public class CitaVerController implements Initializable, Runnable {
         //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + "huancayo");
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersona.getRol().getRolname());
     }
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
@@ -677,7 +681,7 @@ public class CitaVerController implements Initializable, Runnable {
                         addIcon.getStyleClass().add("button-formacircle-green");
                         addIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarAgregar(event, getTableView()));
 
-                        addIcon.setVisible(listCitaOcupada.isEmpty() && listCita.size() < 4 && !isCitaEnOtroLugar);
+                        addIcon.setVisible(listCitaOcupada.isEmpty() && listCita.size() < 4 );
 
                         Button editIcon2 = new Button();
                         editIcon2.setText("x");
@@ -727,7 +731,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", new Lugar(),new Persona());
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersona.getLugar(),oPersona);
                         http
                                 .AddObject(Cita.class,
                                         ocita, "AddCita");
