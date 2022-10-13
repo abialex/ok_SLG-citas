@@ -6,10 +6,9 @@ package controller;
 
 import Entidades.Address;
 import Entidades.Cita;
-import Entidades.Doctor;
 import Entidades.HoraAtencion;
 import Entidades.Lugar;
-import EntidadesSettings.SettingsDoctor;
+import Entidades.Persona;
 import Pdf.Citapdf;
 
 import Util.FileImagUtil;
@@ -104,7 +103,7 @@ public class CitaVerController implements Initializable, Runnable {
     private TableColumn<HoraAtencion, HoraAtencion> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
 
     @FXML
-    private JFXComboBox<Doctor> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
+    private JFXComboBox<Persona> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
 
     @FXML
     private JFXComboBox<String> jcbMes, jcbAnio;
@@ -123,10 +122,10 @@ public class CitaVerController implements Initializable, Runnable {
     String colorPlomo = "-fx-background-color:GRAY; -fx-border-color: #000000";
     String colorBlue = "-fx-background-color:BLUE; -fx-border-color: #000000";
     String colorYellow = "-fx-background-color: #337ab7; -fx-border-color: #000000";
-    Doctor doctorNinguno;
+    Persona personadoctorNinguno;
     List<Cita> listCitaRaiz = new ArrayList<>();
     //List<SettingsDoctor> listdc = new ArrayList<>();
-    List<Doctor> listDoctorG = new ArrayList<>();
+    List<Persona> listpersonaDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
     Thread h1;
@@ -154,7 +153,7 @@ public class CitaVerController implements Initializable, Runnable {
         //oAddress = new Address();
 
         //listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
-        listDoctorG = http.getList(Doctor.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -207,18 +206,18 @@ public class CitaVerController implements Initializable, Runnable {
     }
 
     public void UpdatecargarDoctor() {
-        listDoctorG = http.getList(Doctor.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
         cargarDoctor();
     }
 
     public void cargarDoctor() {
         stoperActualizarComboBox = false;
-        ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
-        doctorNinguno = new Doctor();
-        doctorNinguno.setIddoctor(-1);
-        doctorNinguno.setNombredoctor("NINGUNO");
-        listDoctor.add(doctorNinguno);
-        for (Doctor odoct : listDoctorG) {
+        ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
+        personadoctorNinguno = new Persona();
+        personadoctorNinguno.setIdpersona(-1);
+        personadoctorNinguno.setNombres("NINGUNO");
+        listDoctor.add(personadoctorNinguno);
+        for (Persona odoct : listpersonaDoctorG) {
             listDoctor.add(odoct);
         }
         jcbDoctor1.setItems(listDoctor);
@@ -230,7 +229,7 @@ public class CitaVerController implements Initializable, Runnable {
     }
 
     int extraerIdJCBdoctor(String nombre) {
-        String id = oUtilClass.leerTXT("jcbdoctor1");
+        String id = oUtilClass.leerTXT(nombre);
         if (id.isEmpty()) {
             return -1;
         } else {
@@ -241,32 +240,32 @@ public class CitaVerController implements Initializable, Runnable {
     void cargarSettingsDoctor() {
         //1- poniendo a ninguno pordefcto
         //2- si existe el doctor configurado y está activo: aparece en el combo box
-        jcbDoctor1.getSelectionModel().select(doctorNinguno);
-        jcbDoctor2.getSelectionModel().select(doctorNinguno);
-        jcbDoctor3.getSelectionModel().select(doctorNinguno);
-        jcbDoctor4.getSelectionModel().select(doctorNinguno);
+        jcbDoctor1.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor2.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor3.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor4.getSelectionModel().select(personadoctorNinguno);
 
         int idjcbdoctor1 = extraerIdJCBdoctor("jcbdoctor1");
-        for (Doctor doctor : listDoctorG) {
-            if (doctor.getIddoctor() == idjcbdoctor1) {
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona()== idjcbdoctor1) {
                 jcbDoctor1.getSelectionModel().select(doctor);
             }
         }
-        int idjcbdoctor2 = extraerIdJCBdoctor("jcbdoctor1");
-        for (Doctor doctor : listDoctorG) {
-            if (doctor.getIddoctor() == idjcbdoctor2) {
+        int idjcbdoctor2 = extraerIdJCBdoctor("jcbdoctor2");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor2) {
                 jcbDoctor2.getSelectionModel().select(doctor);
             }
         }
-        int idjcbdoctor3 = extraerIdJCBdoctor("jcbdoctor1");
-        for (Doctor doctor : listDoctorG) {
-            if (doctor.getIddoctor() == idjcbdoctor3) {
+        int idjcbdoctor3 = extraerIdJCBdoctor("jcbdoctor3");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor3) {
                 jcbDoctor3.getSelectionModel().select(doctor);
             }
         }
-        int idjcbdoctor4 = extraerIdJCBdoctor("jcbdoctor1");
-        for (Doctor doctor : listDoctorG) {
-            if (doctor.getIddoctor() == idjcbdoctor4) {
+        int idjcbdoctor4 = extraerIdJCBdoctor("jcbdoctor4");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor4) {
                 jcbDoctor4.getSelectionModel().select(doctor);
             }
         }
@@ -275,19 +274,19 @@ public class CitaVerController implements Initializable, Runnable {
             if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
                 
             } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
-                for (Doctor doctor : listDoctorG) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor2.getSelectionModel().select(doctor);
                     }
                 }
             } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
-                for (Doctor doctor : listDoctorG) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor3.getSelectionModel().select(doctor);
                     }
                 }
             } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
-                for (Doctor doctor : listDoctorG) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor4.getSelectionModel().select(doctor);
                     }
@@ -358,11 +357,11 @@ public class CitaVerController implements Initializable, Runnable {
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
         if (stoperActualizarComboBox) {
-            Doctor doctor = (Doctor) jcb.getSelectionModel().getSelectedItem();
+            Persona doctor = (Persona) jcb.getSelectionModel().getSelectedItem();
             int idjcbdoctor = extraerIdJCBdoctor(jcb.getId());
-            if (doctor != doctorNinguno) {
-                if (idjcbdoctor != doctor.getIddoctor()) {                    
-                    oUtilClass.updateArchivo(jcb.getId(), doctor.getIddoctor() + "");
+            if (doctor != personadoctorNinguno) {
+                if (idjcbdoctor != doctor.getIdpersona()) {                    
+                    oUtilClass.updateArchivo(jcb.getId(), doctor.getIdpersona() + "");
                 }
             } else {
                 oUtilClass.updateArchivo(jcb.getId(), "-1");
@@ -559,7 +558,7 @@ public class CitaVerController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellCitas(JFXComboBox<Doctor> jcb) {
+    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellCitas(JFXComboBox<Persona> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellHoraAtencion = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
             final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
@@ -573,7 +572,7 @@ public class CitaVerController implements Initializable, Runnable {
                     } else {
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona()
                                     && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha)) {
                                 listCita.add(citaRaiz);
@@ -634,7 +633,7 @@ public class CitaVerController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Doctor> jcb) {
+    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Persona> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellFoctory = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
             final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
@@ -651,14 +650,14 @@ public class CitaVerController implements Initializable, Runnable {
                         int tamWidthImag = 20;
                         List<Cita> listCitaOcupada = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCitaOcupada.add(citaRaiz);
                             }
                         }
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && !citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCita.add(citaRaiz);
                             }
@@ -692,7 +691,7 @@ public class CitaVerController implements Initializable, Runnable {
                         managebtn.setStyle("-fx-alignment:center");
                         VBox.setMargin(addIcon, new Insets(4, 0, 4, 0));
                         if (jcb.getSelectionModel().getSelectedItem() != null) {
-                            if (jcb.getSelectionModel().getSelectedItem().getIddoctor() != -1) {
+                            if (jcb.getSelectionModel().getSelectedItem().getIdpersona() != -1) {
                                 setGraphic(managebtn);
                             }
                         }
@@ -721,14 +720,14 @@ public class CitaVerController implements Initializable, Runnable {
                     List<Cita> listCitaOcupada = new ArrayList<>();
 
                     for (Cita citaRaiz : listCitaRaiz) {
-                        if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
+                        if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona()&& citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
                                 && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                             listCitaOcupada.add(citaRaiz);
                         }
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty", new Lugar());
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", new Lugar(),new Persona());
                         http
                                 .AddObject(Cita.class,
                                         ocita, "AddCita");
