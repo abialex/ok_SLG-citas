@@ -86,6 +86,7 @@ public class App extends Application {
 
         }*/
         oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", stage);
+        oLoginController.validarWithCookie();
         oCargandoVistaController.cerrar();
     }
 
