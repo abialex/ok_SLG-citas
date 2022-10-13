@@ -42,7 +42,6 @@ public class App extends Application {
     Stage stage;
     UtilClass oUtilClass = new UtilClass(x, y);
     HttpMethods http = new HttpMethods();
-    Object oControllerVista;
     LoginController oLoginController; 
 
     public class Proceso extends Thread {
@@ -92,7 +91,7 @@ public class App extends Application {
 
     @Override
     public void stop() {
-        oUtilClass.ejecutarMetodo(oControllerVista, "stop");
+        oLoginController.stop();
     }
 
     static void CrearArchivos() {

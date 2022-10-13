@@ -50,10 +50,10 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        validarWithCookie();
+
     }
 
-    void validarWithCookie() {
+    public void validarWithCookie() {
         HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText(), "loguear");
         if (response != null) {
             Persona opersona = json.fromJson(response.body(), Persona.class);
@@ -105,25 +105,27 @@ public class LoginController implements Initializable {
     }
 
     void ingresar(Persona opersona) {
+        Stage stage = new Stage();
         if (opersona.getRol().getRolname().equals("ADMINISTRADOR")) {
-            oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", ap);
-            //oControllerVista.setController(opersona);
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
 
+            //oControllerVista.setController(opersona);
         } else if (opersona.getRol().getRolname().equals("ASISTENTA")) {
             if (opersona.getLugar().getNombrelugar().equals("HUANTA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", ap);
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", stage);
 
             } else if (opersona.getLugar().getNombrelugar().equals("HUAMANGA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", ap);
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", stage);
 
             } else if (opersona.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
                 //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
             }
 
         } else if (opersona.getRol().getRolname().equals("OBSERVADOR")) {
-            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", ap);
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
 
         }
+        cerrar();
     }
 
     private boolean isCompleto() {
@@ -141,6 +143,16 @@ public class LoginController implements Initializable {
             jtfcontrasenia.setStyle("");
         }
         return aux;
+    }
+
+    public void stop() {
+        oUtilClass.ejecutarMetodo(oControllerVista, "stop");
+    }
+
+    @FXML
+    public void cerrar() {
+        ((Stage) ap.getScene().getWindow()).close();
+
     }
 
 }
