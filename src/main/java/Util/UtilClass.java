@@ -167,7 +167,8 @@ public class UtilClass {
         return temp;
 
     }
-
+    //actualiza archivo
+    //si no encuentra el archivo lo crea y le agrega el contenido
     public String updateArchivo(String direccion, String contenido) {
         File file = new File(direccion);
         String contenidoFile = leerTXT(direccion);
