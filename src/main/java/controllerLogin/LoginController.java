@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import controller.CitaVerController;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
@@ -108,8 +109,7 @@ public class LoginController implements Initializable {
         Stage stage = new Stage();
         if (opersona.getRol().getRolname().equals("ADMINISTRADOR")) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
-
-            //oControllerVista.setController(opersona);
+            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
         } else if (opersona.getRol().getRolname().equals("ASISTENTA")) {
             if (opersona.getLugar().getNombrelugar().equals("HUANTA")) {
                 oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", stage);

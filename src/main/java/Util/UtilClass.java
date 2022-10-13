@@ -192,7 +192,7 @@ public class UtilClass {
             try {
                 FileWriter fichero = new FileWriter(direccion);
                 fichero.write(contenido);
-                 fichero.close();
+                fichero.close();
             } catch (IOException ex) {
                 Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
@@ -206,6 +206,14 @@ public class UtilClass {
             Class[] parametro = null;
             Object[] parametro2 = null;
             obj.getClass().getDeclaredMethod(metodo).invoke(obj);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public <T> void ejecutarMetodos_1params(Object objClass, String metodo, T param1) {
+        try {
+            objClass.getClass().getDeclaredMethod(metodo, param1.getClass()).invoke(objClass, param1);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex);
         }
