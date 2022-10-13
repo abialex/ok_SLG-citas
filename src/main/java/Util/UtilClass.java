@@ -7,8 +7,10 @@ package Util;
 import com.jfoenix.controls.JFXTextField;
 import controller.CitaModificarController;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -142,7 +144,12 @@ public class UtilClass {
     }
 
     public String leerTXT(String direccion) {
+        File file = new File(direccion);
         String temp = "";
+        if (!file.exists()){
+            System.out.println("no existe "+direccion);
+            return "";
+        }
         try {
             BufferedReader bf;
             bf = new BufferedReader(new FileReader(direccion));
@@ -153,12 +160,44 @@ public class UtilClass {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex.toString());
+            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         } catch (IOException ex) {
-            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex.toString());
+            Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         return temp;
 
+    }
+
+    public String updateArchivo(String direccion, String contenido) {
+        File file = new File(direccion);
+        String contenidoFile = leerTXT(direccion);
+        if (file.exists()) {
+
+            if (contenidoFile.equals(contenido)) {
+                return contenidoFile;
+            } else {
+                file.delete();
+                try {
+                    FileWriter fichero = new FileWriter(direccion);
+                    fichero.write(contenido);
+                    fichero.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                }
+
+                return contenidoFile;
+            }
+        } else {
+            try {
+                FileWriter fichero = new FileWriter(direccion);
+                fichero.write(contenido);
+                 fichero.close();
+            } catch (IOException ex) {
+                Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+            return contenidoFile;
+
+        }
     }
 
     public void ejecutarMetodo(Object obj, String metodo) {

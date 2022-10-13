@@ -5,6 +5,7 @@
 package Util;
 
 import Entidades.Address;
+import Entidades.Persona;
 import EntidadesSettings.SettingsDoctor;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -25,6 +26,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,11 +50,74 @@ public class HttpMethods {
     final String ADDRESS = "address";
     final String NOMBREDISPOSITIVO = "nombreDispositivo";
     UtilClass oUtilClass = new UtilClass();
+    String X_CSRFToken = "";
+    String Cookie = "";
 
     public HttpMethods() {
+        X_CSRFToken = getCSRFToken();
+        Cookie = getCokkie();
         nombreDispositivo = getNombrePc();
         address = getMACAddress();
         url = oUtilClass.leerTXT("server.txt");
+    }
+
+    public String setCSRFToken(String CSRFtokenNew) {
+        return oUtilClass.updateArchivo("csfr", CSRFtokenNew);
+    }
+
+    public String getCSRFToken() {
+        return oUtilClass.leerTXT("csfr");
+    }
+
+    public String setCokkie(String CokkieNew) {
+        return oUtilClass.updateArchivo("cokkie", CokkieNew);
+    }
+
+    public String getCokkie() {
+        return oUtilClass.leerTXT("cokkie");
+
+    }
+
+    HttpResponse<String> procesoHttpPOST(String metodo, String obj) {
+        try {
+            HttpRequest requestPosts = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(obj))
+                    .uri(URI.create(url + metodo))
+                    .setHeader("Content-type", "application/json")
+                    .setHeader("X-CSRFToken", X_CSRFToken)
+                    .setHeader("Cookie", Cookie).build();
+            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+            return response;
+
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, ex.getMessage(), ex.getMessage());
+        }
+        return null;
+    }
+
+    HttpResponse<String> procesoHttpGET(String metodo) {
+        try {
+            HttpRequest requestPosts = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(url + metodo))
+                    .setHeader("Content-type", "application/json")
+                    .setHeader("X-CSRFToken", X_CSRFToken)
+                    .setHeader("Cookie", Cookie).build();
+            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+            return response;
+
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, ex.getMessage(), ex.getMessage());
+        }
+        return null;
+    }
+
+    //el tipo object en este método recibe String y Persona
+    public HttpResponse<String> loguear(String nickname, String contrasenia, String metodo) {
+        JsonObject Objson = new JsonObject();
+        Objson.addProperty("username", nickname);
+        Objson.addProperty("password", contrasenia);
+        return procesoHttpPOST("loguear", Objson.toString());
     }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
@@ -60,18 +125,10 @@ public class HttpMethods {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
-        JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address);
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + metodo)).build();
-        try {
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+        
+        HttpResponse<String> response = procesoHttpGET(metodo);
+        listGenericos = json.fromJson(response.body(), type);
 
-            listGenericos = json.fromJson(response.body(), type);
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
         for (T listGenerico : listGenericos) {
             listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
         }
@@ -95,8 +152,10 @@ public class HttpMethods {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
             listGenericos = json.fromJson(response.body(), type);
+
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         for (T listGenerico : listGenericos) {
             listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
@@ -119,8 +178,10 @@ public class HttpMethods {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
             listGenericos = json.fromJson(response.body(), type);
+
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         for (T listGenerico : listGenericos) {
             listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
@@ -141,7 +202,8 @@ public class HttpMethods {
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
             oAddress = json.fromJson(response.body(), Address.class);
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return oAddress;
     }
@@ -160,8 +222,10 @@ public class HttpMethods {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
             responseRPTA = response.body();
+
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return responseRPTA;
 
@@ -181,8 +245,10 @@ public class HttpMethods {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
             responseRPTA = response.body();
+
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return responseRPTA;
     }
@@ -199,7 +265,8 @@ public class HttpMethods {
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitaVerController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return "ok";
     }
@@ -224,11 +291,15 @@ public class HttpMethods {
 
             }
             return macAddressBuilder.toString();
+
         } catch (SocketException ex) {
-            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HttpMethods.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return "ERROR ADDRESS";
+
         } catch (UnknownHostException ex) {
-            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HttpMethods.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return "ERROR ADDRESS";
         }
 

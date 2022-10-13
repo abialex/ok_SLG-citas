@@ -5,6 +5,7 @@ import Perspectiva.CitaVerObservadorController;
 import Util.HttpMethods;
 import Util.JPAUtil;
 import Util.UtilClass;
+import controllerLogin.LoginController;
 import controllerVistaEtc.CargandoVistaController;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -42,6 +43,7 @@ public class App extends Application {
     UtilClass oUtilClass = new UtilClass(x, y);
     HttpMethods http = new HttpMethods();
     Object oControllerVista;
+    LoginController oLoginController; 
 
     public class Proceso extends Thread {
 
@@ -62,6 +64,8 @@ public class App extends Application {
     }
 
     void procesoMostrar() {
+        
+        /*
         Address oaddress = http.getAddress();
         if (oaddress.getRol().getRolname().equals("ADMINISTRADOR")) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
@@ -73,15 +77,15 @@ public class App extends Application {
             } else if (oaddress.getLugar().getNombrelugar().equals("HUAMANGA")) {
                 oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", stage);
 
-            } /*else if (oaddress.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
+            } else if (oaddress.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
                 //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
-            }*/
+            }
 
         } else if (oaddress.getRol().getRolname().equals("OBSERVADOR")) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
 
-        }
-
+        }*/
+        oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", stage);
         oCargandoVistaController.cerrar();
     }
 
