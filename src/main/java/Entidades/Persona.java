@@ -79,7 +79,11 @@ public class Persona {
     public void setLugar(Lugar lugar) {
         this.lugar = lugar;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.nombres;
+    }
     
     
     
