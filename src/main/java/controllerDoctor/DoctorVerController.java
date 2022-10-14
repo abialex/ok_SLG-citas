@@ -336,39 +336,6 @@ public class DoctorVerController implements Initializable {
         }
     }
 
-    public Object mostrarVentana(Class generico, String nameFXML) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
-        }
-        Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
-        Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initOwner((Stage) ap.getScene().getWindow());
-        stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.show();
-        return loader.getController();
-    }
-
     public void UpdatecargarDoctor() {
         oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
     }
@@ -385,6 +352,12 @@ public class DoctorVerController implements Initializable {
         this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
+    @FXML
+    public void abrirUrl(){
+        oUtilClass.abrirURL("http://localhost:8000/admin/modulo1/persona/add/");
+    }
+    
+    
 
     @FXML
     void cerrar() {
