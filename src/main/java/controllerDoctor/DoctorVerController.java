@@ -5,6 +5,7 @@
 package controllerDoctor;
 
 import Entidades.Persona;
+import Entidades.Usuario;
 import Util.HttpMethods;
 import Util.UtilClass;
 
@@ -71,8 +72,8 @@ public class DoctorVerController implements Initializable {
     private TableColumn<Persona, Persona> columnNombres;
 
     @FXML
-    private TableColumn<Persona, Persona> columnEstado;
-
+    private TableColumn<Persona, Persona> columnEstado, columnnUsername;
+     
     ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
     private double x = 0;
     private double y = 0;
@@ -115,6 +116,7 @@ public class DoctorVerController implements Initializable {
     void initTableView() {
         columnNombres.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
         columnEstado.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
+        columnnUsername.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
 
         columnNombres.setCellFactory(column -> {
             TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
@@ -129,6 +131,63 @@ public class DoctorVerController implements Initializable {
                         olabel.setStyle("-fx-text-fill: white");
                         olabel.setUserData(item);
                         olabel.setText(item.getNombres()+" "+item.getAp_paterno()+" "+item.getAp_materno());
+                        //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
+                        //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
+                        olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                                if (newPropertyValue) {
+                                    olabel.setStyle("-fx-border-color:WHITE;");
+                                } else {
+                                    olabel.setStyle("");
+                                }
+                            }
+                        });
+                        setGraphic(olabel);
+                        setText(null);
+                    }
+                }
+
+                void changueActivo(MouseEvent event) {
+                    JFXTextField check = (JFXTextField) event.getSource();
+                    check.setStyle("-fx-border-color:BLACK;");
+
+                    check.setEditable(true);
+
+                }
+
+                void modificar(KeyEvent event) {
+                    JFXTextField check = (JFXTextField) event.getSource();
+                    Persona doc = (Persona) check.getUserData();
+                    if (event.getCode() == (KeyCode.ENTER)) {
+                        if (check.getText().length() != 0) {
+                            doc.setNombres(check.getText());
+                            http.UpdateObject(Persona.class, doc, "UpdateDoctor");
+                            updateListDoctor();
+                            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
+                        }
+                    }
+                    if (event.getCode() == (KeyCode.ESCAPE)) {
+                        updateListDoctor();
+                    }
+                }
+            };
+            return cell;
+        });
+        
+        columnnUsername.setCellFactory(column -> {
+            TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
+                @Override
+                protected void updateItem(Persona item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
+                        Label olabel = new Label();
+                        olabel.setStyle("-fx-text-fill: white; -fx-alignment: center" );
+                        olabel.setUserData(item);
+                        olabel.setText(item.getUsuario().getUsername());
                         //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
                         //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
                         olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {

@@ -20,6 +20,7 @@ public class Persona {
     //private int idusuario;
     private Rol rol;
     private Lugar lugar;
+    private Usuario usuario;
 
     public Persona() {
     }
@@ -88,11 +89,19 @@ public class Persona {
         return this;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
     @Override
     public String toString() {
         return this.nombres;
     }
     
     
-    
+       
 }

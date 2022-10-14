@@ -800,6 +800,14 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-prompt-text-fill: black;
 
 }
+.field-forma2 {
+    -fx-font-size: 17px;
+    -fx-fill: white;
+    -fx-text-fill: white;
+    -fx-font-weight:bold;
+    -fx-prompt-text-fill: black;
+
+}
 
 
 

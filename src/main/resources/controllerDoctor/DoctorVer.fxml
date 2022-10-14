@@ -56,8 +56,9 @@
                   </GridPane>
                   <TableView fx:id="tableDoctor" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn fx:id="columnNombres" prefWidth="380.0" sortable="false" style="-fx-background-color: #5b8eba;" text="Nombres y Apellidos" />
-                      <TableColumn fx:id="columnEstado" prefWidth="74.0" sortable="false" style="-fx-background-color: #5b8eba;" />
+                      <TableColumn fx:id="columnNombres" editable="false" prefWidth="290.0" sortable="false" style="-fx-background-color: #5b8eba; -fx-text-fill: white;" text="Nombres y Apellidos" />
+                        <TableColumn fx:id="columnnUsername" editable="false" prefWidth="104.0" sortable="false" style="-fx-background-color: #5b8eba; -fx-alignment: center;" text="Username" />
+                      <TableColumn fx:id="columnEstado" prefWidth="60.0" sortable="false" style="-fx-background-color: #5b8eba;" />
                     </columns>
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
