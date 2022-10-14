@@ -3,10 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Util;
-
-import Entidades.Address;
 import Entidades.Persona;
-import EntidadesSettings.SettingsDoctor;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -43,9 +40,7 @@ public class HttpMethods {
 
     Gson json = new Gson();
     HttpClient httpclient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    String url = "http://localhost:5000/";//;
-    String address = "NADA";
-    String nombreDispositivo = "NADA";
+    String url = "http://localhost:8000/";//;
     final String DATA = "data";
     final String ADDRESS = "address";
     final String NOMBREDISPOSITIVO = "nombreDispositivo";
@@ -56,8 +51,6 @@ public class HttpMethods {
     public HttpMethods() {
         X_CSRFToken = getCSRFToken();
         Cookie = getCokkie();
-        nombreDispositivo = getNombrePc();
-        address = getMACAddress();
         url = oUtilClass.leerTXT("server.txt");
     }
 
@@ -125,7 +118,7 @@ public class HttpMethods {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
-        
+
         HttpResponse<String> response = procesoHttpGET(metodo);
         listGenericos = json.fromJson(response.body(), type);
 
@@ -135,54 +128,15 @@ public class HttpMethods {
         return listGenericos2;
     }
 
-    public <T> List<T> getCitaByFecha(Class<T> generico, String metodo, String fecha) {
-        Type type = new TypeToken<List<T>>() {
-        }.getType();
-        List<T> listGenericos = new ArrayList<T>();
-        List<T> listGenericos2 = new ArrayList<T>();
-
-        JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address);
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
-        Objson.addProperty("fecha", fecha);
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + metodo)).build();
-        List<SettingsDoctor> LIST;
-        try {
-
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            listGenericos = json.fromJson(response.body(), type);
-
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        for (T listGenerico : listGenericos) {
-            listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
-        }
-
-        return listGenericos2;
-    }
-
     public <T> List<T> getCitaFilter(Class<T> generico, String metodo, JsonObject citaAtributesJson) {
-        citaAtributesJson.addProperty(ADDRESS, address);
-        citaAtributesJson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Type type = new TypeToken<List<T>>() {
         }.getType();
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(citaAtributesJson.toString()))
-                .uri(URI.create(url + metodo)).build();
-        List<SettingsDoctor> LIST;
-        try {
 
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            listGenericos = json.fromJson(response.body(), type);
+        HttpResponse<String> response = procesoHttpPOST(metodo, citaAtributesJson.toString());
+        listGenericos = json.fromJson(response.body(), type);
 
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
         for (T listGenerico : listGenericos) {
             listGenericos2.add(json.fromJson(json.toJson(listGenerico), generico));
         }
@@ -190,85 +144,41 @@ public class HttpMethods {
         return listGenericos2;
     }
 
-    public Address getAddress() {
-        JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address + "");
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + "GetAddress")).build();
-        Address oAddress = null;
-        try {
-
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            oAddress = json.fromJson(response.body(), Address.class);
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        return oAddress;
-    }
-
-    public <T> String AddObject(Class<T> generico, Object objeto, String metodo) {
+    public <T> HttpResponse<String> AddObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
-        JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address + "");
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
-        Objson.addProperty(DATA, jsonResponse);
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + metodo)).build();
-        String responseRPTA = "fail";
-        try {
-
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            responseRPTA = response.body();
-
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        return responseRPTA;
-
+        return procesoHttpPOST(metodo, jsonResponse.toString());
     }
 
     public <T> String UpdateObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
-        JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address);
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
-        Objson.addProperty(DATA, jsonResponse);
-        HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + metodo)).build();
         String responseRPTA = "fail";
-        try {
-
-            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-            responseRPTA = response.body();
-
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CitaVerController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+        HttpResponse<String> response = procesoHttpPOST(metodo, jsonResponse.toString());
+        responseRPTA = response.body();
         return responseRPTA;
     }
 
-    public <T> String DeleteObject(Class<T> generico, String metodo, String var) {
+    public <T> HttpResponse<String> DeleteObject(Class<T> generico, String metodo, String var) {
         JsonObject Objson = new JsonObject();
-        Objson.addProperty(ADDRESS, address);
-        Objson.addProperty(NOMBREDISPOSITIVO, nombreDispositivo);
         Objson.addProperty("id", var);
+        return procesoHttpPOST(metodo, Objson.toString());
+    }
+
+    public void getAddress() {
+        JsonObject Objson = new JsonObject();
         HttpRequest requestPosts = HttpRequest.newBuilder().header("Content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(Objson.toString()))
-                .uri(URI.create(url + metodo)).build();
+                .uri(URI.create(url + "GetAddress")).build();
+        //Address oAddress = null;
         try {
 
             HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
-
+        //    oAddress = json.fromJson(response.body(), Address.class);
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(CitaVerController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        return "ok";
+        //return oAddress;
     }
 
     public String getMACAddress() {
