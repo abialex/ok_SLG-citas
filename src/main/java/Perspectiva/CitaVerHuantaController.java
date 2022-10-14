@@ -4,11 +4,9 @@
  */
 package Perspectiva;
 
-import Entidades.Address;
 import Entidades.Cita;
-import Entidades.Doctor;
 import Entidades.HoraAtencion;
-import EntidadesSettings.SettingsDoctor;
+import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXButton;
@@ -86,7 +84,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     private TableColumn<HoraAtencion, HoraAtencion> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
 
     @FXML
-    private JFXComboBox<Doctor> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
+    private JFXComboBox<Persona> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
 
     @FXML
     private JFXComboBox<String> jcbMes, jcbAnio;
@@ -105,15 +103,15 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     String colorPlomo = "-fx-background-color:GRAY; -fx-border-color: #000000";
     String colorBlue = "-fx-background-color:BLUE; -fx-border-color: #000000";
     String colorYellow = "-fx-background-color: #337ab7; -fx-border-color: #000000";
-    Doctor doctorNinguno;
+    Persona personadoctorNinguno;
     List<Cita> listCitaRaiz = new ArrayList<>();
-    List<SettingsDoctor> listdc = new ArrayList<>();
-    List<Doctor> listDoctorG = new ArrayList<>();
+    List<Persona> listpersonaDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    Address oAddress = new Address();
+    Persona oPersonaUser = new Persona();
+    List<HoraAtencion> olistHoraatencion = new ArrayList<>();
 
     @Override
     public void run() {
@@ -133,9 +131,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
-        oAddress = http.getAddress();
-        listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
-        listDoctorG = http.getList(Doctor.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -148,12 +144,15 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         cargarAnio();
         actualizarListMesCita();
         changueMes();
-
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
-        initTable();
         h1 = new Thread(this);
         h1.start();
 
+    }
+
+    public void setController(Persona opersona) {
+        this.oPersonaUser = opersona;
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oPersonaUser.getLugar().getNombrelugar());
+        initTable();
     }
 
     void reconsulta() {
@@ -164,7 +163,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
     @FXML
     void updateListHoraatencion() {
-        List<HoraAtencion> olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         listHoraatencion.clear();
         for (HoraAtencion oDoc : olistHoraatencion) {
             listHoraatencion.add(oDoc);
@@ -177,25 +176,25 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oPersonaUser.getLugar().getNombrelugar());
         actualizarListMesCita();
         refreshTable();
 
     }
 
     public void UpdatecargarDoctor() {
-        listDoctorG = http.getList(Doctor.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
         cargarDoctor();
     }
 
     public void cargarDoctor() {
         stoperActualizarComboBox = false;
-        ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
-        doctorNinguno = new Doctor();
-        doctorNinguno.setIddoctor(-1);
-        doctorNinguno.setNombredoctor("NINGUNO");
-        listDoctor.add(doctorNinguno);
-        for (Doctor odoct : listDoctorG) {
+        ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
+        personadoctorNinguno = new Persona();
+        personadoctorNinguno.setIdpersona(-1);
+        personadoctorNinguno.setNombres("NINGUNO");
+        listDoctor.add(personadoctorNinguno);
+        for (Persona odoct : listpersonaDoctorG) {
             listDoctor.add(odoct);
         }
         jcbDoctor1.setItems(listDoctor);
@@ -206,40 +205,71 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         stoperActualizarComboBox = true;
     }
 
+    int extraerIdJCBdoctor(String nombre) {
+        String id = oUtilClass.leerTXT(nombre);
+        if (id.isEmpty()) {
+            return -1;
+        } else {
+            return Integer.parseInt(id);
+        }
+    }
+
     void cargarSettingsDoctor() {
         //1- poniendo a ninguno pordefcto
         //2- si existe el doctor configurado y está activo: aparece en el combo box
-        jcbDoctor1.getSelectionModel().select(doctorNinguno);
-        jcbDoctor2.getSelectionModel().select(doctorNinguno);
-        jcbDoctor3.getSelectionModel().select(doctorNinguno);
-        jcbDoctor4.getSelectionModel().select(doctorNinguno);
-        for (SettingsDoctor settingsDoctor : listdc) {
-            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
-                for (Doctor doctor : listDoctorG) {
-                    if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
-                        jcbDoctor1.getSelectionModel().select(doctor);
-                    }
-                }
-            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
-                for (Doctor doctor : listDoctorG) {
+        jcbDoctor1.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor2.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor3.getSelectionModel().select(personadoctorNinguno);
+        jcbDoctor4.getSelectionModel().select(personadoctorNinguno);
+
+        int idjcbdoctor1 = extraerIdJCBdoctor("jcbdoctor1");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor1) {
+                jcbDoctor1.getSelectionModel().select(doctor);
+            }
+        }
+        int idjcbdoctor2 = extraerIdJCBdoctor("jcbdoctor2");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor2) {
+                jcbDoctor2.getSelectionModel().select(doctor);
+            }
+        }
+        int idjcbdoctor3 = extraerIdJCBdoctor("jcbdoctor3");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor3) {
+                jcbDoctor3.getSelectionModel().select(doctor);
+            }
+        }
+        int idjcbdoctor4 = extraerIdJCBdoctor("jcbdoctor4");
+        for (Persona doctor : listpersonaDoctorG) {
+            if (doctor.getIdpersona() == idjcbdoctor4) {
+                jcbDoctor4.getSelectionModel().select(doctor);
+            }
+        }
+        /*              
+            for (SettingsDoctor settingsDoctor : listdc) {
+            if (settingsDoctor.getName().equals("jcbDoctor1") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
+                
+            } else if (settingsDoctor.getName().equals("jcbDoctor2") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor2.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
-                for (Doctor doctor : listDoctorG) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor3") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor3.getSelectionModel().select(doctor);
                     }
                 }
-            } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && oAddress.getId() == settingsDoctor.getAddress().getId()) {
-                for (Doctor doctor : listDoctorG) {
+            } else if (settingsDoctor.getName().equals("jcbDoctor4") && settingsDoctor.getDoctor().isActivo() && !settingsDoctor.getDoctor().isFlag() && false) {
+                for (Doctor doctor : listpersonaDoctorG) {
                     if (doctor.getIddoctor() == settingsDoctor.getDoctor().getIddoctor()) {
                         jcbDoctor4.getSelectionModel().select(doctor);
                     }
                 }
             }
-        }
+        }*/
     }
 
     void cargarMes() {
@@ -252,7 +282,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     @FXML
     public void actualizarListMesCita() {
         //actualiza las citas que tego cada vez que agrego, elimino o modifico
-        listCitaRaiz = http.getCitaByFecha(Cita.class, "GetListCitasByFecha", jcbAnio.getSelectionModel().getSelectedItem());
+        listCitaRaiz = http.getList(Cita.class, "CitaAll");
     }
 
     void cargarAnio() {
@@ -299,32 +329,20 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oAddress.getLugar().getNombrelugar());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oPersonaUser.getLugar().getNombrelugar());
     }
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
         if (stoperActualizarComboBox) {
-            Doctor doctor = (Doctor) jcb.getSelectionModel().getSelectedItem();
-            boolean isNuevo = true;
-            for (SettingsDoctor oDoctorSettings : listdc) {
-                if (jcb.getId().equals(oDoctorSettings.getName())) {
-                    isNuevo = false;
-                    if (doctor != doctorNinguno) {
-                        if (oDoctorSettings.getDoctor() != doctor) {
-                            oDoctorSettings.setDoctor(doctor);
-                            http.UpdateObject(SettingsDoctor.class, oDoctorSettings, "UpdateSettingsDoctor");
-                        }
-                    } else {
-                        http.DeleteObject(SettingsDoctor.class, "DeleteSettingsDoctor", oDoctorSettings.getId() + "");
-                    }
-                    break;
+            Persona doctor = (Persona) jcb.getSelectionModel().getSelectedItem();
+            int idjcbdoctor = extraerIdJCBdoctor(jcb.getId());
+            if (doctor != personadoctorNinguno) {
+                if (idjcbdoctor != doctor.getIdpersona()) {
+                    oUtilClass.updateArchivo(jcb.getId(), doctor.getIdpersona() + "");
                 }
+            } else {
+                oUtilClass.updateArchivo(jcb.getId(), "-1");
             }
-            if (isNuevo) {
-                SettingsDoctor sd = new SettingsDoctor(doctor, jcb.getId(), oAddress);
-                http.AddObject(SettingsDoctor.class, sd, "AddSettingsDoctor");
-            }
-            listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
         }
     }
 
@@ -517,7 +535,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellCitas(JFXComboBox<Doctor> jcb) {
+    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellCitas(JFXComboBox<Persona> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellHoraAtencion = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
             final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
@@ -531,7 +549,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                     } else {
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona()
                                     && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha)) {
                                 listCita.add(citaRaiz);
@@ -559,8 +577,8 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
                             buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
-                            if (cita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
-                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());                         
+                            if (cita.getLugar().getIdlugar() != oPersonaUser.getLugar().getIdlugar()) {
+                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
 
                             } else {
                                 Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
@@ -586,7 +604,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                     JFXButton buton = (JFXButton) event.getSource();
                     Cita oCita = (Cita) buton.getUserData();
                     CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class, "CitaModificar", ap);
-                    oCitaModificarController.setController(odc, table);
+                    oCitaModificarController.setController(odc, table, olistHoraatencion);
                     oCitaModificarController.setCita(oCita);
                     lockedPantalla();
                 }
@@ -596,7 +614,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Doctor> jcb) {
+    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Persona> jcb) {
         Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellFoctory = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
             // make cell containing buttons
             final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
@@ -613,14 +631,14 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         int tamWidthImag = 20;
                         List<Cita> listCitaOcupada = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCitaOcupada.add(citaRaiz);
                             }
                         }
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
                                     && citaRaiz.getFechacita().isEqual(oFecha) && !citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCita.add(citaRaiz);
                             }
@@ -628,7 +646,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
                         boolean isCitaEnOtroLugar = false;
                         for (Cita horacita : listCita) {
-                            if (horacita.getLugar().getIdlugar() != oAddress.getLugar().getIdlugar()) {
+                            if (horacita.getLugar().getIdlugar() != oPersonaUser.getLugar().getIdlugar()) {
                                 isCitaEnOtroLugar = true;
                                 break;
                             }
@@ -654,7 +672,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         managebtn.setStyle("-fx-alignment:center");
                         VBox.setMargin(addIcon, new Insets(4, 0, 4, 0));
                         if (jcb.getSelectionModel().getSelectedItem() != null) {
-                            if (jcb.getSelectionModel().getSelectedItem().getIddoctor() != -1) {
+                            if (jcb.getSelectionModel().getSelectedItem().getIdpersona() != -1) {
                                 setGraphic(managebtn);
                             }
                         }
@@ -673,7 +691,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
-                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oAddress);
+                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oPersonaUser);
                     lockedPantalla();
                 }
 
@@ -682,14 +700,14 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                     List<Cita> listCitaOcupada = new ArrayList<>();
 
                     for (Cita citaRaiz : listCitaRaiz) {
-                        if (citaRaiz.getDoctor().getIddoctor() == jcb.getSelectionModel().getSelectedItem().getIddoctor() && citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
+                        if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
                                 && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                             listCitaOcupada.add(citaRaiz);
                         }
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", "empty", oAddress.getLugar());
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersonaUser.getLugar(),oPersonaUser);
                         http.AddObject(Cita.class, ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();

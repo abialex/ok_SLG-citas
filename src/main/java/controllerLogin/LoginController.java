@@ -6,6 +6,8 @@ package controllerLogin;
 
 import Entidades.Address;
 import Entidades.Persona;
+import Perspectiva.CitaVerHuamangaController;
+import Perspectiva.CitaVerHuantaController;
 import Perspectiva.CitaVerObservadorController;
 import Util.HttpMethods;
 import Util.UtilClass;
@@ -112,10 +114,12 @@ public class LoginController implements Initializable {
             oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
         } else if (opersona.getRol().getRolname().equals("ASISTENTA")) {
             if (opersona.getLugar().getNombrelugar().equals("HUANTA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", stage);
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerHuantaController.class, "CitaVerHuanta", stage);
+                  oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
             } else if (opersona.getLugar().getNombrelugar().equals("HUAMANGA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", stage);
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerHuamangaController.class, "CitaVerHuamanga", stage);
+                  oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
             } else if (opersona.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
                 //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
@@ -123,6 +127,7 @@ public class LoginController implements Initializable {
 
         } else if (opersona.getRol().getRolname().equals("OBSERVADOR")) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+              oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
         }
         cerrar();

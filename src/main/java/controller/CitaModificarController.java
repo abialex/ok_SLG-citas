@@ -71,7 +71,6 @@ public class CitaModificarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarHora();
         initRestricciones();
     }
 
@@ -80,10 +79,20 @@ public class CitaModificarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    public void setController(Object odc, TableView<HoraAtencion> table) {
+    public void setController(Object odc, TableView<HoraAtencion> table, List<HoraAtencion> listhoraatenccion) {
         this.table = table;
         this.oObjetoController = odc;
+        this.listHora = listhoraatenccion;
+        cargarHora();
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
+    }
+
+    void cargarHora() {
+        ObservableList<HoraAtencion> listhora = FXCollections.observableArrayList();
+        for (HoraAtencion oHora : listHora) {
+            listhora.add(oHora);
+        }
+        jcbHora.setItems(listhora);
     }
 
     @FXML
@@ -95,14 +104,14 @@ public class CitaModificarController implements Initializable {
     void modificarCita() {
         if (isComplete()) {
             JsonObject citaAtributesJson = new JsonObject();
-            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
             citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
             citaAtributesJson.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
-            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
             citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson4.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson4);
@@ -155,18 +164,9 @@ public class CitaModificarController implements Initializable {
         }
     }
 
-    void cargarHora() {
-        listHora = http.getList(HoraAtencion.class, "HoraAtencionAll");
-        ObservableList<HoraAtencion> listhora = FXCollections.observableArrayList();
-        for (HoraAtencion oHora : listHora) {
-            listhora.add(oHora);
-        }
-        jcbHora.setItems(listhora);
-    }
-
     public void setCita(Cita oCita) {
         this.oCita = oCita;
-        jtfDoctor.setText(oCita.getDoctor().getNombredoctor());
+        jtfDoctor.setText(oCita.getDoctor().getNombres()+" "+oCita.getDoctor().getAp_paterno());
         jtfFecha.setText(oCita.getFechacita() + "");
         for (HoraAtencion horaAtencion : listHora) {
             if (horaAtencion.getIdhoraatencion() == oCita.getHoraatencion().getIdhoraatencion()) {

@@ -131,6 +131,7 @@ public class CitaVerController implements Initializable, Runnable {
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
     Persona oPersonaUser = new Persona();
+    List<HoraAtencion> olistHoraatencion=new ArrayList<>();
 
     @Override
     public void run() {
@@ -186,7 +187,7 @@ public class CitaVerController implements Initializable, Runnable {
 
     @FXML
     void updateListHoraatencion() {
-        List<HoraAtencion> olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         listHoraatencion.clear();
         for (HoraAtencion oDoc : olistHoraatencion) {
             listHoraatencion.add(oDoc);
@@ -627,7 +628,7 @@ public class CitaVerController implements Initializable, Runnable {
                     Cita oCita = (Cita) buton.getUserData();
                     CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class,
                             "CitaModificar", ap);
-                    oCitaModificarController.setController(odc, table);
+                    oCitaModificarController.setController(odc, table, olistHoraatencion);
                     oCitaModificarController.setCita(oCita);
                     lockedPantalla();
                 }
