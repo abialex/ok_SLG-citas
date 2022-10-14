@@ -4,10 +4,9 @@
  */
 package controller;
 
-import Entidades.Address;
 import Entidades.Cita;
-import Entidades.Doctor;
 import Entidades.HoraAtencion;
+import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXTextField;
@@ -50,9 +49,9 @@ public class CitaAgregarController implements Initializable {
 
     Object oObjetoController;
     HoraAtencion horaAtencion;
-    Doctor oDoctor;
+    Persona oDoctorpersona;
     LocalDate oFechaCita;
-    Address oAddress;
+    Persona oPersonaUser;
     TableView<HoraAtencion> table;
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass=new UtilClass();
@@ -73,12 +72,12 @@ public class CitaAgregarController implements Initializable {
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    public void setPersona(HoraAtencion oHora, Doctor doc, LocalDate oFecha, Address oAddress) {
+    public void setPersona(HoraAtencion oHora, Persona operdoc, LocalDate oFecha, Persona persona) {
         this.horaAtencion = oHora;
-        this.oDoctor = doc;
+        this.oDoctorpersona = operdoc;
         this.oFechaCita = oFecha;
-        this.oAddress=oAddress;
-        jtfDoctor.setText(doc.getNombredoctor());
+        this.oPersonaUser=persona;
+        jtfDoctor.setText(operdoc.getNombres());
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora.getHora());
         lblAMPM.setText(oHora.getAbreviatura());
@@ -88,7 +87,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctor, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oAddress.getLugar());
+            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oPersonaUser.getLugar());
             http.AddObject(Cita.class, ocita, "AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
@@ -118,7 +117,7 @@ public class CitaAgregarController implements Initializable {
         } else {
             jtfnombrepaciente.setStyle("");
         }
-
+        
         return aux;
     }
 
