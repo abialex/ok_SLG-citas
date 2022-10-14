@@ -4,7 +4,7 @@
  */
 package controller;
 
-import Entidades.Doctor;
+import Entidades.Persona;
 import Pdf.Citapdf;
 import Util.HttpMethods;
 import Util.UtilClass;
@@ -40,7 +40,7 @@ public class ImprimirHorarioController implements Initializable {
     private AnchorPane ap;
 
     @FXML
-    private JFXComboBox<Doctor> jcbDoctor;
+    private JFXComboBox<Persona> jcbDoctor;
 
     @FXML
     private Label lblHoy;
@@ -58,13 +58,13 @@ public class ImprimirHorarioController implements Initializable {
     }
 
     public void cargarDoctor() {
-        List<Doctor> listDoctorG = http.getList(Doctor.class, "DoctorAll");
-        ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
-        Doctor doctorNinguno;
-        doctorNinguno = new Doctor();
-        doctorNinguno.setNombredoctor("NINGUNO");
+        List<Persona> listDoctorG = http.getList(Persona.class, "DoctorAll");
+        ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
+        Persona doctorNinguno;
+        doctorNinguno = new Persona();
+        doctorNinguno.setNombres("NINGUNO");
         listDoctor.add(doctorNinguno);
-        for (Doctor odoct : listDoctorG) {
+        for (Persona odoct : listDoctorG) {
             listDoctor.add(odoct);
         }
         jcbDoctor.setItems(listDoctor);
@@ -79,7 +79,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     void imprimirHoy() {
-        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombredoctor().equals("NINGUNO")) {
+        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
             abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "HOY"));
@@ -90,7 +90,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     void imprimirManiana() {
-        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombredoctor().equals("NINGUNO")) {
+        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
             String url = "";
@@ -109,7 +109,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     void imprimirEstaSemana() {
-        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombredoctor().equals("NINGUNO")) {
+        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
             abrirArchivo(Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem(), lc));
@@ -122,7 +122,7 @@ public class ImprimirHorarioController implements Initializable {
 
     @FXML
     void imprimirProximaSemana() {
-        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombredoctor().equals("NINGUNO")) {
+        if (!jcbDoctor.getSelectionModel().getSelectedItem().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
             lc = lc.plusDays(7);

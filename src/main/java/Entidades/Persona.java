@@ -23,6 +23,10 @@ public class Persona {
 
     public Persona() {
     }
+    public Persona(String nombress,String ap_paterno){
+        this.nombres = nombress;        
+        this.ap_paterno = ap_paterno;
+    }
     
     public int getIdpersona() {
         return idpersona;

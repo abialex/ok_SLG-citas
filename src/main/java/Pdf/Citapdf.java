@@ -4,13 +4,10 @@
  */
 package Pdf;
 
-import Entidades.Address;
 import Entidades.Cita;
 import Entidades.Doctor;
-
+import Entidades.Persona;
 import Entidades.HoraAtencion;
-import EntidadesSettings.SettingsDoctor;
-
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -28,6 +25,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import Pdf.style.style2;
 import Util.HttpMethods;
+import Util.UtilClass;
 import com.google.gson.JsonObject;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -55,18 +53,18 @@ public class Citapdf {
 
     static HttpMethods http = new HttpMethods();
 
-    public static String ImprimirCita(Doctor odoctor, LocalDate fecha) {
+    public static String ImprimirCita(Persona odoctor, LocalDate fecha) {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
-        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fechaInicio.toString());
         citaAtributesJson.addProperty("fechaFin", fechaFin.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fechaInicio + "-" + fechaFin + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fechaInicio + "-" + fechaFin + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -145,7 +143,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getDoctor().getNombredoctor(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres()+" "+odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);
@@ -210,15 +208,15 @@ public class Citapdf {
         return urlWrite;
     }
 
-    public static String ImprimirCitaHoy(Doctor odoctor, LocalDate fecha, String tipo) {
+    public static String ImprimirCitaHoy(Persona odoctor, LocalDate fecha, String tipo) {
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
-        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
         int volumen = 115;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombredoctor() + "_" + fecha + "_" + tipo + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fecha + "_" + tipo + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -298,7 +296,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getDoctor().getNombredoctor(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres()+" "+odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);
@@ -362,15 +360,23 @@ public class Citapdf {
     }
 
     public static String ImprimirCitaDoctores(LocalDate fecha) {
+        UtilClass oUtilClass = new UtilClass();
         List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
-        List<SettingsDoctor> listSettingsAll = http.getList(SettingsDoctor.class, "SettingsDoctorAll");//configurar para solo 5 
-        List<SettingsDoctor> listsettings = new ArrayList<>();
-        for (SettingsDoctor settingsDoctor : listSettingsAll) {
-            if (settingsDoctor.getName().contains("jcbDoctor")) {
-                listsettings.add(settingsDoctor);
+        List<Persona> listpersonaDoctorAll = http.getList(Persona.class, "DoctorAll");//configurar para solo 5 
+        List<Persona> listDoctorFilter = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            String iddoctor = oUtilClass.leerTXT("jcbDoctor" + i);
+            
+            if(iddoctor.equals("")){
+                iddoctor="-1";
+            }
+            for (Persona odoctor : listpersonaDoctorAll) {
+                if (odoctor.getIdpersona() == Integer.parseInt(iddoctor)) {
+                    listDoctorFilter.add(odoctor);
+                }
             }
         }
 
@@ -465,23 +471,23 @@ public class Citapdf {
         // Tabla Doctor
         Table tableSemana = new Table(new float[]{volumen * 0.5f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f, volumen * 0.9f});
         tableSemana.addCell(new Cell().add(new Paragraph("Hora").setFont(bold).addStyle(styleTextCenter)));
-        Collections.sort(listsettings);
-        int tamanio = listsettings.size();
+        //Collections.sort(listDoctorFilter);
+        int tamanio = listDoctorFilter.size();
         for (int i = 0; i < 5 - tamanio; i++) {
-            listsettings.add(new SettingsDoctor(new Doctor("NINGUNO"), "Z",new Address()));
+            listDoctorFilter.add(new Persona("N","A"));
         }
-        for (SettingsDoctor settingsDoctor : listsettings) {
-            tableSemana.addCell(new Cell().add(new Paragraph(settingsDoctor.getDoctor().getNombredoctor()).setFont(bold).addStyle(styleTextCenter)));
+        for (Persona odoctor : listDoctorFilter) {
+            tableSemana.addCell(new Cell().add(new Paragraph(odoctor.getNombres()+" "+odoctor.getAp_paterno()).setFont(bold).addStyle(styleTextCenter)));
         }
 
         for (HoraAtencion ohora : listHoraatencion) {
             tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
-            for (SettingsDoctor settingsDoctor : listsettings) {
+            for (Persona odoctor : listDoctorFilter) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
                 boolean aux = true;
                 boolean UnaVez = true;
                 for (Cita cita : listCita) {
-                    if (cita.getDoctor().getIddoctor() == settingsDoctor.getDoctor().getIddoctor() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
+                    if (cita.getDoctor().getIdpersona() == odoctor.getIdpersona() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             if (UnaVez) {
