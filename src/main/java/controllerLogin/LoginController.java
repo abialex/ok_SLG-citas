@@ -108,17 +108,17 @@ public class LoginController implements Initializable {
 
     void ingresar(Persona opersona) {
         Stage stage = new Stage();
-        if (opersona.getRol().getRolname().equals("ADMINISTRADOR")) {
+        if (opersona.getAdmin()) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
             oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
         } else if (opersona.getRol().getRolname().equals("ASISTENTA")) {
             if (opersona.getLugar().getNombrelugar().equals("HUANTA")) {
                 oControllerVista = oUtilClass.mostrarVentana(CitaVerHuantaController.class, "CitaVerHuanta", stage);
-                  oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
+                oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
             } else if (opersona.getLugar().getNombrelugar().equals("HUAMANGA")) {
                 oControllerVista = oUtilClass.mostrarVentana(CitaVerHuamangaController.class, "CitaVerHuamanga", stage);
-                  oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
+                oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
             } else if (opersona.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
                 //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
@@ -126,8 +126,11 @@ public class LoginController implements Initializable {
 
         } else if (opersona.getRol().getRolname().equals("OBSERVADOR")) {
             oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
-              oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
+            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
 
+        } else if (opersona.getRol().getRolname().equals("DOCTOR")) {
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
         }
         cerrar();
     }

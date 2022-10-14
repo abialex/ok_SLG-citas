@@ -21,6 +21,7 @@ public class Persona {
     private Rol rol;
     private Lugar lugar;
     private Usuario usuario;
+    private Boolean admin;
 
     public Persona() {
     }
@@ -96,10 +97,18 @@ public class Persona {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
+      
     @Override
     public String toString() {
-        return this.nombres;
+        return this.nombres+" "+this.ap_paterno;
     }
     
     
