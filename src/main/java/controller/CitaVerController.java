@@ -130,7 +130,7 @@ public class CitaVerController implements Initializable, Runnable {
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    Persona oPersona = new Persona();
+    Persona oPersonaUser = new Persona();
 
     @Override
     public void run() {
@@ -175,7 +175,7 @@ public class CitaVerController implements Initializable, Runnable {
     }
     
     public void setController(Persona opersona){
-        this.oPersona=opersona;   
+        this.oPersonaUser=opersona;   
     }
     
     void reconsulta() {
@@ -199,7 +199,7 @@ public class CitaVerController implements Initializable, Runnable {
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersona.getRol().getRolname());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersonaUser.getRol().getRolname());
         actualizarListMesCita();
         refreshTable();
 
@@ -356,7 +356,7 @@ public class CitaVerController implements Initializable, Runnable {
         //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersona.getRol().getRolname());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersonaUser.getRol().getRolname());
     }
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
@@ -715,7 +715,7 @@ public class CitaVerController implements Initializable, Runnable {
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class,
                             "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
-                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, new Address());
+                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oPersonaUser);
                     lockedPantalla();
                 }
 
@@ -731,16 +731,13 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersona.getLugar(),oPersona);
-                        http
-                                .AddObject(Cita.class,
-                                        ocita, "AddCita");
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersonaUser.getLugar(),oPersonaUser);
+                        http.AddObject(Cita.class,ocita, "AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
 
                     } else {
-                        http.DeleteObject(Cita.class,
-                                "DeleteCita", listCitaOcupada.get(0).getIdcita() + "");
+                        http.DeleteObject(Cita.class,"DeleteCita", listCitaOcupada.get(0).getIdcita() + "");
                         actualizarListMesCita();
                         getTableView().refresh();
                     }
