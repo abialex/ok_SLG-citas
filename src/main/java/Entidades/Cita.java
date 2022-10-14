@@ -5,72 +5,43 @@
 package Entidades;
 
 import java.time.LocalDate;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 /**
  *
  * @author alexis
  */
-@Entity
 public class Cita {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idcita;
-
-    @JoinColumn(insertable = true, updatable = true, name = "iddoctor", nullable = false)
-    @ManyToOne
-    private Doctor doctor;
-
-    @JoinColumn(insertable = true, updatable = true, name = "idhoraatencion", nullable = false)
-    @ManyToOne
-    private HoraAtencion horaatencion;
-
-    @ManyToOne
-    @JoinColumn(insertable = true, updatable = true, name = "idlugar", nullable = true)
-    private Lugar lugar;
-
-    @Column(name = "nombrepaciente", nullable = true)
     private String nombrepaciente;
-
-    @Column(name = "minuto", nullable = true)
-    private String minuto;
-
-    @Column(name = "fechacita", nullable = true)
     private LocalDate fechacita;
-
-    @Column(name = "razon", nullable = true)
-    private String razon;
-
-    @Column(name = "celular", nullable = true)
+    private Persona doctor;
+    private HoraAtencion horaatencion;
+    private Lugar lugar;
     private String celular;
+    private String razon;
+    private String minuto;
+    private Persona persona;
 
     public Cita() {
     }
 
-    public Cita(Doctor doctor, String pacientenombr, HoraAtencion horaatencion, LocalDate fechacita, String razon, String minuto, String celular,Lugar lugar) {
-        this.doctor = doctor;
-        this.nombrepaciente = pacientenombr;
-        this.horaatencion = horaatencion;
+    public Cita(Persona doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, Lugar lugar, Persona persona) {
         this.fechacita = fechacita;
-        this.razon = razon;
-        this.minuto = minuto;
-        this.celular = celular;
+        this.doctor = doctor;
+        this.horaatencion = horaatencion;
         this.lugar = lugar;
+        this.razon = razon;
+        this.persona = persona;
     }
 
-    public Cita(Doctor doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, String celular, Lugar lugar) {
-        this.doctor = doctor;
-        this.horaatencion = horaatencion;
-        this.fechacita = fechacita;
+    public Cita(Persona oDoctor, String nombrepaciente, HoraAtencion horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar) {
+        this.doctor = oDoctor;
+        this.nombrepaciente = nombrepaciente;
+        this.horaatencion = horaAtencion;
+        this.fechacita = oFechaCita;
         this.razon = razon;
+        this.minuto = minuto;
         this.celular = celular;
         this.lugar = lugar;
     }
@@ -83,20 +54,28 @@ public class Cita {
         this.idcita = idcita;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
     public String getNombrepaciente() {
         return nombrepaciente;
     }
 
     public void setNombrepaciente(String nombrepaciente) {
         this.nombrepaciente = nombrepaciente;
+    }
+
+    public LocalDate getFechacita() {
+        return fechacita;
+    }
+
+    public void setFechacita(LocalDate fechacita) {
+        this.fechacita = fechacita;
+    }
+
+    public Persona getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Persona doctor) {
+        this.doctor = doctor;
     }
 
     public HoraAtencion getHoraatencion() {
@@ -107,12 +86,20 @@ public class Cita {
         this.horaatencion = horaatencion;
     }
 
-    public LocalDate getFechacita() {
-        return fechacita;
+    public Lugar getLugar() {
+        return lugar;
     }
 
-    public void setFechacita(LocalDate fechacita) {
-        this.fechacita = fechacita;
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getRazon() {
@@ -131,22 +118,12 @@ public class Cita {
         this.minuto = minuto;
     }
 
-    public String getCelular() {
-        return celular;
+    public Persona getPersona() {
+        return persona;
     }
 
-    public void setCelular(String celular) {
-        this.celular = celular;
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
-
-    public Lugar getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
-    }
-    
-    
 
 }
