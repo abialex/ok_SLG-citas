@@ -3,10 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package Perspectiva;
-
-import Entidades.Address;
 import Entidades.Cita;
-import Entidades.Doctor;
 import Entidades.HoraAtencion;
 import Entidades.Persona;
 import Util.HttpMethods;

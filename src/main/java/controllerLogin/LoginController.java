@@ -4,7 +4,6 @@
  */
 package controllerLogin;
 
-import Entidades.Address;
 import Entidades.Persona;
 import Perspectiva.CitaVerHuamangaController;
 import Perspectiva.CitaVerHuantaController;

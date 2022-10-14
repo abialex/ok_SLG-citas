@@ -7,7 +7,6 @@ package Perspectiva;
 import Entidades.Cita;
 import Entidades.HoraAtencion;
 import Entidades.Persona;
-import EntidadesSettings.SettingsDoctor;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXButton;

@@ -1,6 +1,5 @@
 package controller;
 
-import Entidades.Address;
 import Perspectiva.CitaVerObservadorController;
 import Util.HttpMethods;
 import Util.JPAUtil;
