@@ -6,6 +6,7 @@ package Util;
 
 import com.jfoenix.controls.JFXTextField;
 import controller.CitaModificarController;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -146,8 +150,8 @@ public class UtilClass {
     public String leerTXT(String direccion) {
         File file = new File(direccion);
         String temp = "";
-        if (!file.exists()){
-            System.out.println("no existe "+direccion);
+        if (!file.exists()) {
+            System.out.println("no existe " + direccion);
             return "";
         }
         try {
@@ -167,6 +171,7 @@ public class UtilClass {
         return temp;
 
     }
+
     //actualiza archivo
     //si no encuentra el archivo lo crea y le agrega el contenido
     public String updateArchivo(String direccion, String contenido) {
@@ -198,6 +203,22 @@ public class UtilClass {
             }
             return contenidoFile;
 
+        }
+    }
+
+    public void abrirURL(String direccion) {
+        URL url = null;
+        try {
+            url = new URL(direccion);
+            try {
+                Desktop.getDesktop().browse(url.toURI());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
         }
     }
 
