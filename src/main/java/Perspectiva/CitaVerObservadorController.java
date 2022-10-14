@@ -193,6 +193,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
         personadoctorNinguno = new Persona();
         personadoctorNinguno.setIdpersona(-1);
         personadoctorNinguno.setNombres("NINGUNO");
+        personadoctorNinguno.setAp_paterno("");
         listDoctor.add(personadoctorNinguno);
         for (Persona odoct : listpersonaDoctorG) {
             listDoctor.add(odoct);
