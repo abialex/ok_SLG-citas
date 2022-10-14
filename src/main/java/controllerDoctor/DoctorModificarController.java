@@ -4,7 +4,7 @@
  */
 package controllerDoctor;
 
-import Entidades.Doctor;
+import Entidades.Persona;
 import Util.HttpMethods;
 import com.jfoenix.controls.JFXTextField;
 import controller.CitaVerController;
@@ -30,7 +30,7 @@ public class DoctorModificarController implements Initializable {
     private JFXTextField jtfNombreDoctor;
 
     DoctorVerController oDoctorVerController;
-    Doctor oDoctor;
+    Persona oDoctor;
     HttpMethods http = new HttpMethods();
 
     @Override
@@ -40,17 +40,17 @@ public class DoctorModificarController implements Initializable {
 
     @FXML
     void modificar() {
-        oDoctor.setNombredoctor(jtfNombreDoctor.getText());
-        http.UpdateObject(Doctor.class, oDoctor, "UpdateDoctor");
+        oDoctor.setNombres(jtfNombreDoctor.getText());
+        http.UpdateObject(Persona.class, oDoctor, "UpdateDoctor");
         oDoctorVerController.UpdatecargarDoctor();
         oDoctorVerController.updateListDoctor();
         cerrar();
     }
 
-    public void setController(DoctorVerController odc, Doctor odoctor) {
+    public void setController(DoctorVerController odc, Persona odoctor) {
         this.oDoctorVerController = odc;
         this.oDoctor = odoctor;
-        jtfNombreDoctor.setText(odoctor.getNombredoctor());
+        jtfNombreDoctor.setText(odoctor.getNombres());
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 

@@ -83,6 +83,10 @@ public class Persona {
     public void setLugar(Lugar lugar) {
         this.lugar = lugar;
     }
+    
+    public Persona getPersona(){
+        return this;
+    }
 
     @Override
     public String toString() {

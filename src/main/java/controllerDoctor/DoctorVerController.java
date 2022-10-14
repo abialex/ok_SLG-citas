@@ -4,7 +4,7 @@
  */
 package controllerDoctor;
 
-import Entidades.Doctor;
+import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;
 
@@ -65,19 +65,19 @@ public class DoctorVerController implements Initializable {
     private JFXTextField jtfNombres;
 
     @FXML
-    private TableView<Doctor> tableDoctor;
+    private TableView<Persona> tableDoctor;
 
     @FXML
-    private TableColumn<Doctor, Doctor> columnNombres;
+    private TableColumn<Persona, Persona> columnNombres;
 
     @FXML
-    private TableColumn<Doctor, Doctor> columnEstado;
+    private TableColumn<Persona, Persona> columnEstado;
 
-    ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
+    ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
     private double x = 0;
     private double y = 0;
     DoctorVerController oDoctorVerController = this;
-    Doctor oDoctorEliminar;
+    Persona oDoctorEliminar;
     int indexEliminar;
     Object oObjetoController;
     HttpMethods http = new HttpMethods();
@@ -92,9 +92,9 @@ public class DoctorVerController implements Initializable {
 
     @FXML
     void updateListDoctor() {
-        List<Doctor> olistDoc = http.getList(Doctor.class, "DoctorAll");
+        List<Persona> olistDoc = http.getList(Persona.class, "DoctorAll");
         listDoctor.clear();
-        for (Doctor oDoc : olistDoc) {
+        for (Persona oDoc : olistDoc) {
             listDoctor.add(oDoc);
         }
     }
@@ -102,10 +102,10 @@ public class DoctorVerController implements Initializable {
     @FXML
     void guardarDoctor() {
         if (jtfNombres.getText().length() != 0) {
-            Doctor odoctor = new Doctor();
-            odoctor.setNombredoctor(jtfNombres.getText());
-            odoctor.setActivo(true);
-            http.AddObject(Doctor.class, odoctor, "AddDoctor");
+            Persona odoctor = new Persona();
+            odoctor.setNombres(jtfNombres.getText());
+            //odoctor.setActivo(true);
+            http.AddObject(Persona.class, odoctor, "AddDoctor");
             updateListDoctor();
             oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
             jtfNombres.setText("");
@@ -113,13 +113,13 @@ public class DoctorVerController implements Initializable {
     }
 
     void initTableView() {
-        columnNombres.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-        columnEstado.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
+        columnNombres.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
+        columnEstado.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
 
         columnNombres.setCellFactory(column -> {
-            TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
+            TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
                 @Override
-                protected void updateItem(Doctor item, boolean empty) {
+                protected void updateItem(Persona item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setGraphic(null);
@@ -128,7 +128,7 @@ public class DoctorVerController implements Initializable {
                         Label olabel = new Label();
                         olabel.setStyle("-fx-text-fill: white");
                         olabel.setUserData(item);
-                        olabel.setText(item.getNombredoctor());
+                        olabel.setText(item.getNombres()+" "+item.getAp_paterno()+" "+item.getAp_materno());
                         //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
                         //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
                         olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -156,11 +156,11 @@ public class DoctorVerController implements Initializable {
 
                 void modificar(KeyEvent event) {
                     JFXTextField check = (JFXTextField) event.getSource();
-                    Doctor doc = (Doctor) check.getUserData();
+                    Persona doc = (Persona) check.getUserData();
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
-                            doc.setNombredoctor(check.getText());
-                            http.UpdateObject(Doctor.class, doc, "UpdateDoctor");
+                            doc.setNombres(check.getText());
+                            http.UpdateObject(Persona.class, doc, "UpdateDoctor");
                             updateListDoctor();
                             oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
                         }
@@ -173,12 +173,12 @@ public class DoctorVerController implements Initializable {
             return cell;
         });
 
-        Callback<TableColumn<Doctor, Doctor>, TableCell<Doctor, Doctor>> cellFoctory = (TableColumn<Doctor, Doctor> param) -> {
+        Callback<TableColumn<Persona, Persona>, TableCell<Persona, Persona>> cellFoctory = (TableColumn<Persona, Persona> param) -> {
             // make cell containing buttons
-            final TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
+            final TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
 
                 @Override
-                public void updateItem(Doctor item, boolean empty) {
+                public void updateItem(Persona item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -220,12 +220,12 @@ public class DoctorVerController implements Initializable {
 
                 void mostrarEliminar(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
-                    oDoctorEliminar = (Doctor) imag.getUserData();
+                    oDoctorEliminar = (Persona) imag.getUserData();
                     indexEliminar = listDoctor.indexOf(oDoctorEliminar);
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setHeaderText(null);
                     alert.setTitle("Info");
-                    alert.setContentText("¿Desea eliminar al Dr(a): " + oDoctorEliminar.getNombredoctor() + "?");
+                    alert.setContentText("¿Desea eliminar al Dr(a): " + oDoctorEliminar.getNombres()+" "+oDoctorEliminar.getAp_paterno()+" ?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         eliminar();
@@ -236,7 +236,7 @@ public class DoctorVerController implements Initializable {
 
                 void mostrarModificar(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
-                    Doctor odoctor = (Doctor) imag.getUserData();
+                    Persona odoctor = (Persona) imag.getUserData();
                     DoctorModificarController oDoctorModificarController = (DoctorModificarController) oUtilClass.mostrarVentana(DoctorModificarController.class, "DoctorModificar", ap);
                     oDoctorModificarController.setController(oDoctorVerController, odoctor);
                     lockedPantalla();
@@ -271,8 +271,8 @@ public class DoctorVerController implements Initializable {
 
     public void eliminar() {
         if (indexEliminar != -1) {
-            oDoctorEliminar.setFlag(true);
-            http.UpdateObject(Doctor.class, oDoctorEliminar, "UpdateDoctor");
+            //oDoctorEliminar.setFlag(true);
+            http.UpdateObject(Persona.class, oDoctorEliminar, "UpdateDoctor");
             updateListDoctor();
         }
     }
