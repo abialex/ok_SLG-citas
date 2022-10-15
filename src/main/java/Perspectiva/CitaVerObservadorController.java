@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package Perspectiva;
+
 import Entidades.Cita;
 import Entidades.HoraAtencion;
 import Entidades.Persona;
@@ -14,6 +15,7 @@ import controller.CitaAgregarController;
 import controller.CitaModificarController;
 import controller.ImprimirHorarioController;
 import controllerDoctor.DoctorVerController;
+import controllerLogin.LoginController;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +40,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -981,6 +986,36 @@ public class CitaVerObservadorController implements Initializable, Runnable {
         });
         stage.show();
         return loader.getController();
+    }
+
+    @FXML
+    void cerrarSesion() {
+        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+        Alert alertOK = new Alert(Alert.AlertType.INFORMATION);
+        Alert alertPregunta = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alertPregunta.setHeaderText(null);
+        alertPregunta.setTitle("Info");
+        alertPregunta.setContentText(oPersonaUser.getNombres() + " ¿desea cerrar sesión?");
+        Optional<ButtonType> result = alertPregunta.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            int statusCode = http.CerrarSesion().statusCode();
+            if (statusCode == 200) {
+                alertOK.setHeaderText(null);
+                alertOK.setTitle(null);
+                alertOK.setContentText("Nos vemos " + oPersonaUser.getNombres());
+                alertOK.showAndWait();
+                cerrar();
+                stop();
+                LoginController oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", new Stage());
+            } else if (statusCode == 226) {
+                alertWarning.setHeaderText(null);
+                alertWarning.setTitle(null);
+                alertWarning.setContentText("Ya está se cerró la sesión, puede cerrar el programa :) ");
+                alertWarning.showAndWait();
+
+            }
+        }
     }
 
     public void stop() {
