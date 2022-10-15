@@ -112,6 +112,10 @@ public class HttpMethods {
         Objson.addProperty("password", contrasenia);
         return procesoHttpPOST("loguear", Objson.toString());
     }
+    
+    public HttpResponse<String> CerrarSesion(){
+        return procesoHttpGET("CerrarSesion");
+    }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
         Type type = new TypeToken<List<T>>() {
