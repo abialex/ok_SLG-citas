@@ -112,7 +112,7 @@ public class CitaVerController implements Initializable, Runnable {
     private JFXComboBox<String> jcbMes, jcbAnio;
 
     @FXML
-    private Label lblfecha;
+    private Label lblfecha, lblInfoUser;
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
@@ -179,6 +179,7 @@ public class CitaVerController implements Initializable, Runnable {
 
     public void setController(Persona opersona){
         this.oPersonaUser=opersona;
+        lblInfoUser.setText(opersona.getRol().getRolname()+": "+opersona.getNombres()+" "+opersona.getAp_paterno()+" "+opersona.getAp_materno());
     }
 
     void reconsulta() {

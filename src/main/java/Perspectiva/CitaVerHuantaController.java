@@ -94,7 +94,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     private JFXComboBox<String> jcbMes, jcbAnio;
 
     @FXML
-    private Label lblfecha;
+    private Label lblfecha, lblInfoUser;
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
@@ -156,6 +156,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     public void setController(Persona opersona) {
         this.oPersonaUser = opersona;
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oPersonaUser.getLugar().getNombrelugar());
+        lblInfoUser.setText(opersona.getRol().getRolname() + ": " + opersona.getNombres() + " " + opersona.getAp_paterno() + " " + opersona.getAp_materno());
         initTable();
     }
 

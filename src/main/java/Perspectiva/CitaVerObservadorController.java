@@ -94,7 +94,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     private JFXComboBox<String> jcbMes, jcbAnio;
 
     @FXML
-    private Label lblfecha;
+    private Label lblfecha, lblInfoUser;
 
     ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
@@ -157,6 +157,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     public void setController(Persona opersona) {
         this.oPersonaUser = opersona;
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: " + oPersonaUser.getLugar().getNombrelugar());
+        lblInfoUser.setText(opersona.getRol().getRolname() + ": " + opersona.getNombres() + " " + opersona.getAp_paterno() + " " + opersona.getAp_materno());
         initTable();
     }
 
@@ -1004,7 +1005,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
                 alertOK.setHeaderText(null);
                 alertOK.setTitle(null);
                 alertOK.setContentText("Nos vemos " + oPersonaUser.getNombres());
-                alertOK.showAndWait();               
+                alertOK.showAndWait();
                 cerrar();
                 LoginController oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", new Stage());
             } else if (statusCode == 226) {
