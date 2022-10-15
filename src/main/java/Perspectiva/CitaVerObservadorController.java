@@ -1004,9 +1004,8 @@ public class CitaVerObservadorController implements Initializable, Runnable {
                 alertOK.setHeaderText(null);
                 alertOK.setTitle(null);
                 alertOK.setContentText("Nos vemos " + oPersonaUser.getNombres());
-                alertOK.showAndWait();
+                alertOK.showAndWait();               
                 cerrar();
-                stop();
                 LoginController oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", new Stage());
             } else if (statusCode == 226) {
                 alertWarning.setHeaderText(null);
@@ -1024,6 +1023,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
 
     @FXML
     void cerrar() {
+        stop();
         ((Stage) ap.getScene().getWindow()).close();
     }
 }

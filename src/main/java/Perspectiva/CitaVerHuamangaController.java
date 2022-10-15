@@ -1012,7 +1012,6 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
                 alertOK.setContentText("Nos vemos " + oPersonaUser.getNombres());
                 alertOK.showAndWait();
                 cerrar();
-                stop();
                 LoginController oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", new Stage());
             } else if (statusCode == 226) {
                 alertWarning.setHeaderText(null);
@@ -1030,6 +1029,7 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
 
     @FXML
     void cerrar() {
+        stop();
         ((Stage) ap.getScene().getWindow()).close();
     }
 }
