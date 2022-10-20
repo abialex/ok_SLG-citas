@@ -35,7 +35,7 @@ public class Cita {
         this.persona = persona;
     }
 
-    public Cita(Persona oDoctor, String nombrepaciente, HoraAtencion horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar) {
+    public Cita(Persona oDoctor, String nombrepaciente, HoraAtencion horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar, Persona personauser) {
         this.doctor = oDoctor;
         this.nombrepaciente = nombrepaciente;
         this.horaatencion = horaAtencion;
@@ -44,6 +44,7 @@ public class Cita {
         this.minuto = minuto;
         this.celular = celular;
         this.lugar = lugar;
+        this.persona = personauser;
     }
 
     public int getIdcita() {
