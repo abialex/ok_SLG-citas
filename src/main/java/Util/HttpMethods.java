@@ -106,15 +106,18 @@ public class HttpMethods {
     }
 
     //el tipo object en este método recibe String y Persona
-    public HttpResponse<String> loguear(String nickname, String contrasenia, String metodo) {
+    
+    final String citaUrl="cita";
+    final String sessionUrl="session";
+    public HttpResponse<String> loguear(String nickname, String contrasenia) {
         JsonObject Objson = new JsonObject();
         Objson.addProperty("username", nickname);
         Objson.addProperty("password", contrasenia);
-        return procesoHttpPOST("loguear", Objson.toString());
+        return procesoHttpPOST(sessionUrl+"/loguear", Objson.toString());
     }
     
     public HttpResponse<String> CerrarSesion(){
-        return procesoHttpGET("CerrarSesion");
+        return procesoHttpGET(sessionUrl+"/CerrarSesion");
     }
 
     public <T> List<T> getList(Class<T> generico, String metodo) {
@@ -123,7 +126,7 @@ public class HttpMethods {
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
 
-        HttpResponse<String> response = procesoHttpGET(metodo);
+        HttpResponse<String> response = procesoHttpGET(citaUrl+metodo);
         listGenericos = json.fromJson(response.body(), type);
 
         for (T listGenerico : listGenericos) {
@@ -138,7 +141,7 @@ public class HttpMethods {
         List<T> listGenericos = new ArrayList<T>();
         List<T> listGenericos2 = new ArrayList<T>();
 
-        HttpResponse<String> response = procesoHttpPOST(metodo, citaAtributesJson.toString());
+        HttpResponse<String> response = procesoHttpPOST(citaUrl+metodo, citaAtributesJson.toString());
         listGenericos = json.fromJson(response.body(), type);
 
         for (T listGenerico : listGenericos) {
@@ -151,14 +154,14 @@ public class HttpMethods {
     public <T> HttpResponse<String> AddObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
-        return procesoHttpPOST(metodo, jsonResponse.toString());
+        return procesoHttpPOST(citaUrl+metodo, jsonResponse.toString());
     }
 
     public <T> String UpdateObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
         String jsonResponse = json.toJson(obj);
         String responseRPTA = "fail";
-        HttpResponse<String> response = procesoHttpPOST(metodo, jsonResponse.toString());
+        HttpResponse<String> response = procesoHttpPOST(citaUrl+metodo, jsonResponse.toString());
         responseRPTA = response.body();
         return responseRPTA;
     }
@@ -166,7 +169,7 @@ public class HttpMethods {
     public <T> HttpResponse<String> DeleteObject(Class<T> generico, String metodo, String var) {
         JsonObject Objson = new JsonObject();
         Objson.addProperty("id", var);
-        return procesoHttpPOST(metodo, Objson.toString());
+        return procesoHttpPOST(citaUrl+metodo, Objson.toString());
     }
 
     public void getAddress() {

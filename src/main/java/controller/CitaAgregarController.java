@@ -88,7 +88,7 @@ public class CitaAgregarController implements Initializable {
     void guardarCita() {
         if (isComplete()) {
             Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oPersonaUser.getLugar(),oPersonaUser);
-            http.AddObject(Cita.class, ocita, "AddCita");
+            http.AddObject(Cita.class, ocita, "/AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
             cerrar();

@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
     }
 
     public void validarWithCookie() {
-        HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText(), "loguear");
+        HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
         if (response != null) {
             Persona opersona = json.fromJson(response.body(), Persona.class);
             if (response.statusCode() == 226) {
@@ -70,7 +70,7 @@ public class LoginController implements Initializable {
     @FXML
     void validar() {
         if (isCompleto()) {
-            HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText(), "loguear");
+            HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
             if (response != null) {
                 Persona opersona = json.fromJson(response.body(), Persona.class);
                 switch (response.statusCode()) {

@@ -93,7 +93,7 @@ public class DoctorVerController implements Initializable {
 
     @FXML
     void updateListDoctor() {
-        List<Persona> olistDoc = http.getList(Persona.class, "DoctorAll");
+        List<Persona> olistDoc = http.getList(Persona.class, "/DoctorAll");
         listDoctor.clear();
         for (Persona oDoc : olistDoc) {
             listDoctor.add(oDoc);
@@ -106,7 +106,7 @@ public class DoctorVerController implements Initializable {
             Persona odoctor = new Persona();
             odoctor.setNombres(jtfNombres.getText());
             //odoctor.setActivo(true);
-            http.AddObject(Persona.class, odoctor, "AddDoctor");
+            http.AddObject(Persona.class, odoctor, "/AddDoctor");
             updateListDoctor();
             oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
             jtfNombres.setText("");
@@ -162,7 +162,7 @@ public class DoctorVerController implements Initializable {
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
                             doc.setNombres(check.getText());
-                            http.UpdateObject(Persona.class, doc, "UpdateDoctor");
+                            http.UpdateObject(Persona.class, doc, "/UpdateDoctor");
                             updateListDoctor();
                             oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
                         }
@@ -219,7 +219,7 @@ public class DoctorVerController implements Initializable {
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
                             doc.setNombres(check.getText());
-                            http.UpdateObject(Persona.class, doc, "UpdateDoctor");
+                            http.UpdateObject(Persona.class, doc, "/UpdateDoctor");
                             updateListDoctor();
                             oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
                         }
@@ -331,7 +331,7 @@ public class DoctorVerController implements Initializable {
     public void eliminar() {
         if (indexEliminar != -1) {
             //oDoctorEliminar.setFlag(true);
-            http.UpdateObject(Persona.class, oDoctorEliminar, "UpdateDoctor");
+            http.UpdateObject(Persona.class, oDoctorEliminar, "/UpdateDoctor");
             updateListDoctor();
         }
     }

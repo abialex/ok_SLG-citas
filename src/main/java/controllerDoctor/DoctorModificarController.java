@@ -41,7 +41,7 @@ public class DoctorModificarController implements Initializable {
     @FXML
     void modificar() {
         oDoctor.setNombres(jtfNombreDoctor.getText());
-        http.UpdateObject(Persona.class, oDoctor, "UpdateDoctor");
+        http.UpdateObject(Persona.class, oDoctor, "/UpdateDoctor");
         oDoctorVerController.UpdatecargarDoctor();
         oDoctorVerController.updateListDoctor();
         cerrar();

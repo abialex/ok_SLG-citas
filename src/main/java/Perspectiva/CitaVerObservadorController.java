@@ -135,7 +135,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
-        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -169,7 +169,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
 
     @FXML
     void updateListHoraatencion() {
-        olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        olistHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         listHoraatencion.clear();
         for (HoraAtencion oDoc : olistHoraatencion) {
             listHoraatencion.add(oDoc);
@@ -189,7 +189,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     }
 
     public void UpdatecargarDoctor() {
-        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
         cargarDoctor();
     }
 
@@ -265,7 +265,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     @FXML
     public void actualizarListMesCita() {
         //actualiza las citas que tego cada vez que agrego, elimino o modifico
-        listCitaRaiz = http.getList(Cita.class, "CitaAll");
+        listCitaRaiz = http.getList(Cita.class, "/CitaAll");
     }
 
     void cargarAnio() {

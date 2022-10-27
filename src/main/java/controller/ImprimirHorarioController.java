@@ -58,11 +58,13 @@ public class ImprimirHorarioController implements Initializable {
     }
 
     public void cargarDoctor() {
-        List<Persona> listDoctorG = http.getList(Persona.class, "DoctorAll");
+        List<Persona> listDoctorG = http.getList(Persona.class, "/DoctorAll");
         ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
         Persona doctorNinguno;
         doctorNinguno = new Persona();
         doctorNinguno.setNombres("NINGUNO");
+        doctorNinguno.setAp_paterno("");
+        doctorNinguno.setAp_materno("");
         listDoctor.add(doctorNinguno);
         for (Persona odoct : listDoctorG) {
             listDoctor.add(odoct);

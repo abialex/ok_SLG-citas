@@ -108,13 +108,13 @@ public class CitaModificarController implements Initializable {
             citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
             citaAtributesJson.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
-            List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
+            List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
             citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
             citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson4.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
-            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson4);
+            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson4);
 
             if (listCitaOcupada.isEmpty()) {
                 if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHoraatencion()) {
@@ -122,7 +122,7 @@ public class CitaModificarController implements Initializable {
                     oCita.setMinuto(jtfminuto.getText());
                     oCita.setRazon(jtfrazon.getText());
                     oCita.setCelular(jtftelefono.getText());
-                    http.UpdateObject(Cita.class, oCita, "UpdateCita");
+                    http.UpdateObject(Cita.class, oCita, "/UpdateCita");
                     oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
                     table.refresh();
                     cerrar();
@@ -149,7 +149,7 @@ public class CitaModificarController implements Initializable {
         alert.setContentText("¿Desea eliminar al paciente: " + oCita.getNombrepaciente() + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            http.DeleteObject(Cita.class, "DeleteCita", oCita.getIdcita() + "");
+            http.DeleteObject(Cita.class, "/DeleteCita", oCita.getIdcita() + "");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
             cerrar();

@@ -157,7 +157,7 @@ public class CitaVerController implements Initializable, Runnable {
         //oAddress = new Address();
 
         //listdc = http.getList(SettingsDoctor.class, "SettingsDoctorAll");
-        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -190,7 +190,7 @@ public class CitaVerController implements Initializable, Runnable {
 
     @FXML
     void updateListHoraatencion() {
-        olistHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        olistHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         listHoraatencion.clear();
         for (HoraAtencion oDoc : olistHoraatencion) {
             listHoraatencion.add(oDoc);
@@ -214,7 +214,7 @@ public class CitaVerController implements Initializable, Runnable {
     }
 
     public void UpdatecargarDoctor() {
-        listpersonaDoctorG = http.getList(Persona.class, "DoctorAll");
+        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
         cargarDoctor();
     }
 
@@ -314,7 +314,7 @@ public class CitaVerController implements Initializable, Runnable {
     @FXML
     public void actualizarListMesCita() {
         //actualiza las citas que tego cada vez que agrego, elimino o modifico
-        listCitaRaiz = http.getList(Cita.class, "CitaAll");
+        listCitaRaiz = http.getList(Cita.class, "/CitaAll");
     }
 
     void cargarAnio() {
@@ -737,12 +737,12 @@ public class CitaVerController implements Initializable, Runnable {
 
                     if (listCitaOcupada.isEmpty()) {
                         Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersonaUser.getLugar(),oPersonaUser);
-                        http.AddObject(Cita.class,ocita, "AddCita");
+                        http.AddObject(Cita.class,ocita, "/AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
 
                     } else {
-                        http.DeleteObject(Cita.class,"DeleteCita", listCitaOcupada.get(0).getIdcita() + "");
+                        http.DeleteObject(Cita.class,"/DeleteCita", listCitaOcupada.get(0).getIdcita() + "");
                         actualizarListMesCita();
                         getTableView().refresh();
                     }

@@ -56,12 +56,12 @@ public class Citapdf {
     public static String ImprimirCita(Persona odoctor, LocalDate fecha) {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fechaInicio.toString());
         citaAtributesJson.addProperty("fechaFin", fechaFin.toString());
-        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fechaInicio + "-" + fechaFin + ".pdf";
@@ -209,11 +209,11 @@ public class Citapdf {
     }
 
     public static String ImprimirCitaHoy(Persona odoctor, LocalDate fecha, String tipo) {
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
-        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
         int volumen = 115;
         PdfWriter writer = null;
         String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fecha + "_" + tipo + ".pdf";
@@ -361,11 +361,11 @@ public class Citapdf {
 
     public static String ImprimirCitaDoctores(LocalDate fecha) {
         UtilClass oUtilClass = new UtilClass();
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "HoraAtencionAll");
+        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
-        List<Cita> listCita = http.getCitaFilter(Cita.class, "CitaFilter", citaAtributesJson);
-        List<Persona> listpersonaDoctorAll = http.getList(Persona.class, "DoctorAll");//configurar para solo 5 
+        List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
+        List<Persona> listpersonaDoctorAll = http.getList(Persona.class, "/DoctorAll");//configurar para solo 5 
         List<Persona> listDoctorFilter = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             String iddoctor = oUtilClass.leerTXT("jcbDoctor" + i);
