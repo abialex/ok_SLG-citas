@@ -145,7 +145,7 @@ public class CitaVerController implements Initializable, Runnable {
             });
 
             try {
-                Thread.sleep(20000);
+                Thread.sleep(40000);
             } catch (InterruptedException e) {
             }
         }
