@@ -72,9 +72,9 @@ public class LoginController implements Initializable {
         if (isCompleto()) {
             HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
             if (response != null) {
-                Persona opersona = json.fromJson(response.body(), Persona.class);
                 switch (response.statusCode()) {
                     case 200:
+                        Persona opersona = json.fromJson(response.body(), Persona.class);
                         /* validar que exista el header
                          validar que haya mas de 43 caracteres */
                         if (response.headers().allValues("set-cookie").size() > 1) {
