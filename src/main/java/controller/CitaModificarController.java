@@ -33,6 +33,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -61,6 +63,12 @@ public class CitaModificarController implements Initializable {
     @FXML
     private Label lblAMPM;
 
+    @FXML
+    private ImageView img_user_doctor, img_calendario, img_user_paciente, img_reloj, img_razon, img_telefono;
+    
+    @FXML
+    private ImageView img_icon_1, img_icon_2;
+
     Object oObjetoController;
     Cita oCita;
     TableView<HoraAtencion> table;
@@ -72,6 +80,7 @@ public class CitaModificarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initRestricciones();
+        especial_navidad();
     }
 
     void initRestricciones() {
@@ -166,7 +175,7 @@ public class CitaModificarController implements Initializable {
 
     public void setCita(Cita oCita) {
         this.oCita = oCita;
-        jtfDoctor.setText(oCita.getDoctor().getNombres()+" "+oCita.getDoctor().getAp_paterno());
+        jtfDoctor.setText(oCita.getDoctor().getNombres() + " " + oCita.getDoctor().getAp_paterno());
         jtfFecha.setText(oCita.getFechacita() + "");
         for (HoraAtencion horaAtencion : listHora) {
             if (horaAtencion.getIdhoraatencion() == oCita.getHoraatencion().getIdhoraatencion()) {
@@ -205,5 +214,17 @@ public class CitaModificarController implements Initializable {
     void cerrar() {
         oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
+    }
+
+    void especial_navidad() {
+        //img_user_doctor.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_doctor_navidad.png").toExternalForm()));
+        img_calendario.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_calendario_navidad.png").toExternalForm()));
+        //img_user_paciente.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_paciente_navidad.png").toExternalForm()));
+        img_reloj.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_reloj_navidad.png").toExternalForm()));
+        img_razon.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_motivo_navidad.png").toExternalForm()));
+        img_telefono.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_telefono_navidad.png").toExternalForm()));
+        img_icon_1.setVisible(true);
+        img_icon_2.setVisible(true);
+
     }
 }

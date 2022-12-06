@@ -53,6 +53,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -117,6 +118,12 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     Persona oPersonaUser = new Persona();
     List<HoraAtencion> olistHoraatencion = new ArrayList<>();
 
+    @FXML
+    private BorderPane bp_citas;
+
+    @FXML
+    private ImageView img_adorno, imgHorario;
+
     @Override
     public void run() {
         Thread ct = Thread.currentThread();
@@ -150,6 +157,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         changueMes();
         h1 = new Thread(this);
         h1.start();
+        especial_navidad();
 
     }
 
@@ -299,7 +307,12 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
     @FXML
     void changueMes() {
-        mostrarDias(numeroDeDiasMes(jcbMes.getSelectionModel().getSelectedItem()));
+        if (LocalDate.now().getMonthValue() == 12) {
+            mostrarDias_especial_navidad(numeroDeDiasMes(jcbMes.getSelectionModel().getSelectedItem()));
+        } else {
+            mostrarDias(numeroDeDiasMes(jcbMes.getSelectionModel().getSelectedItem()));
+        }
+
     }
 
     void initTable() {
@@ -599,6 +612,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         setGraphic(fp);
                         setText(null);
                         setStyle("-fx-pref-height: 0px;   -fx-background-color:  linear-gradient(from 41px 39px to 50px 50px, reflect,  #b7cdf7 30%, #bfd5ff  47%);");
+                        setStyle("-fx-background-color: transparent");
                         LocalTime time = LocalTime.now();
                         if (Integer.parseInt(item.getHora()) == time.getHour()) {
                             setStyle("-fx-background-color:#334ccc");
@@ -809,13 +823,23 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     @FXML
     void imagHorarioMoved(MouseEvent event) {
         ImageView imag = (ImageView) event.getSource();
-        imag.setImage(new Image(getClass().getResource("/imagenes/horario-2.png").toExternalForm()));
+        if (LocalDate.now().getMonthValue() == 12) {
+            imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-2.png").toExternalForm()));
+        } else {
+
+            imag.setImage(new Image(getClass().getResource("/imagenes/horario-2.png").toExternalForm()));
+        }
     }
 
     @FXML
     void imagHorarioFuera(MouseEvent event) {
         ImageView imag = (ImageView) event.getSource();
-        imag.setImage(new Image(getClass().getResource("/imagenes/horario-1.png").toExternalForm()));
+        if (LocalDate.now().getMonthValue() == 12) {
+            imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
+        } else {
+
+            imag.setImage(new Image(getClass().getResource("/imagenes/horario-1.png").toExternalForm()));
+        }
     }
 
     @FXML
@@ -1055,5 +1079,55 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     void cerrar() {
         stop();
         ((Stage) ap.getScene().getWindow()).close();
+    }
+
+    void especial_navidad() {
+        if (LocalDate.now().getMonthValue() == 12) {
+            img_adorno.setVisible(true);
+            bp_citas.getStyleClass().add("fondo_navidad");
+            tableDoctor1.setStyle("-fx-background-color: transparent");
+            tableDoctor2.setStyle("-fx-background-color: transparent");
+            tableDoctor3.setStyle("-fx-background-color: transparent");
+            tableDoctor4.setStyle("-fx-background-color: transparent");
+            imgHorario.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
+
+        }
+    }
+
+    void mostrarDias_especial_navidad(int Dias) {
+        fpDias.getChildren().clear();
+        LocalDate fechaNow = LocalDate.now();
+        boolean auxColor = true;
+        for (int i = 1; i <= Dias; i++) {
+
+            LocalDate fechaCita = LocalDate.of(Integer.parseInt(jcbAnio.getSelectionModel().getSelectedItem()), getNumMes(jcbMes.getSelectionModel().getSelectedItem()), i);
+            JFXButton bt = new JFXButton();
+            bt.setUserData(fechaCita);
+            bt.addEventHandler(ActionEvent.ACTION, event -> setFecha(event));
+            bt.getStyleClass().clear();
+
+            int diaSemana = fechaCita.getDayOfWeek().getValue();
+            /*if (diaSemana == 7) {
+               bt.setStyle(colorRed);
+            }*/
+
+            bt.setText(i < 10 ? "0" + i : "" + i);
+            FlowPane.setMargin(bt, new Insets(2, 4, 2, 4));
+            if (diaSemana != 7) {
+                if (auxColor) {
+                    bt.getStyleClass().add("button-forma1_navidad_red");
+                    auxColor = false;
+                } else {
+                    bt.getStyleClass().add("button-forma1_navidad_green");
+                    auxColor = true;
+                }
+                if (fechaCita.equals(fechaNow)) {
+                    bt.getStyleClass().clear();
+                    bt.getStyleClass().add("button-forma1-seleccionado");
+                }
+                fpDias.getChildren().add(bt);
+            }
+
+        }
     }
 }

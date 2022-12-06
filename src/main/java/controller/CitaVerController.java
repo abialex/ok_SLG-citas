@@ -211,7 +211,7 @@ public class CitaVerController implements Initializable, Runnable {
         jcbMes.getSelectionModel().select(getMesNum(LocalDate.now().getMonthValue()));
         jcbAnio.getSelectionModel().select(LocalDate.now().getYear() + "");
         changueMes();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersonaUser.getRol().getRolname());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + "ADMINISTRADOR");
         actualizarListMesCita();
         refreshTable();
 
@@ -853,7 +853,7 @@ public class CitaVerController implements Initializable, Runnable {
     void imagHorarioMoved(MouseEvent event) {
         ImageView imag = (ImageView) event.getSource();
         if (LocalDate.now().getMonthValue() == 12) {
-             imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-2.png").toExternalForm()));
+            imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-2.png").toExternalForm()));
         } else {
 
             imag.setImage(new Image(getClass().getResource("/imagenes/horario-2.png").toExternalForm()));
@@ -863,8 +863,8 @@ public class CitaVerController implements Initializable, Runnable {
     @FXML
     void imagHorarioFuera(MouseEvent event) {
         ImageView imag = (ImageView) event.getSource();
-          if (LocalDate.now().getMonthValue() == 12) {
-             imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
+        if (LocalDate.now().getMonthValue() == 12) {
+            imag.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
         } else {
 
             imag.setImage(new Image(getClass().getResource("/imagenes/horario-1.png").toExternalForm()));
@@ -1111,13 +1111,15 @@ public class CitaVerController implements Initializable, Runnable {
     }
 
     void especial_navidad() {
-        img_adorno.setVisible(true);
-        bp_citas.getStyleClass().add("fondo_navidad");
-        tableDoctor1.setStyle("-fx-background-color: transparent");
-        tableDoctor2.setStyle("-fx-background-color: transparent");
-        tableDoctor3.setStyle("-fx-background-color: transparent");
-        tableDoctor4.setStyle("-fx-background-color: transparent");
-        imgHorario.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
+        if (LocalDate.now().getMonthValue() == 12) {
+            img_adorno.setVisible(true);
+            bp_citas.getStyleClass().add("fondo_navidad");
+            tableDoctor1.setStyle("-fx-background-color: transparent");
+            tableDoctor2.setStyle("-fx-background-color: transparent");
+            tableDoctor3.setStyle("-fx-background-color: transparent");
+            tableDoctor4.setStyle("-fx-background-color: transparent");
+            imgHorario.setImage(new Image(getClass().getResource("/imagenes/calendario_navidad-1.png").toExternalForm()));
+        }
 
     }
 
@@ -1137,10 +1139,7 @@ public class CitaVerController implements Initializable, Runnable {
             /*if (diaSemana == 7) {
                bt.setStyle(colorRed);
             }*/
-            if (fechaCita.equals(fechaNow)) {
-                bt.getStyleClass().clear();
-                bt.getStyleClass().add("button-forma1-seleccionado");
-            }
+
             bt.setText(i < 10 ? "0" + i : "" + i);
             FlowPane.setMargin(bt, new Insets(2, 4, 2, 4));
             if (diaSemana != 7) {
@@ -1150,6 +1149,10 @@ public class CitaVerController implements Initializable, Runnable {
                 } else {
                     bt.getStyleClass().add("button-forma1_navidad_green");
                     auxColor = true;
+                }
+                if (fechaCita.equals(fechaNow)) {
+                    bt.getStyleClass().clear();
+                    bt.getStyleClass().add("button-forma1-seleccionado");
                 }
                 fpDias.getChildren().add(bt);
             }
