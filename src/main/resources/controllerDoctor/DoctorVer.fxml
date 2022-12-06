@@ -47,7 +47,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </JFXTextField>
-                        <JFXButton onAction="#guardarDoctor" styleClass="button-forma3" text="Guardar" GridPane.rowIndex="1">
+                        <JFXButton onAction="#abrirUrl" styleClass="button-forma3" text="Guardar" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
