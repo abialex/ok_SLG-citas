@@ -512,7 +512,7 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-prompt-text-fill: black;
     -fx-font-weight: bold;
     -fx-padding: -2px;
-    
+
 }
 
 .combobox-forma1{
@@ -552,7 +552,7 @@ VBox > .split-menu-button.last > .arrow-button {
 }
 
 
- .combobox-forma3  .cell:hover {
+.combobox-forma3  .cell:hover {
     -fx-text-fill: linear-gradient(to top,#002f59,#3183cc);
     -fx-background-color: linear-gradient(to top,#ffffff,#9da9d1);
     -fx-border-radius: 12;
@@ -1353,4 +1353,47 @@ VBox > .split-menu-button.last > .arrow-button {
 
 .slider:vertical .track {
     -fx-pref-width: 5;
+}
+
+
+/* navidad */
+.label-navidad{
+    /*-fx-text-fill: white /*linear-gradient(from 0px 0px to 40px 0px, reflect,  #1c8003 50%, #8f0303  50%)*/;
+
+    
+}
+.fondo_navidad{
+    -fx-background-image:url("images/fondo_navidad.jpg");
+}
+
+.button-forma1_navidad_green{
+    -fx-padding: 4 8 8 8;
+    -fx-background-insets: 0,0 0 5 0,0 0 6 0,0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color:
+        linear-gradient(from 0% 93% to 0% 100%,#39a313 0%,#389012 100%),
+        #3c9d24,
+        #67d83a,
+        radial-gradient(center 50% 50%, radius 100%,#67d93a,#52c52c);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75),4,0,0,1);
+    -fx-font-weight: bold;
+    -fx-font-size: 1.3em;
+    -fx-text-fill: white;
+
+}
+
+.button-forma1_navidad_red{
+    -fx-padding: 4 8 8 8;
+    -fx-background-insets: 0,0 0 5 0,0 0 6 0,0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color:
+        linear-gradient(from 0% 93% to 0% 100%,#a31313 0%,#901212 100%),
+        #9d2424,
+        #d83a3a,
+        radial-gradient(center 50% 50%, radius 100%,#d93a3a,#c52c2c);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75),4,0,0,1);
+    -fx-font-weight: bold;
+    -fx-font-size: 1.3em;
+    -fx-text-fill: white;
+
 }
