@@ -166,7 +166,7 @@ public class Citapdf {
         tableSemana.addCell(new Cell().add(new Paragraph("SÁBADO\n" + fechaInicio.plusDays(5)).setFont(bold).addStyle(styleTextCenter)));
 
         for (Integer ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora), styleTextCenter8, styleTextCenter8, subrayadoNo));
+            tableSemana.addCell(getCell(oUtilClass.toformat12horasAMPM(ohora), styleTextCenter8, styleTextCenter8, subrayadoNo));
             for (int i = 0; i < 6; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.8f});
                 boolean aux = true;
@@ -186,7 +186,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 11);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));
@@ -315,7 +315,7 @@ public class Citapdf {
         tableSemana.addCell(new Cell().add(new Paragraph(tipo + "\n" + fecha.plusDays(0)).setFont(bold).addStyle(styleTextCenter)));
 
         for (Integer ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
+            tableSemana.addCell(getCell(oUtilClass.toformat12horasAMPM(ohora), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
             for (int i = 0; i < 1; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 1.115f, volumen * 1.115f, volumen * 1.115f, volumen * 1.115f});
                 boolean aux = true;
@@ -335,7 +335,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 15);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft9, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + datos + "\n" + cita.getRazon(), styleTextLeft9, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(new Cell(1, 4).add(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo)).addStyle(styleCell));
@@ -489,7 +489,7 @@ public class Citapdf {
         }
 
         for (Integer ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora) , styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
+            tableSemana.addCell(getCell(oUtilClass.toformat12horasAMPM(ohora) , styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
             for (Persona odoctor : listDoctorFilter) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
                 boolean aux = true;
@@ -507,7 +507,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 13);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + datos + "\n" + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));

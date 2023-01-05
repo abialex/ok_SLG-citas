@@ -574,7 +574,7 @@ public class CitaVerController implements Initializable, Runnable {
                         }
                         label.setStyle("-fx-text-fill: white");
                             
-                        label.setText(oUtilClass.toformat12horas(item));
+                        label.setText(oUtilClass.toformat12horasAMPM(item));
                         setGraphic(label);
                         setText("");
 
@@ -627,7 +627,7 @@ public class CitaVerController implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
+                            buttonCita.setText(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + cita.getNombrepaciente());
                             buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                             Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
                             tooltipCelular.setShowDelay(Duration.seconds(0.2));

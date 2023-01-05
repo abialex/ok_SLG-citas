@@ -240,8 +240,17 @@ public class UtilClass {
         }
     }
 
-    public String toformat12horas(int hora) {
+    public String toformat12horasAMPM(int hora) {
         int hora12f = hora - 12 == 0 ? 12 : hora - 12;
         return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) + " pm" : ((hora < 10 ? "0" + hora : hora)) + " am";
+    }
+    
+    public String toformat12horas(int hora) {
+        int hora12f = hora - 12 == 0 ? 12 : hora - 12;
+        return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) +"": ((hora < 10 ? "0" + hora : hora))+"";
+    }
+    
+    public String toformat00(int hora){
+        return hora>10 ? hora+"": "0"+hora;
     }
 }

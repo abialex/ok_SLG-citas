@@ -524,7 +524,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
                         }
                         label.setStyle("-fx-text-fill: white");
 
-                        label.setText(oUtilClass.toformat12horas(item));
+                        label.setText(oUtilClass.toformat12horasAMPM(item));
                         setGraphic(label);
                         setText("");
 
@@ -577,7 +577,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
+                            buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute())+ " " + cita.getLugar().getNombrelugar());
 
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);

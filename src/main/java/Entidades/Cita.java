@@ -21,7 +21,6 @@ public class Cita {
     private Lugar lugar;
     private String celular;
     private String razon;
-    private String minuto;
     private Persona persona;
 
     public Cita() {
@@ -36,13 +35,12 @@ public class Cita {
         this.persona = persona;
     }
 
-    public Cita(Persona oDoctor, String nombrepaciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar, Persona personauser) {
+    public Cita(Persona oDoctor, String nombrepaciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String celular, Lugar lugar, Persona personauser) {
         this.doctor = oDoctor;
         this.nombrepaciente = nombrepaciente;
         this.hora = horaAtencion;
         this.fechacita = oFechaCita;
         this.razon = razon;
-        this.minuto = minuto;
         this.celular = celular;
         this.lugar = lugar;
         this.persona = personauser;
@@ -110,14 +108,6 @@ public class Cita {
 
     public void setRazon(String razon) {
         this.razon = razon;
-    }
-
-    public String getMinuto() {
-        return minuto;
-    }
-
-    public void setMinuto(String minuto) {
-        this.minuto = minuto;
     }
 
     public Persona getPersona() {

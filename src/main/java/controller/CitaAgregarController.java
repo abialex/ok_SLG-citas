@@ -97,7 +97,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oPersonaUser.getLugar(), oPersonaUser);
+            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), oPersonaUser.getLugar(), oPersonaUser);
             http.AddObject(Cita.class, ocita, "/AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
