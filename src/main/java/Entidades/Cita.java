@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
@@ -16,7 +17,7 @@ public class Cita {
     private String nombrepaciente;
     private LocalDate fechacita;
     private Persona doctor;
-    private HoraAtencion horaatencion;
+    private LocalTime hora;
     private Lugar lugar;
     private String celular;
     private String razon;
@@ -26,19 +27,19 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(Persona doctor, HoraAtencion horaatencion, LocalDate fechacita, String razon, Lugar lugar, Persona persona) {
+    public Cita(Persona doctor, LocalTime horaatencion, LocalDate fechacita, String razon, Lugar lugar, Persona persona) {
         this.fechacita = fechacita;
         this.doctor = doctor;
-        this.horaatencion = horaatencion;
+        this.hora = horaatencion;
         this.lugar = lugar;
         this.razon = razon;
         this.persona = persona;
     }
 
-    public Cita(Persona oDoctor, String nombrepaciente, HoraAtencion horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar, Persona personauser) {
+    public Cita(Persona oDoctor, String nombrepaciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String minuto, String celular, Lugar lugar, Persona personauser) {
         this.doctor = oDoctor;
         this.nombrepaciente = nombrepaciente;
-        this.horaatencion = horaAtencion;
+        this.hora = horaAtencion;
         this.fechacita = oFechaCita;
         this.razon = razon;
         this.minuto = minuto;
@@ -79,12 +80,12 @@ public class Cita {
         this.doctor = doctor;
     }
 
-    public HoraAtencion getHoraatencion() {
-        return horaatencion;
+    public LocalTime getHora() {
+        return hora;
     }
-
-    public void setHoraatencion(HoraAtencion horaatencion) {
-        this.horaatencion = horaatencion;
+    
+    public void setHora(LocalTime horaatencion) {
+        this.hora = horaatencion;
     }
 
     public Lugar getLugar() {

@@ -13,6 +13,7 @@ import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -56,11 +57,11 @@ public class CitaAgregarController implements Initializable {
     private ImageView img_icon_1, img_icon_2;
 
     Object oObjetoController;
-    HoraAtencion horaAtencion;
+    Integer horaAtencionpurga;
     Persona oDoctorpersona;
     LocalDate oFechaCita;
     Persona oPersonaUser;
-    TableView<HoraAtencion> table;
+    TableView<Integer> table;
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass = new UtilClass();
 
@@ -75,28 +76,28 @@ public class CitaAgregarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    public void setController(Object odc, TableView<HoraAtencion> table) {
+    public void setController(Object odc, TableView<Integer> table) {
         this.table = table;
         this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    public void setPersona(HoraAtencion oHora, Persona operdoc, LocalDate oFecha, Persona persona) {
-        this.horaAtencion = oHora;
+    public void setPersona(Integer oHora, Persona operdoc, LocalDate oFecha, Persona persona) {
+        this.horaAtencionpurga = oHora;
         this.oDoctorpersona = operdoc;
         this.oFechaCita = oFecha;
         this.oPersonaUser = persona;
         jtfDoctor.setText(operdoc.getNombres());
         jtfFecha.setText(oFecha.toString());
-        jtfHora.setText(oHora.getHora());
-        lblAMPM.setText(oHora.getAbreviatura());
+        jtfHora.setText(oHora+"");
+        //lblAMPM.setText(oHora.getAbreviatura());
         jtfminuto.setText("00");
     }
 
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), horaAtencion, oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oPersonaUser.getLugar(), oPersonaUser);
+            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtfminuto.getText(), jtftelefono.getText(), oPersonaUser.getLugar(), oPersonaUser);
             http.AddObject(Cita.class, ocita, "/AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();

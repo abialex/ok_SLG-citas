@@ -15,6 +15,7 @@ import controller.App;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +59,7 @@ public class CitaModificarController implements Initializable {
     private JFXTextField jtfFecha, jtfminuto, jtfPaciente, jtfrazon, jtftelefono;
 
     @FXML
-    private JFXComboBox<HoraAtencion> jcbHora;
+    private JFXComboBox<Integer> jcbHora;
 
     @FXML
     private Label lblAMPM;
@@ -71,15 +72,17 @@ public class CitaModificarController implements Initializable {
 
     Object oObjetoController;
     Cita oCita;
-    TableView<HoraAtencion> table;
+    TableView<Integer> table;
     Alert alert = new Alert(Alert.AlertType.WARNING);
-    List<HoraAtencion> listHora = new ArrayList<>();
+    ObservableList<Integer> listHora = FXCollections.observableArrayList();
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass = new UtilClass();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+         cargarHora();
         initRestricciones();
+        
         especial_navidad();
     }
 
@@ -88,25 +91,21 @@ public class CitaModificarController implements Initializable {
         jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
     }
 
-    public void setController(Object odc, TableView<HoraAtencion> table, List<HoraAtencion> listhoraatenccion) {
+    public void setController(Object odc, TableView<Integer> table) {
         this.table = table;
         this.oObjetoController = odc;
-        this.listHora = listhoraatenccion;
-        cargarHora();
+       
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
     void cargarHora() {
-        ObservableList<HoraAtencion> listhora = FXCollections.observableArrayList();
-        for (HoraAtencion oHora : listHora) {
-            listhora.add(oHora);
-        }
-        jcbHora.setItems(listhora);
+        listHora.addAll(9,10,11,12,16,17,18,19,20);
+        jcbHora.setItems(listHora);
     }
 
     @FXML
     void changueHora() {
-        lblAMPM.setText(jcbHora.getSelectionModel().getSelectedItem().getAbreviatura());
+        //lblAMPM.setText(jcbHora.getSelectionModel().getSelectedItem().getAbreviatura());
     }
 
     @FXML
@@ -116,21 +115,22 @@ public class CitaModificarController implements Initializable {
             citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
             citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
-            citaAtributesJson.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            citaAtributesJson.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
             citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
             citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
-            citaAtributesJson4.addProperty("idhoraatencion", jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion());
+            citaAtributesJson4.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson4);
 
             if (listCitaOcupada.isEmpty()) {
-                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHoraatencion()) {
-                    oCita.setHoraatencion(jcbHora.getSelectionModel().getSelectedItem());
+                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHora().getHour()) {
+                    oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), 0));
                     oCita.setMinuto(jtfminuto.getText());
                     oCita.setRazon(jtfrazon.getText());
                     oCita.setCelular(jtftelefono.getText());
+                    oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), Integer.parseInt(jtfminuto.getText())));
                     http.UpdateObject(Cita.class, oCita, "/UpdateCita");
                     oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
                     table.refresh();
@@ -144,7 +144,7 @@ public class CitaModificarController implements Initializable {
             } else {
                 alert.setHeaderText(null);
                 alert.setTitle(null);
-                alert.setContentText("El Dr. está ocupado a las " + listCitaOcupada.get(0).getHoraatencion().getHora() + ":00 " + listCitaOcupada.get(0).getHoraatencion().getAbreviatura());
+                alert.setContentText("El Dr. está ocupado a las " + listCitaOcupada.get(0).getHora().getHour() + ":00 " /*+ listCitaOcupada.get(0).getHora().getAbreviatura()*/);
                 alert.showAndWait();
             }
         }
@@ -174,13 +174,14 @@ public class CitaModificarController implements Initializable {
     }
 
     public void setCita(Cita oCita) {
+        
         this.oCita = oCita;
         jtfDoctor.setText(oCita.getDoctor().getNombres() + " " + oCita.getDoctor().getAp_paterno());
         jtfFecha.setText(oCita.getFechacita() + "");
-        for (HoraAtencion horaAtencion : listHora) {
-            if (horaAtencion.getIdhoraatencion() == oCita.getHoraatencion().getIdhoraatencion()) {
-                jcbHora.getSelectionModel().select(horaAtencion);
-                lblAMPM.setText(oCita.getHoraatencion().getAbreviatura());
+        for (Integer hora : listHora) {
+            if (hora == oCita.getHora().getHour()) {
+                jcbHora.getSelectionModel().select(hora);
+                //lblAMPM.setText(oCita.getHora().getAbreviatura());
                 break;
             }
 

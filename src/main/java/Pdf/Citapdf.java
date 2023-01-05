@@ -41,8 +41,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.VerticalAlignment;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javax.swing.JOptionPane;
 
 /**
@@ -52,11 +55,14 @@ import javax.swing.JOptionPane;
 public class Citapdf {
 
     static HttpMethods http = new HttpMethods();
+    static UtilClass oUtilClass=new UtilClass();
 
     public static String ImprimirCita(Persona odoctor, LocalDate fecha) {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
+        ObservableList<Integer> listHoraatencion = FXCollections.observableArrayList();
+        listHoraatencion.addAll(9, 10, 11, 12, 16, 17, 18, 19, 20);
+
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fechaInicio.toString());
@@ -64,7 +70,7 @@ public class Citapdf {
         List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fechaInicio + "-" + fechaFin + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres() + "_" + fechaInicio + "-" + fechaFin + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -143,7 +149,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres()+" "+odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres() + " " + odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);
@@ -159,15 +165,15 @@ public class Citapdf {
         tableSemana.addCell(new Cell().add(new Paragraph("VIERNES\n" + fechaInicio.plusDays(4)).setFont(bold).addStyle(styleTextCenter)));
         tableSemana.addCell(new Cell().add(new Paragraph("SÁBADO\n" + fechaInicio.plusDays(5)).setFont(bold).addStyle(styleTextCenter)));
 
-        for (HoraAtencion ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter8, styleTextCenter8, subrayadoNo));
+        for (Integer ohora : listHoraatencion) {
+            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora), styleTextCenter8, styleTextCenter8, subrayadoNo));
             for (int i = 0; i < 6; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.8f});
                 boolean aux = true;
                 boolean UnaVez = true;
                 LocalDate fechaCom = fechaInicio.plusDays(i);
                 for (Cita cita : listCita) {
-                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
+                    if (cita.getFechacita().equals(fechaCom) && cita.getHora().getHour() == ohora) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             if (UnaVez) {
@@ -180,7 +186,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 11);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + " : " + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));
@@ -209,14 +215,15 @@ public class Citapdf {
     }
 
     public static String ImprimirCitaHoy(Persona odoctor, LocalDate fecha, String tipo) {
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
+        ObservableList<Integer> listHoraatencion = FXCollections.observableArrayList();
+        listHoraatencion.addAll(9, 10, 11, 12, 16, 17, 18, 19, 20);
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
         int volumen = 115;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres()+ "_" + fecha + "_" + tipo + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres() + "_" + fecha + "_" + tipo + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -296,7 +303,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres()+" "+odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres() + " " + odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);
@@ -307,8 +314,8 @@ public class Citapdf {
         tableSemana.addCell(new Cell().add(new Paragraph("Hora").setFont(bold).addStyle(styleTextCenter)));
         tableSemana.addCell(new Cell().add(new Paragraph(tipo + "\n" + fecha.plusDays(0)).setFont(bold).addStyle(styleTextCenter)));
 
-        for (HoraAtencion ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
+        for (Integer ohora : listHoraatencion) {
+            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
             for (int i = 0; i < 1; i++) {
                 Table TableHoraDia = new Table(new float[]{volumen * 1.115f, volumen * 1.115f, volumen * 1.115f, volumen * 1.115f});
                 boolean aux = true;
@@ -316,7 +323,7 @@ public class Citapdf {
                 LocalDate fechaCom = fecha.plusDays(i);
 
                 for (Cita cita : listCita) {
-                    if (cita.getFechacita().equals(fechaCom) && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
+                    if (cita.getFechacita().equals(fechaCom) && cita.getHora().getHour() == ohora) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             if (UnaVez) {
@@ -328,7 +335,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 15);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft9, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft9, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(new Cell(1, 4).add(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo)).addStyle(styleCell));
@@ -361,7 +368,8 @@ public class Citapdf {
 
     public static String ImprimirCitaDoctores(LocalDate fecha) {
         UtilClass oUtilClass = new UtilClass();
-        List<HoraAtencion> listHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
+        ObservableList<Integer> listHoraatencion = FXCollections.observableArrayList();
+        listHoraatencion.addAll(9, 10, 11, 12, 16, 17, 18, 19, 20);
         JsonObject citaAtributesJson = new JsonObject();
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
@@ -369,9 +377,9 @@ public class Citapdf {
         List<Persona> listDoctorFilter = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             String iddoctor = oUtilClass.leerTXT("jcbDoctor" + i);
-            
-            if(iddoctor.equals("")){
-                iddoctor="-1";
+
+            if (iddoctor.equals("")) {
+                iddoctor = "-1";
             }
             for (Persona odoctor : listpersonaDoctorAll) {
                 if (odoctor.getIdpersona() == Integer.parseInt(iddoctor)) {
@@ -474,20 +482,20 @@ public class Citapdf {
         //Collections.sort(listDoctorFilter);
         int tamanio = listDoctorFilter.size();
         for (int i = 0; i < 5 - tamanio; i++) {
-            listDoctorFilter.add(new Persona("N","A"));
+            listDoctorFilter.add(new Persona("N", "A"));
         }
         for (Persona odoctor : listDoctorFilter) {
-            tableSemana.addCell(new Cell().add(new Paragraph(odoctor.getNombres()+" "+odoctor.getAp_paterno()).setFont(bold).addStyle(styleTextCenter)));
+            tableSemana.addCell(new Cell().add(new Paragraph(odoctor.getNombres() + " " + odoctor.getAp_paterno()).setFont(bold).addStyle(styleTextCenter)));
         }
 
-        for (HoraAtencion ohora : listHoraatencion) {
-            tableSemana.addCell(getCell(ohora.getHora() + " " + ohora.getAbreviatura(), styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
+        for (Integer ohora : listHoraatencion) {
+            tableSemana.addCell(getCell(oUtilClass.toformat12horas(ohora) , styleTextCenter13, styleTextCenter8, subrayadoNo)).setMarginBottom(10f).setMarginTop(10f);
             for (Persona odoctor : listDoctorFilter) {
                 Table TableHoraDia = new Table(new float[]{volumen * 0.89f});
                 boolean aux = true;
                 boolean UnaVez = true;
                 for (Cita cita : listCita) {
-                    if (cita.getDoctor().getIdpersona() == odoctor.getIdpersona() && cita.getHoraatencion().getIdhoraatencion() == ohora.getIdhoraatencion()) {
+                    if (cita.getDoctor().getIdpersona() == odoctor.getIdpersona() && cita.getHora().getHour() == ohora) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             if (UnaVez) {
@@ -499,7 +507,7 @@ public class Citapdf {
                                 datos = datos.substring(0, 13);
                                 datos = datos + "...";
                             }
-                            TableHoraDia.addCell(getCell(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
+                            TableHoraDia.addCell(getCell(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + datos + "\n" + cita.getRazon(), styleTextLeft7, styleCell, subrayadoNo));
 
                         } else {
                             TableHoraDia.addCell(getCell("OCUPADO", styleTextCenterRojo, styleCell, subrayadoNo));

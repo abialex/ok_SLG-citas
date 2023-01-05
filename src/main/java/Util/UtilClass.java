@@ -239,4 +239,9 @@ public class UtilClass {
             Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public String toformat12horas(int hora) {
+        int hora12f = hora - 12 == 0 ? 12 : hora - 12;
+        return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) + " pm" : ((hora < 10 ? "0" + hora : hora)) + " am";
+    }
 }
