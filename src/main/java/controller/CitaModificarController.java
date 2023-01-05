@@ -5,7 +5,6 @@
 package controller;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.google.gson.JsonObject;

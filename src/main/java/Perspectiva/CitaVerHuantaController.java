@@ -5,7 +5,6 @@
 package Perspectiva;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
 import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;

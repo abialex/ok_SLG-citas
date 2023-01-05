@@ -7,7 +7,6 @@ package Pdf;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.Persona;
-import Entidades.HoraAtencion;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.events.PdfDocumentEvent;

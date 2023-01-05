@@ -5,7 +5,6 @@
 package Perspectiva;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
 import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;
@@ -122,7 +121,6 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
     Persona oPersonaUser = new Persona();
-    List<HoraAtencion> olistHoraatencion = new ArrayList<>();
 
     @Override
     public void run() {

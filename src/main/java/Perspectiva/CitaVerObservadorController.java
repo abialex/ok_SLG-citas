@@ -5,7 +5,6 @@
 package Perspectiva;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
 import Entidades.Persona;
 import Util.HttpMethods;
 import Util.UtilClass;
@@ -86,7 +85,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     private TableColumn<Integer, Integer> columnCitas1, columnCitas2, columnCitas3, columnCitas4;
 
     @FXML
-    private TableColumn<HoraAtencion, HoraAtencion> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
+    private TableColumn<Integer, Integer> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
 
     @FXML
     private JFXComboBox<Persona> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;

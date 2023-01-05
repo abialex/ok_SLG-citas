@@ -5,7 +5,6 @@
 package controller;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
 import Entidades.Lugar;
 import Entidades.Persona;
 import Pdf.Citapdf;
@@ -141,7 +140,6 @@ public class CitaVerController implements Initializable, Runnable {
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
     Persona oPersonaUser = new Persona();
-    List<HoraAtencion> olistHoraatencion = new ArrayList<>();
 
     @Override
     public void run() {
