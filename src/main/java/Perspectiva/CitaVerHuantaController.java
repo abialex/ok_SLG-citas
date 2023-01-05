@@ -77,16 +77,16 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     private FlowPane fpDias;
 
     @FXML
-    private TableView<HoraAtencion> tableDoctor1, tableDoctor2, tableDoctor3, tableDoctor4;
+    private TableView<LocalTime> tableDoctor1, tableDoctor2, tableDoctor3, tableDoctor4;
 
     @FXML
-    private TableColumn<HoraAtencion, HoraAtencion> columnHoraAtencion1, columnHoraAtencion2, columnHoraAtencion3, columnHoraAtencion4;
+    private TableColumn<Integer, Integer> columnHoraAtencion1, columnHoraAtencion2, columnHoraAtencion3, columnHoraAtencion4;
 
     @FXML
-    private TableColumn<HoraAtencion, HoraAtencion> columnCitas1, columnCitas2, columnCitas3, columnCitas4;
+    private TableColumn<Integer, Integer> columnCitas1, columnCitas2, columnCitas3, columnCitas4;
 
     @FXML
-    private TableColumn<HoraAtencion, HoraAtencion> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
+    private TableColumn<Integer, Integer> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
 
     @FXML
     private JFXComboBox<Persona> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
@@ -97,7 +97,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     @FXML
     private Label lblfecha, lblInfoUser;
 
-    ObservableList<HoraAtencion> listHoraatencion = FXCollections.observableArrayList();
+    ObservableList<LocalTime> listHoraatencion = FXCollections.observableArrayList();
     LocalDate oFecha;
     CitaVerHuantaController odc = this;
     private double x = 0;
@@ -116,7 +116,6 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
     Persona oPersonaUser = new Persona();
-    List<HoraAtencion> olistHoraatencion = new ArrayList<>();
 
     @FXML
     private BorderPane bp_citas;
@@ -176,11 +175,17 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
     @FXML
     void updateListHoraatencion() {
-        olistHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         listHoraatencion.clear();
-        for (HoraAtencion oDoc : olistHoraatencion) {
-            listHoraatencion.add(oDoc);
-        }
+        listHoraatencion.addAll(
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(16, 0),
+                LocalTime.of(17, 0),
+                LocalTime.of(18, 0),
+                LocalTime.of(19, 0),
+                LocalTime.of(20, 0));
     }
 
     @FXML
@@ -458,9 +463,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         HoraLabel.setStyle("-fx-text-fill: white");
         Label CitasLabel = new Label("Citas");
         CitasLabel.setStyle("-fx-text-fill: white");
-        columnHoraAtencion1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnCitas1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado1.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        columnHoraAtencion1.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnCitas1.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnEstado1.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
 
         columnHoraAtencion1.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion1.setGraphic(HoraLabel);
@@ -475,9 +480,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         HoraLabel.setStyle("-fx-text-fill: white");
         Label CitasLabel = new Label("Citas");
         CitasLabel.setStyle("-fx-text-fill: white");
-        columnHoraAtencion2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnCitas2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado2.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        columnHoraAtencion2.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnCitas2.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnEstado2.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
 
         columnHoraAtencion2.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion2.setGraphic(HoraLabel);
@@ -492,9 +497,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         HoraLabel.setStyle("-fx-text-fill: white");
         Label CitasLabel = new Label("Citas");
         CitasLabel.setStyle("-fx-text-fill: white");
-        columnHoraAtencion3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnCitas3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado3.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        columnHoraAtencion3.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnCitas3.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnEstado3.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
 
         columnHoraAtencion3.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion3.setGraphic(HoraLabel);
@@ -509,9 +514,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         HoraLabel.setStyle("-fx-text-fill: white");
         Label CitasLabel = new Label("Citas");
         CitasLabel.setStyle("-fx-text-fill: white");
-        columnHoraAtencion4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnCitas4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
-        columnEstado4.setCellValueFactory(new PropertyValueFactory<HoraAtencion, HoraAtencion>("horaatencion"));
+        columnHoraAtencion4.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnCitas4.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
+        columnEstado4.setCellValueFactory(new PropertyValueFactory<Integer, Integer>("hour"));
 
         columnHoraAtencion4.setCellFactory(getCellHoraAtencion());
         columnHoraAtencion4.setGraphic(HoraLabel);
@@ -521,12 +526,12 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         columnEstado4.setCellFactory(getCellEstado(jcbDoctor4));
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellHoraAtencion() {
-        Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellHoraAtencion = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
+    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellHoraAtencion() {
+        Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> cellHoraAtencion = (TableColumn<Integer, Integer> param) -> {
             // make cell containing buttons
-            final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
+            final TableCell<Integer, Integer> cell = new TableCell<Integer, Integer>() {
                 @Override
-                public void updateItem(HoraAtencion item, boolean empty) {
+                public void updateItem(Integer item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -537,12 +542,12 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         Label label = new Label();
                         label.setFont(new Font("Times New Roman Bold", 13));
                         LocalTime time = LocalTime.now();
-                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                        if (item == time.getHour()) {
                             setStyle("-fx-background-color:#334ccc");
                         }
                         label.setStyle("-fx-text-fill: white");
 
-                        label.setText(item.getHora() + " " + item.getAbreviatura());
+                        label.setText(oUtilClass.toformat12horas(item));
                         setGraphic(label);
                         setText("");
 
@@ -554,12 +559,12 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellCitas(JFXComboBox<Persona> jcb) {
-        Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellHoraAtencion = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
+    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellCitas(JFXComboBox<Persona> jcb) {
+        Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> cellHoraAtencion = (TableColumn<Integer, Integer> param) -> {
             // make cell containing buttons
-            final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
+            final TableCell<Integer, Integer> cell = new TableCell<Integer, Integer>() {
                 @Override
-                public void updateItem(HoraAtencion item, boolean empty) {
+                public void updateItem(Integer item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -569,7 +574,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
                             if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona()
-                                    && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                                    && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha)) {
                                 listCita.add(citaRaiz);
                             }
@@ -595,9 +600,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
+                            buttonCita.setText(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + cita.getNombrepaciente());
                             if (cita.getLugar().getIdlugar() != oPersonaUser.getLugar().getIdlugar()) {
-                                buttonCita.setText(cita.getHoraatencion().getHora() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
+                                buttonCita.setText(cita.getHora().getHour() + ":" + cita.getMinuto() + " " + cita.getLugar().getNombrelugar());
 
                             } else {
                                 Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
@@ -614,17 +619,17 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         setStyle("-fx-pref-height: 0px;   -fx-background-color:  linear-gradient(from 41px 39px to 50px 50px, reflect,  #b7cdf7 30%, #bfd5ff  47%);");
                         setStyle("-fx-background-color: transparent");
                         LocalTime time = LocalTime.now();
-                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                        if (item == time.getHour()) {
                             setStyle("-fx-background-color:#334ccc");
                         }
                     }
                 }
 
-                void modificarCita(ActionEvent event, TableView<HoraAtencion> table) {
+                void modificarCita(ActionEvent event, TableView<Integer> table) {
                     JFXButton buton = (JFXButton) event.getSource();
                     Cita oCita = (Cita) buton.getUserData();
                     CitaModificarController oCitaModificarController = (CitaModificarController) oUtilClass.mostrarVentana(CitaModificarController.class, "CitaModificar", ap);
-                    oCitaModificarController.setController(odc, table, olistHoraatencion);
+                    oCitaModificarController.setController(odc, table);
                     oCitaModificarController.setCita(oCita);
                     lockedPantalla();
                 }
@@ -634,13 +639,13 @@ public class CitaVerHuantaController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> getCellEstado(JFXComboBox<Persona> jcb) {
-        Callback<TableColumn<HoraAtencion, HoraAtencion>, TableCell<HoraAtencion, HoraAtencion>> cellFoctory = (TableColumn<HoraAtencion, HoraAtencion> param) -> {
+    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellEstado(JFXComboBox<Persona> jcb) {
+        Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> cellFoctory = (TableColumn<Integer, Integer> param) -> {
             // make cell containing buttons
-            final TableCell<HoraAtencion, HoraAtencion> cell = new TableCell<HoraAtencion, HoraAtencion>() {
+            final TableCell<Integer, Integer> cell = new TableCell<Integer, Integer>() {
 
                 @Override
-                public void updateItem(HoraAtencion item, boolean empty) {
+                public void updateItem(Integer item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -651,14 +656,14 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                         int tamWidthImag = 20;
                         List<Cita> listCitaOcupada = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCitaOcupada.add(citaRaiz);
                             }
                         }
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == item.getIdhoraatencion()
+                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha) && !citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCita.add(citaRaiz);
                             }
@@ -697,7 +702,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                             }
                         }
                         LocalTime time = LocalTime.now();
-                        if (Integer.parseInt(item.getHora()) == time.getHour()) {
+                        if (item == time.getHour()) {
                             setStyle("-fx-background-color:#334ccc");
                         }
                         setText(null);
@@ -705,9 +710,9 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                     }
                 }
 
-                void mostrarAgregar(MouseEvent event, TableView<HoraAtencion> table) {
+                void mostrarAgregar(MouseEvent event, TableView<Integer> table) {
                     Button buton = (Button) event.getSource();
-                    HoraAtencion oHora = (HoraAtencion) buton.getUserData();
+                    int oHora = (Integer) buton.getUserData();
 
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class, "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
@@ -716,18 +721,19 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                 }
 
                 void guardarEliminarBloqueo(MouseEvent event, Button addicon) {
-                    HoraAtencion oHora = (HoraAtencion) addicon.getUserData();
+                     int oHora = (Integer) addicon.getUserData();
+                    LocalTime lt_hora = LocalTime.of(oHora, 00);
                     List<Cita> listCitaOcupada = new ArrayList<>();
 
                     for (Cita citaRaiz : listCitaRaiz) {
-                        if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHoraatencion().getIdhoraatencion() == oHora.getIdhoraatencion()
+                        if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == oHora
                                 && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                             listCitaOcupada.add(citaRaiz);
                         }
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), oHora, oFecha, "OCUPADO", oPersonaUser.getLugar(), oPersonaUser);
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", oPersonaUser.getLugar(), oPersonaUser);
                         http.AddObject(Cita.class, ocita, "/AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
