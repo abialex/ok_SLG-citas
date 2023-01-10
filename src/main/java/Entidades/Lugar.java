@@ -42,6 +42,12 @@ public class Lugar {
     public void setNombrelugar(String nombrelugar) {
         this.nombrelugar = nombrelugar;
     }
+
+    @Override
+    public String toString() {
+        return nombrelugar;
+    }
+    
     
     
 

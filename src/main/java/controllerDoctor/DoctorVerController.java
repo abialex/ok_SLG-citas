@@ -187,7 +187,7 @@ public class DoctorVerController implements Initializable {
                         Label olabel = new Label();
                         olabel.setStyle("-fx-text-fill: white; -fx-alignment: center" );
                         olabel.setUserData(item);
-                        olabel.setText(item.getUsuario().getUsername());
+                        olabel.setText("falta aqui");
                         //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
                         //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
                         olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {

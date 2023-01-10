@@ -111,14 +111,14 @@ public class CitaModificarController implements Initializable {
     void modificarCita() {
         if (isComplete()) {
             JsonObject citaAtributesJson = new JsonObject();
-            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
+            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getPersona().getIdpersona());
             citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
             citaAtributesJson.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
-            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIdpersona());
+            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getPersona().getIdpersona());
             citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson4.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson4);
@@ -174,7 +174,7 @@ public class CitaModificarController implements Initializable {
     public void setCita(Cita oCita) {
         
         this.oCita = oCita;
-        jtfDoctor.setText(oCita.getDoctor().getNombres() + " " + oCita.getDoctor().getAp_paterno());
+        jtfDoctor.setText(oCita.getDoctor().getPersona().getNombres() + " " + oCita.getDoctor().getPersona().getAp_paterno());
         jtfFecha.setText(oCita.getFechacita() + "");
         for (Integer hora : listHora) {
             if (hora == oCita.getHora().getHour()) {

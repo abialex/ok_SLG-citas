@@ -494,7 +494,7 @@ public class Citapdf {
                 boolean aux = true;
                 boolean UnaVez = true;
                 for (Cita cita : listCita) {
-                    if (cita.getDoctor().getIdpersona() == odoctor.getIdpersona() && cita.getHora().getHour() == ohora) {
+                    if (cita.getDoctor().getPersona().getIdpersona() == odoctor.getIdpersona() && cita.getHora().getHour() == ohora) {
                         aux = false;
                         if (cita.getNombrepaciente() != null) {
                             if (UnaVez) {

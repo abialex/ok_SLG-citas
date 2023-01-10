@@ -16,26 +16,27 @@ public class Cita {
     private int idcita;
     private String nombrepaciente;
     private LocalDate fechacita;
-    private Persona doctor;
+    private Doctor doctor;
+    private Persona persona;
     private LocalTime hora;
     private Lugar lugar;
     private String celular;
     private String razon;
-    private Persona persona;
+    private Usuario usuario;
 
     public Cita() {
     }
 
-    public Cita(Persona doctor, LocalTime horaatencion, LocalDate fechacita, String razon, Lugar lugar, Persona persona) {
+    public Cita(Doctor doctor, LocalTime horaatencion, LocalDate fechacita, String razon, Lugar lugar, Usuario usuario) {
         this.fechacita = fechacita;
         this.doctor = doctor;
         this.hora = horaatencion;
         this.lugar = lugar;
         this.razon = razon;
-        this.persona = persona;
+        this.usuario = usuario;
     }
 
-    public Cita(Persona oDoctor, String nombrepaciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String celular, Lugar lugar, Persona personauser) {
+    public Cita(Doctor oDoctor, String nombrepaciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String celular, Lugar lugar, Usuario personauser) {
         this.doctor = oDoctor;
         this.nombrepaciente = nombrepaciente;
         this.hora = horaAtencion;
@@ -43,7 +44,7 @@ public class Cita {
         this.razon = razon;
         this.celular = celular;
         this.lugar = lugar;
-        this.persona = personauser;
+        this.usuario = personauser;
     }
 
     public int getIdcita() {
@@ -70,12 +71,20 @@ public class Cita {
         this.fechacita = fechacita;
     }
 
-    public Persona getDoctor() {
+    public Doctor getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Persona doctor) {
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalTime getHora() {
@@ -108,14 +117,6 @@ public class Cita {
 
     public void setRazon(String razon) {
         this.razon = razon;
-    }
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
     }
 
 }

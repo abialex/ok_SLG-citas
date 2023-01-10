@@ -11,6 +11,8 @@ package Entidades;
 public class Usuario {
     private String username;
     private String email;
+    private Persona persona;
+    private boolean admin;
 
     public Usuario() {
     }
@@ -30,7 +32,21 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
     
 }

@@ -17,27 +17,18 @@ import javax.persistence.ManyToOne;
  *
  * @author alexis
  */
-@Entity
+
 public class Doctor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int iddoctor;
-
-    @Column(name = "nombredoctor", nullable = true)
-    private String nombredoctor;
-
-    @Column(name = "activo", nullable = true)
-    private boolean activo;
-
-    @Column(name = "flag", nullable = true)
-    private boolean flag;
+    private String cop;
+    private Persona persona;
 
     public Doctor() {
     }
 
     public Doctor(String persona) {
-        this.nombredoctor = persona;
+        this.cop = persona;
     }
 
     public int getIddoctor() {
@@ -49,36 +40,38 @@ public class Doctor {
     }
 
     public String getNombredoctor() {
-        return nombredoctor;
+        return cop;
     }
 
     public void setNombredoctor(String nombredoctor) {
-        this.nombredoctor = nombredoctor;
-    }
-
-    public boolean isFlag() {
-        return flag;
-    }
-
-    public void setFlag(boolean flag) {
-        this.flag = flag;
+        this.cop = nombredoctor;
     }
 
     public Doctor getDoctor() {
         return this;
     }
 
-    public boolean isActivo() {
-        return activo;
+    public String getCop() {
+        return cop;
     }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
+    public void setCop(String cop) {
+        this.cop = cop;
     }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+    
+    
 
     @Override
     public String toString() {
-        return this.nombredoctor;
+        return this.persona.toString();
     }
 
 }

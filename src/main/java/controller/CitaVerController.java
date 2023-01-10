@@ -5,8 +5,11 @@
 package controller;
 
 import Entidades.Cita;
+import Entidades.Doctor;
 import Entidades.Lugar;
 import Entidades.Persona;
+import Entidades.Rol;
+import Entidades.Usuario;
 import Pdf.Citapdf;
 
 import Util.FileImagUtil;
@@ -106,7 +109,7 @@ public class CitaVerController implements Initializable, Runnable {
     private TableColumn<Integer, Integer> columnEstado1, columnEstado2, columnEstado3, columnEstado4;
 
     @FXML
-    private JFXComboBox<Persona> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
+    private JFXComboBox<Doctor> jcbDoctor1, jcbDoctor2, jcbDoctor3, jcbDoctor4;
 
     @FXML
     private JFXComboBox<String> jcbMes, jcbAnio;
@@ -131,15 +134,16 @@ public class CitaVerController implements Initializable, Runnable {
     String colorPlomo = "-fx-background-color:GRAY; -fx-border-color: #000000";
     String colorBlue = "-fx-background-color:BLUE; -fx-border-color: #000000";
     String colorYellow = "-fx-background-color: #337ab7; -fx-border-color: #000000";
-    Persona personadoctorNinguno;
+    Doctor personadoctorNinguno;
     List<Cita> listCitaRaiz = new ArrayList<>();
     //List<SettingsDoctor> listdc = new ArrayList<>();
-    List<Persona> listpersonaDoctorG = new ArrayList<>();
+    List<Doctor> listpersonaDoctorG = new ArrayList<>();
     boolean stoperActualizarComboBox = true;
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    Persona oPersonaUser = new Persona();
+    List<Lugar> list_lugar=new ArrayList<>();
+    Usuario oUsuario = new Usuario();
 
     @Override
     public void run() {
@@ -159,8 +163,8 @@ public class CitaVerController implements Initializable, Runnable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
-
-        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
+        System.out.println("INICIO");
+        listpersonaDoctorG = http.getList(Doctor.class, "/DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
         tableDoctor2.setItems(listHoraatencion);
@@ -178,12 +182,13 @@ public class CitaVerController implements Initializable, Runnable {
         initTable();
         h1 = new Thread(this);
         h1.start();
-        especial_navidad();
+
     }
 
-    public void setController(Persona opersona) {
-        this.oPersonaUser = opersona;
-        lblInfoUser.setText(opersona.getRol().getRolname() + ": " + opersona.getNombres() + " " + opersona.getAp_paterno() + " " + opersona.getAp_materno());
+    public void setController(Usuario osuario, Rol orol, ArrayList<Lugar> list_lugar) {
+        this.oUsuario = osuario;
+        this.list_lugar = list_lugar;
+        lblInfoUser.setText(osuario.getPersona().getNombres() + " " + osuario.getPersona().getAp_paterno() + " " + osuario.getPersona().getAp_materno());
     }
 
     void reconsulta() {
@@ -226,19 +231,20 @@ public class CitaVerController implements Initializable, Runnable {
     }
 
     public void UpdatecargarDoctor() {
-        listpersonaDoctorG = http.getList(Persona.class, "/DoctorAll");
+        listpersonaDoctorG = http.getList(Doctor.class, "/DoctorAll");
         cargarDoctor();
     }
 
     public void cargarDoctor() {
         stoperActualizarComboBox = false;
-        ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
-        personadoctorNinguno = new Persona();
-        personadoctorNinguno.setIdpersona(-1);
-        personadoctorNinguno.setNombres("NINGUNO");
-        personadoctorNinguno.setAp_paterno("");
+        ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
+        Persona oper = new Persona();
+        oper.setNombres("NINGUNO");
+        oper.setAp_paterno("");
+        personadoctorNinguno = new Doctor();
+        personadoctorNinguno.setPersona(oper);
         listDoctor.add(personadoctorNinguno);
-        for (Persona odoct : listpersonaDoctorG) {
+        for (Doctor odoct : listpersonaDoctorG) {
             listDoctor.add(odoct);
         }
         jcbDoctor1.setItems(listDoctor);
@@ -267,26 +273,26 @@ public class CitaVerController implements Initializable, Runnable {
         jcbDoctor4.getSelectionModel().select(personadoctorNinguno);
 
         int idjcbdoctor1 = extraerIdJCBdoctor("jcbdoctor1");
-        for (Persona doctor : listpersonaDoctorG) {
-            if (doctor.getIdpersona() == idjcbdoctor1) {
+        for (Doctor doctor : listpersonaDoctorG) {
+            if (doctor.getPersona().getIdpersona() == idjcbdoctor1) {
                 jcbDoctor1.getSelectionModel().select(doctor);
             }
         }
         int idjcbdoctor2 = extraerIdJCBdoctor("jcbdoctor2");
-        for (Persona doctor : listpersonaDoctorG) {
-            if (doctor.getIdpersona() == idjcbdoctor2) {
+        for (Doctor doctor : listpersonaDoctorG) {
+            if (doctor.getPersona().getIdpersona() == idjcbdoctor2) {
                 jcbDoctor2.getSelectionModel().select(doctor);
             }
         }
         int idjcbdoctor3 = extraerIdJCBdoctor("jcbdoctor3");
-        for (Persona doctor : listpersonaDoctorG) {
-            if (doctor.getIdpersona() == idjcbdoctor3) {
+        for (Doctor doctor : listpersonaDoctorG) {
+            if (doctor.getPersona().getIdpersona() == idjcbdoctor3) {
                 jcbDoctor3.getSelectionModel().select(doctor);
             }
         }
         int idjcbdoctor4 = extraerIdJCBdoctor("jcbdoctor4");
-        for (Persona doctor : listpersonaDoctorG) {
-            if (doctor.getIdpersona() == idjcbdoctor4) {
+        for (Doctor doctor : listpersonaDoctorG) {
+            if (doctor.getPersona().getIdpersona() == idjcbdoctor4) {
                 jcbDoctor4.getSelectionModel().select(doctor);
             }
         }
@@ -378,16 +384,16 @@ public class CitaVerController implements Initializable, Runnable {
         //buton.setStyle(colorYellow);
         oFecha = (LocalDate) buton.getUserData();
         refreshTable();
-        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - " + oPersonaUser.getRol().getRolname());
+        lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
     }
 
     void modificarSettingsDoctor(JFXComboBox jcb) {
         if (stoperActualizarComboBox) {
-            Persona doctor = (Persona) jcb.getSelectionModel().getSelectedItem();
+            Doctor doctor = (Doctor) jcb.getSelectionModel().getSelectedItem();
             int idjcbdoctor = extraerIdJCBdoctor(jcb.getId());
             if (doctor != personadoctorNinguno) {
-                if (idjcbdoctor != doctor.getIdpersona()) {
-                    oUtilClass.updateArchivo(jcb.getId(), doctor.getIdpersona() + "");
+                if (idjcbdoctor != doctor.getPersona().getIdpersona()) {
+                    oUtilClass.updateArchivo(jcb.getId(), doctor.getPersona().getIdpersona() + "");
                 }
             } else {
                 oUtilClass.updateArchivo(jcb.getId(), "-1");
@@ -571,7 +577,7 @@ public class CitaVerController implements Initializable, Runnable {
                             setStyle("-fx-background-color:#334ccc");
                         }
                         label.setStyle("-fx-text-fill: white");
-                            
+
                         label.setText(oUtilClass.toformat12horasAMPM(item));
                         setGraphic(label);
                         setText("");
@@ -584,7 +590,7 @@ public class CitaVerController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellCitas(JFXComboBox<Persona> jcb) {
+    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellCitas(JFXComboBox<Doctor> jcb) {
         Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> cellHoraAtencion = (TableColumn<Integer, Integer> param) -> {
             // make cell containing buttons
             final TableCell<Integer, Integer> cell = new TableCell<Integer, Integer>() {
@@ -598,7 +604,7 @@ public class CitaVerController implements Initializable, Runnable {
                     } else {
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona()
+                            if (citaRaiz.getDoctor().getPersona().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getPersona().getIdpersona()
                                     && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha)) {
                                 listCita.add(citaRaiz);
@@ -661,7 +667,7 @@ public class CitaVerController implements Initializable, Runnable {
         return cellHoraAtencion;
     }
 
-    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellEstado(JFXComboBox<Persona> jcb) {
+    Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> getCellEstado(JFXComboBox<Doctor> jcb) {
         Callback<TableColumn<Integer, Integer>, TableCell<Integer, Integer>> cellFoctory = (TableColumn<Integer, Integer> param) -> {
             // make cell containing buttons
             final TableCell<Integer, Integer> cell = new TableCell<Integer, Integer>() {
@@ -678,14 +684,14 @@ public class CitaVerController implements Initializable, Runnable {
                         int tamWidthImag = 20;
                         List<Cita> listCitaOcupada = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == item
+                            if (citaRaiz.getDoctor().getPersona().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getPersona().getIdpersona() && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCitaOcupada.add(citaRaiz);
                             }
                         }
                         List<Cita> listCita = new ArrayList<>();
                         for (Cita citaRaiz : listCitaRaiz) {
-                            if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == item
+                            if (citaRaiz.getDoctor().getPersona().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getPersona().getIdpersona() && citaRaiz.getHora().getHour() == item
                                     && citaRaiz.getFechacita().isEqual(oFecha) && !citaRaiz.getRazon().equals("OCUPADO")) {
                                 listCita.add(citaRaiz);
                             }
@@ -719,7 +725,7 @@ public class CitaVerController implements Initializable, Runnable {
                         managebtn.setStyle("-fx-alignment:center");
                         VBox.setMargin(addIcon, new Insets(4, 0, 4, 0));
                         if (jcb.getSelectionModel().getSelectedItem() != null) {
-                            if (jcb.getSelectionModel().getSelectedItem().getIdpersona() != -1) {
+                            if (jcb.getSelectionModel().getSelectedItem().getPersona().getIdpersona() != -1) {
                                 setGraphic(managebtn);
                             }
                         }
@@ -739,7 +745,7 @@ public class CitaVerController implements Initializable, Runnable {
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class,
                             "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
-                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oPersonaUser);
+                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oUsuario,list_lugar);
                     lockedPantalla();
                 }
 
@@ -749,14 +755,14 @@ public class CitaVerController implements Initializable, Runnable {
                     List<Cita> listCitaOcupada = new ArrayList<>();
 
                     for (Cita citaRaiz : listCitaRaiz) {
-                        if (citaRaiz.getDoctor().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getIdpersona() && citaRaiz.getHora().getHour() == oHora
+                        if (citaRaiz.getDoctor().getPersona().getIdpersona() == jcb.getSelectionModel().getSelectedItem().getPersona().getIdpersona() && citaRaiz.getHora().getHour() == oHora
                                 && citaRaiz.getFechacita().isEqual(oFecha) && citaRaiz.getRazon().equals("OCUPADO")) {
                             listCitaOcupada.add(citaRaiz);
                         }
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", oPersonaUser.getLugar(), oPersonaUser);
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", list_lugar, oUsuario);
                         http.AddObject(Cita.class, ocita, "/AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
@@ -1084,14 +1090,14 @@ public class CitaVerController implements Initializable, Runnable {
 
         alertPregunta.setHeaderText(null);
         alertPregunta.setTitle("Info");
-        alertPregunta.setContentText(oPersonaUser.getNombres() + " ¿desea cerrar sesión?");
+        alertPregunta.setContentText(oUsuario.getPersona().getNombres() + " ¿desea cerrar sesión?");
         Optional<ButtonType> result = alertPregunta.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             int statusCode = http.CerrarSesion().statusCode();
             if (statusCode == 200) {
                 alertOK.setHeaderText(null);
                 alertOK.setTitle(null);
-                alertOK.setContentText("Nos vemos " + oPersonaUser.getNombres());
+                alertOK.setContentText("Nos vemos " + oUsuario.getPersona().getNombres());
                 alertOK.showAndWait();
                 cerrar();
                 LoginController oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", new Stage());
@@ -1104,7 +1110,6 @@ public class CitaVerController implements Initializable, Runnable {
             }
         }
     }
-
 
     public void stop() {
         h1.stop();

@@ -5,9 +5,13 @@
 package controller;
 
 import Entidades.Cita;
+import Entidades.Doctor;
+import Entidades.Lugar;
 import Entidades.Persona;
+import Entidades.Usuario;
 import Util.HttpMethods;
 import Util.UtilClass;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.net.URL;
@@ -29,6 +33,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.swing.JComboBox;
 
 /**
  * FXML Controller class
@@ -51,15 +56,19 @@ public class CitaAgregarController implements Initializable {
 
     @FXML
     private ImageView img_user_doctor, img_calendario, img_user_paciente, img_reloj, img_razon, img_telefono;
+    
+    @FXML
+    private JFXComboBox<Lugar> jcb_lugar;
 
     @FXML
     private ImageView img_icon_1, img_icon_2;
 
     Object oObjetoController;
     Integer horaAtencionpurga;
-    Persona oDoctorpersona;
+    Doctor oDoctorpersona;
     LocalDate oFechaCita;
-    Persona oPersonaUser;
+    Usuario oUsuario;
+    List<Lugar> list_lugar;
     TableView<Integer> table;
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass = new UtilClass();
@@ -67,7 +76,6 @@ public class CitaAgregarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initRestricciones();
-        especial_navidad();
     }
 
     void initRestricciones() {
@@ -81,12 +89,19 @@ public class CitaAgregarController implements Initializable {
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    public void setPersona(Integer oHora, Persona operdoc, LocalDate oFecha, Persona persona) {
+    public void setPersona(Integer oHora, Doctor odoctor, LocalDate oFecha, Usuario persona, List<Lugar> lugares) {
         this.horaAtencionpurga = oHora;
-        this.oDoctorpersona = operdoc;
+        this.oDoctorpersona = odoctor;
         this.oFechaCita = oFecha;
-        this.oPersonaUser = persona;
-        jtfDoctor.setText(operdoc.getNombres());
+        this.oUsuario = persona;
+        this.list_lugar = lugares;
+        ObservableList<Lugar> list_lugar_o = FXCollections.observableArrayList();
+        for (Lugar olugar : list_lugar) {
+            list_lugar_o.add(olugar);
+        }
+        jcb_lugar.setItems(list_lugar_o);       
+        jcb_lugar.getSelectionModel().select(list_lugar_o.get(0));
+        jtfDoctor.setText(odoctor.getPersona().getNombres());
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora+"");
         //lblAMPM.setText(oHora.getAbreviatura());
@@ -96,7 +111,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), oPersonaUser.getLugar(), oPersonaUser);
+            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), jcb_lugar.getSelectionModel().getSelectedItem(), oUsuario);
             http.AddObject(Cita.class, ocita, "/AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();

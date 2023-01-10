@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -83,6 +84,7 @@ public class UtilClass {
     }
 
     public Object mostrarVentana(Class generico, String nameFXML, Stage st) {
+        System.out.println(generico);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(generico.getResource(nameFXML + ".fxml"));
         Parent root = null;
@@ -232,9 +234,9 @@ public class UtilClass {
         }
     }
 
-    public <T> void ejecutarMetodos_1params(Object objClass, String metodo, T param1) {
+    public <R,T2,Y> void ejecutarMetodos_1params(Object objClass, String metodo, R param1, T2 param2,List<Y> param3) {
         try {
-            objClass.getClass().getDeclaredMethod(metodo, param1.getClass()).invoke(objClass, param1);
+            objClass.getClass().getDeclaredMethod(metodo, param1.getClass(),param2.getClass(), param3.getClass()).invoke(objClass, param1,param2,param3);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -244,13 +246,13 @@ public class UtilClass {
         int hora12f = hora - 12 == 0 ? 12 : hora - 12;
         return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) + " pm" : ((hora < 10 ? "0" + hora : hora)) + " am";
     }
-    
+
     public String toformat12horas(int hora) {
         int hora12f = hora - 12 == 0 ? 12 : hora - 12;
-        return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) +"": ((hora < 10 ? "0" + hora : hora))+"";
+        return hora12f >= 0 ? (hora12f < 10 ? "0" + hora12f : hora12f) + "" : ((hora < 10 ? "0" + hora : hora)) + "";
     }
-    
-    public String toformat00(int hora){
-        return hora>10 ? hora+"": "0"+hora;
+
+    public String toformat00(int hora) {
+        return hora > 10 ? hora + "" : "0" + hora;
     }
 }

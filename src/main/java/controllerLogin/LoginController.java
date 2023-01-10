@@ -4,7 +4,10 @@
  */
 package controllerLogin;
 
+import Entidades.Lugar;
 import Entidades.Persona;
+import Entidades.Rol;
+import Entidades.Usuario;
 import Perspectiva.CitaVerHuamangaController;
 import Perspectiva.CitaVerHuantaController;
 import Perspectiva.CitaVerObservadorController;
@@ -18,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -58,10 +62,10 @@ public class LoginController implements Initializable {
     public void validarWithCookie() {
         HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
         if (response != null) {
-            Persona opersona = json.fromJson(response.body(), Persona.class);
+            Usuario ousuario = json.fromJson(response.body(), Usuario.class);
             if (response.statusCode() == 226) {
                 lblMensaje.setText("Ya está logueado");
-                ingresar(opersona);
+                ingresar(ousuario);
 
             }
         }
@@ -74,7 +78,7 @@ public class LoginController implements Initializable {
             if (response != null) {
                 switch (response.statusCode()) {
                     case 200:
-                        Persona opersona = json.fromJson(response.body(), Persona.class);
+                        Usuario osuario = json.fromJson(response.body(), Usuario.class);
                         /* validar que exista el header
                          validar que haya mas de 43 caracteres */
                         if (response.headers().allValues("set-cookie").size() > 1) {
@@ -83,8 +87,8 @@ public class LoginController implements Initializable {
                                     + " " + response.headers().allValues("set-cookie").get(1).substring(0, 42));
                         }
 
-                        lblMensaje.setText("Bienvenido " + opersona.getNombres() + ".");
-                        ingresar(opersona);
+                        lblMensaje.setText("Bienvenido " + osuario.getPersona().getNombres() + ".");
+                        ingresar(osuario);
                         break;
 
                     case 226:
@@ -106,31 +110,51 @@ public class LoginController implements Initializable {
         }
     }
 
-    void ingresar(Persona opersona) {
+    Lugar getLugarUsuario(List<Lugar> list_lugar, String nombre_lugar) {
+
+        for (Lugar lugar : list_lugar) {
+            if (lugar.getNombrelugar().equals(nombre_lugar)) {
+                return lugar;
+            }
+        }
+        return new Lugar();
+    }
+
+    void ingresar(Usuario osuario) {
         Stage stage = new Stage();
-        if (opersona.getAdmin()) {
-            oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
-            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
-        } else if (opersona.getRol().getRolname().equals("ASISTENTA")) {
-            if (opersona.getLugar().getNombrelugar().equals("HUANTA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerHuantaController.class, "CitaVerHuanta", stage);
-                oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
-
-            } else if (opersona.getLugar().getNombrelugar().equals("HUAMANGA")) {
-                oControllerVista = oUtilClass.mostrarVentana(CitaVerHuamangaController.class, "CitaVerHuamanga", stage);
-                oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
-
-            } else if (opersona.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
-                //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
+        List<Rol> list_rol = http.getList(Rol.class, "/RolUserAll");
+        List<Lugar> list_lugar = http.getList(Lugar.class, "/LugarUserAll");
+        Rol orol = null;
+        if (list_rol.size() == 1) {
+            orol = list_rol.get(0);
+            switch (orol.getRolname()) {
+                case "ADMINISTRADOR":
+                    oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
+                    oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", osuario, orol, list_lugar);
+                    break;
+                case "ASISTENTA_HUANTA":
+                    oControllerVista = oUtilClass.mostrarVentana(CitaVerHuantaController.class, "CitaVerHuanta", stage);
+                    oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", osuario, orol, list_lugar);
+                    break;
+                case "ASISTENTA_HUAMANGA":
+                    oControllerVista = oUtilClass.mostrarVentana(CitaVerHuamangaController.class, "CitaVerHuamanga", stage);
+                    oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", osuario, orol, list_lugar);
+                    break;
+                case "DOCTOR":
+                    oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+                    oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", osuario, orol, list_lugar);
+                    break;
+                case "OBSERVADOR":
+                    oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+                    oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", osuario, orol, list_lugar);
+                    break;
+                default:
+                    throw new AssertionError();
             }
 
-        } else if (opersona.getRol().getRolname().equals("OBSERVADOR")) {
-            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
-            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
+        } else if (list_rol.size() >= 1) {
+            //abrir con abrirSELECCIONADOR DE LUGAR
 
-        } else if (opersona.getRol().getRolname().equals("DOCTOR")) {
-            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
-            oUtilClass.ejecutarMetodos_1params(oControllerVista, "setController", opersona);
         }
         cerrar();
     }

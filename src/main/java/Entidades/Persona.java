@@ -11,25 +11,22 @@ import java.time.LocalDate;
  * @author alexis
  */
 public class Persona {
- 
+
     private int idpersona;
     private String nombres;
     private String ap_paterno;
     private String ap_materno;
     private LocalDate fecha_cumple;
     //private int idusuario;
-    private Rol rol;
-    private Lugar lugar;
-    private Usuario usuario;
-    private Boolean admin;
 
     public Persona() {
     }
-    public Persona(String nombress,String ap_paterno){
-        this.nombres = nombress;        
+
+    public Persona(String nombress, String ap_paterno) {
+        this.nombres = nombress;
         this.ap_paterno = ap_paterno;
     }
-    
+
     public int getIdpersona() {
         return idpersona;
     }
@@ -70,47 +67,13 @@ public class Persona {
         this.fecha_cumple = fecha_cumple;
     }
 
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
-    public Lugar getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
-    }
-    
-    public Persona getPersona(){
+    public Persona getPersona() {
         return this;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
-    }
-      
     @Override
     public String toString() {
-        return this.nombres+" "+this.ap_paterno;
+        return this.nombres + " " + this.ap_paterno;
     }
-    
-    
-       
+
 }
