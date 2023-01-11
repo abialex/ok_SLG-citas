@@ -9,6 +9,7 @@ package Entidades;
  * @author alexis
  */
 public class Usuario {
+    private int id;
     private String username;
     private String email;
     private Persona persona;
@@ -48,5 +49,15 @@ public class Usuario {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
     
 }

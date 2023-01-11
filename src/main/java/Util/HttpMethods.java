@@ -150,6 +150,23 @@ public class HttpMethods {
 
         return listGenericos2;
     }
+    public <T> T ConsultObject(Class<T> generico, String metodo,String dato) {
+        HttpResponse<String> response= procesoHttpGET(citaUrl+metodo+"/"+dato);
+        T obj=null;
+        switch (response.statusCode()) {
+            case 200:
+                obj=json.fromJson(response.body(), generico);
+                break;
+            case 204:
+                System.out.println(response.body());
+                obj=null;
+                break;
+            default:
+                obj=null;
+                break;
+        }           
+        return obj;
+    }
 
     public <T> HttpResponse<String> AddObject(Class<T> generico, Object objeto, String metodo) {
         T obj = (T) objeto;
@@ -165,7 +182,7 @@ public class HttpMethods {
         responseRPTA = response.body();
         return responseRPTA;
     }
-
+    
     public <T> HttpResponse<String> DeleteObject(Class<T> generico, String metodo, String var) {
         JsonObject Objson = new JsonObject();
         Objson.addProperty("id", var);

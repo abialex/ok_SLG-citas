@@ -15,6 +15,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.net.URL;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CitaAgregarController implements Initializable {
     private AnchorPane ap;
 
     @FXML
-    private JFXTextField jtfDoctor, jtfFecha, jtfHora, jtfminuto;
+    private JFXTextField jtfDoctor, jtfFecha, jtfHora, jtfminuto, jtf_dni;
 
     @FXML
     private JFXTextField jtfrazon, jtfnombrepaciente, jtftelefono;
@@ -56,7 +57,7 @@ public class CitaAgregarController implements Initializable {
 
     @FXML
     private ImageView img_user_doctor, img_calendario, img_user_paciente, img_reloj, img_razon, img_telefono;
-    
+
     @FXML
     private JFXComboBox<Lugar> jcb_lugar;
 
@@ -68,6 +69,7 @@ public class CitaAgregarController implements Initializable {
     Doctor oDoctorpersona;
     LocalDate oFechaCita;
     Usuario oUsuario;
+    Persona oPersona;
     List<Lugar> list_lugar;
     TableView<Integer> table;
     HttpMethods http = new HttpMethods();
@@ -99,11 +101,11 @@ public class CitaAgregarController implements Initializable {
         for (Lugar olugar : list_lugar) {
             list_lugar_o.add(olugar);
         }
-        jcb_lugar.setItems(list_lugar_o);       
+        jcb_lugar.setItems(list_lugar_o);
         jcb_lugar.getSelectionModel().select(list_lugar_o.get(0));
-        jtfDoctor.setText(odoctor.getPersona().getNombres());
+        jtfDoctor.setText(odoctor.getPersona().getNombres() + " " + odoctor.getPersona().getAp_paterno() + " " + odoctor.getPersona().getAp_materno());
         jtfFecha.setText(oFecha.toString());
-        jtfHora.setText(oHora+"");
+        jtfHora.setText(oHora + "");
         //lblAMPM.setText(oHora.getAbreviatura());
         jtfminuto.setText("00");
     }
@@ -111,7 +113,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctorpersona, jtfnombrepaciente.getText(), LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), jcb_lugar.getSelectionModel().getSelectedItem(), oUsuario);
+            Cita ocita = new Cita(oDoctorpersona, oPersona, LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), jcb_lugar.getSelectionModel().getSelectedItem(), oUsuario);
             http.AddObject(Cita.class, ocita, "/AddCita");
             oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
             table.refresh();
@@ -161,6 +163,19 @@ public class CitaAgregarController implements Initializable {
         img_icon_1.setVisible(true);
         img_icon_2.setVisible(true);
 
+    }
+
+    @FXML
+    void buscar_persona_by_dni() {
+        String dni = jtf_dni.getText();
+        Persona opersona = http.ConsultObject(Persona.class, "/GetDni", dni);
+        if(opersona != null){
+            oPersona = opersona;
+            jtfnombrepaciente.setText(opersona.getNombres()+" "+opersona.getAp_paterno()+" "+opersona.getAp_materno());
+        }
+        else{
+            jtfnombrepaciente.setText("no se encontró, registrelo --------->");
+        }
     }
 
 }
