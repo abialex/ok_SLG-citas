@@ -86,7 +86,8 @@ public class LoginController implements Initializable {
                             http.setCokkie(response.headers().allValues("set-cookie").get(0).substring(0, 43)
                                     + " " + response.headers().allValues("set-cookie").get(1).substring(0, 42));
                         }
-
+                        //actualizando csfr y cookie
+                        http = new HttpMethods();
                         lblMensaje.setText("Bienvenido " + osuario.getPersona().getNombres() + ".");
                         ingresar(osuario);
                         break;
