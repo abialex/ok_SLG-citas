@@ -4,6 +4,7 @@
  */
 package Util;
 import Entidades.Persona;
+import EntidadesAux.PersonaReniec;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -248,6 +249,24 @@ public class HttpMethods {
 
         }
         return nombrepc;
+    }
+    
+      public PersonaReniec consultarDNI(String dni) {
+        String urlReniec="https://dniruc.apisperu.com/api/v1/dni/";
+        String token="?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InlhbGxlXzEzQG91dGxvb2suY29tIn0.cCYpO0FV8HcMr58MDvUhPk82YyB67Bv754byZrgvzkc";
+         try {
+            HttpRequest requestPosts = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(urlReniec + dni+ token))
+                    .build();
+            HttpResponse<String> response = httpclient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+             PersonaReniec personReniec = json.fromJson(response.body(), PersonaReniec.class);
+            return personReniec;
+
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(HttpMethods.class.getName()).log(Level.SEVERE, ex.getMessage(), ex.getMessage());
+        }
+        return null;
     }
 
 }

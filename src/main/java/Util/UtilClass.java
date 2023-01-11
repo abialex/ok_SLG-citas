@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -138,6 +139,30 @@ public class UtilClass {
         }
     }
 
+    public void SoloNumerosEnteros4(KeyEvent event
+    ) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (!Character.isDigit(key)) {
+            event.consume();
+        }
+        if (o.getText().length() >= 4) {
+            event.consume();
+        }
+    }
+
+    public void SoloNumerosEnteros8(KeyEvent event
+    ) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (!Character.isDigit(key)) {
+            event.consume();
+        }
+        if (o.getText().length() >= 8) {
+            event.consume();
+        }
+    }
+
     public void SoloNumerosEnteros9(KeyEvent event) {
         JFXTextField o = (JFXTextField) event.getSource();
         char key = event.getCharacter().charAt(0);
@@ -145,6 +170,15 @@ public class UtilClass {
             event.consume();
         }
         if (o.getText().length() >= 9) {
+            event.consume();
+        }
+    }
+
+    public void SoloLetras(KeyEvent event
+    ) {
+        JFXTextField o = (JFXTextField) event.getSource();
+        char key = event.getCharacter().charAt(0);
+        if (Character.isDigit(key)) {
             event.consume();
         }
     }
@@ -234,9 +268,9 @@ public class UtilClass {
         }
     }
 
-    public <R,T2,Y> void ejecutarMetodos_1params(Object objClass, String metodo, R param1, T2 param2,List<Y> param3) {
+    public <R, T2, Y> void ejecutarMetodos_1params(Object objClass, String metodo, R param1, T2 param2, List<Y> param3) {
         try {
-            objClass.getClass().getDeclaredMethod(metodo, param1.getClass(),param2.getClass(), param3.getClass()).invoke(objClass, param1,param2,param3);
+            objClass.getClass().getDeclaredMethod(metodo, param1.getClass(), param2.getClass(), param3.getClass()).invoke(objClass, param1, param2, param3);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(UtilClass.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -254,5 +288,29 @@ public class UtilClass {
 
     public String toformat00(int hora) {
         return hora > 10 ? hora + "" : "0" + hora;
+    }
+
+    public void mostrar_alerta_warning(String title,String mensaje) {
+        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+        alertWarning.setHeaderText(null);
+        alertWarning.setTitle(title);
+        alertWarning.setContentText(mensaje);
+        alertWarning.showAndWait();
+    }
+    
+    public void mostrar_alerta_success(String title,String mensaje) {
+        Alert alertWarning = new Alert(Alert.AlertType.INFORMATION);
+        alertWarning.setHeaderText(null);
+        alertWarning.setTitle(title);
+        alertWarning.setContentText(mensaje);
+        alertWarning.showAndWait();
+    }
+    
+    public void mostrar_alerta_error(String title,String mensaje) {
+        Alert alertWarning = new Alert(Alert.AlertType.ERROR);
+        alertWarning.setHeaderText(null);
+        alertWarning.setTitle(title);
+        alertWarning.setContentText(mensaje);
+        alertWarning.showAndWait();
     }
 }

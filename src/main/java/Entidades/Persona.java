@@ -13,11 +13,16 @@ import java.time.LocalDate;
 public class Persona {
 
     private int idpersona;
+    private String dni;
     private String nombres;
     private String ap_paterno;
     private String ap_materno;
+    private String telefono;
+    private String sexo;
     private LocalDate fecha_cumple;
-    //private int idusuario;
+    private String ocupacion;
+    private String lugar_de_procedencia;
+    private String domicilio;
 
     public Persona() {
     }
@@ -71,6 +76,54 @@ public class Persona {
         return this;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getOcupacion() {
+        return ocupacion;
+    }
+
+    public void setOcupacion(String ocupacion) {
+        this.ocupacion = ocupacion;
+    }
+
+    public String getLugar_de_procedencia() {
+        return lugar_de_procedencia;
+    }
+
+    public void setLugar_de_procedencia(String lugar_de_procedencia) {
+        this.lugar_de_procedencia = lugar_de_procedencia;
+    }
+
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
+    
     @Override
     public String toString() {
         return this.nombres + " " + this.ap_paterno;

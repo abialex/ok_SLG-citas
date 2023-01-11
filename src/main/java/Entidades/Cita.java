@@ -36,7 +36,7 @@ public class Cita {
         this.usuario = usuario;
     }
 
-    public Cita(Doctor oDoctor, Persona persona_paciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, String celular, Lugar lugar, Usuario personauser) {
+    public Cita(Doctor oDoctor, Persona persona_paciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, Lugar lugar, Usuario personauser) {
         this.doctor = oDoctor;
         this.persona = persona_paciente;
         this.hora = horaAtencion;

@@ -762,7 +762,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", list_lugar, oUsuario);
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", new Lugar(), oUsuario);
                         http.AddObject(Cita.class, ocita, "/AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();
@@ -1133,7 +1133,7 @@ public class CitaVerController implements Initializable, Runnable {
         }
 
     }
-
+    
     void mostrarDias_especial_navidad(int Dias) {
         fpDias.getChildren().clear();
         LocalDate fechaNow = LocalDate.now();

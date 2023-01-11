@@ -9,6 +9,7 @@ import Entidades.Doctor;
 import Entidades.Lugar;
 import Entidades.Persona;
 import Entidades.Usuario;
+import EntidadesAux.PersonaReniec;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXComboBox;
@@ -50,7 +51,7 @@ public class CitaAgregarController implements Initializable {
     private JFXTextField jtfDoctor, jtfFecha, jtfHora, jtfminuto, jtf_dni;
 
     @FXML
-    private JFXTextField jtfrazon, jtfnombrepaciente, jtftelefono;
+    private JFXTextField jtfrazon, jtfnombrepaciente;
 
     @FXML
     private Label lblAMPM;
@@ -82,7 +83,7 @@ public class CitaAgregarController implements Initializable {
 
     void initRestricciones() {
         jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros2(event));
-        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
+        jtf_dni.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros8(event));
     }
 
     public void setController(Object odc, TableView<Integer> table) {
@@ -113,11 +114,24 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void guardarCita() {
         if (isComplete()) {
-            Cita ocita = new Cita(oDoctorpersona, oPersona, LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jtftelefono.getText(), jcb_lugar.getSelectionModel().getSelectedItem(), oUsuario);
-            http.AddObject(Cita.class, ocita, "/AddCita");
-            oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
-            table.refresh();
-            cerrar();
+            if (oPersona != null) {
+                Cita ocita = new Cita(oDoctorpersona, oPersona, LocalTime.of(horaAtencionpurga, Integer.parseInt(jtfminuto.getText())), oFechaCita, jtfrazon.getText(), jcb_lugar.getSelectionModel().getSelectedItem(), oUsuario);
+                HttpResponse<String> response = http.AddObject(Cita.class, ocita, "/AddCita");
+                if (response.statusCode() == 201) {
+                    oUtilClass.mostrar_alerta_success("Exitoso", "Guardado");
+                    oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
+                    table.refresh();
+                } else {
+                    oUtilClass.mostrar_alerta_error("Código de error" + response.statusCode(), "No se guardó");
+                }
+
+                cerrar();
+            } else {
+                oUtilClass.mostrar_alerta_warning("Incompleto", "No se ha seleccionado a la persona válida");
+
+            }
+        } else {
+            oUtilClass.mostrar_alerta_warning("Incompleto", "LLene los cuadros encerrados en rojo");
         }
     }
 
@@ -169,13 +183,18 @@ public class CitaAgregarController implements Initializable {
     void buscar_persona_by_dni() {
         String dni = jtf_dni.getText();
         Persona opersona = http.ConsultObject(Persona.class, "/GetDni", dni);
-        if(opersona != null){
+        if (opersona != null) {
             oPersona = opersona;
-            jtfnombrepaciente.setText(opersona.getNombres()+" "+opersona.getAp_paterno()+" "+opersona.getAp_materno());
-        }
-        else{
+            jtfnombrepaciente.setText(opersona.getNombres() + " " + opersona.getAp_paterno() + " " + opersona.getAp_materno());
+        } else {
             jtfnombrepaciente.setText("no se encontró, registrelo --------->");
         }
+    }
+
+    @FXML
+    void abrir_registrar_persona() {
+        PersonaRegistroController oPersonaRegistroController = (PersonaRegistroController) oUtilClass.mostrarVentana(PersonaRegistroController.class, "PersonaRegistro", ap);
+        oPersonaRegistroController.setController(jtf_dni.getText());
     }
 
 }

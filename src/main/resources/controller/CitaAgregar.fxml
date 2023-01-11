@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="422.0" prefWidth="629.0" stylesheets="@../../../../../Citas/src/main/resources/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaAgregarController">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="422.0" prefWidth="629.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaAgregarController">
    <children>
       <BorderPane layoutX="2.0" layoutY="2.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -158,8 +158,8 @@
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="257.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="370.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="272.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="355.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
@@ -209,7 +209,7 @@
                                     <Insets left="15.0" right="10.0" />
                                  </GridPane.margin>
                               </JFXTextField>
-                              <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                              <ImageView fitHeight="34.0" fitWidth="34.0" onMouseClicked="#abrir_registrar_persona" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                                  <image>
                                     <Image url="@../imagenes/medical-2.png" />
                                  </image>
@@ -243,52 +243,36 @@
                   <GridPane GridPane.rowIndex="2">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="249.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="199.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <GridPane GridPane.columnIndex="1">
-                           <columnConstraints>
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="25.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <ImageView fx:id="img_telefono" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../imagenes/icons/icon-phone.png" />
-                                 </image>
-                              </ImageView>
-                              <JFXTextField fx:id="jtftelefono" focusColor="BLACK" labelFloat="true" promptText="Teléfono" styleClass="field-forma1" unFocusColor="WHITE" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" right="15.0" />
-                                 </GridPane.margin>
-                              </JFXTextField>
-                           </children>
-                        </GridPane>
                         <GridPane>
                            <columnConstraints>
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="35.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <JFXTextField fx:id="jtfrazon" focusColor="BLACK" labelFloat="true" promptText="Razón" styleClass="field-forma1" unFocusColor="WHITE" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" right="15.0" />
-                                 </GridPane.margin>
-                              </JFXTextField>
-                              <ImageView fx:id="img_razon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../imagenes/icons/icon-motivo.png" />
-                                 </image>
-                              </ImageView>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="img_razon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../imagenes/icons/icon-motivo.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <JFXTextField fx:id="jtfrazon" focusColor="BLACK" labelFloat="true" maxWidth="1.7976931348623157E308" prefWidth="99999.0" promptText="Razón" styleClass="field-forma1" unFocusColor="WHITE">
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="15.0" />
+                                       </HBox.margin>
+                                    </JFXTextField>
+                                 </children>
+                              </HBox>
                            </children>
                         </GridPane>
                      </children>
