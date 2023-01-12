@@ -75,6 +75,7 @@ public class CitaAgregarController implements Initializable {
     TableView<Integer> table;
     HttpMethods http = new HttpMethods();
     UtilClass oUtilClass = new UtilClass();
+    CitaAgregarController oCitaAgregarController= this;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -178,6 +179,12 @@ public class CitaAgregarController implements Initializable {
         img_icon_2.setVisible(true);
 
     }
+    
+    void actualizar_dni_datospersona_after_register(Persona opersona){
+        this.oPersona=opersona;
+        jtf_dni.setText(oPersona.getDni());
+        jtfnombrepaciente.setText(oPersona.getNombres()+" "+oPersona.getAp_paterno()+" "+oPersona.getAp_materno());
+    }
 
     @FXML
     void buscar_persona_by_dni() {
@@ -194,7 +201,15 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void abrir_registrar_persona() {
         PersonaRegistroController oPersonaRegistroController = (PersonaRegistroController) oUtilClass.mostrarVentana(PersonaRegistroController.class, "PersonaRegistro", ap);
-        oPersonaRegistroController.setController(jtf_dni.getText());
+        oPersonaRegistroController.setController(oCitaAgregarController,jtf_dni.getText());
+        lockedPantalla();
+    }
+     public void lockedPantalla() {
+        if (ap.isDisable()) {
+            ap.setDisable(false);
+        } else {
+            ap.setDisable(true);
+        }
     }
 
 }

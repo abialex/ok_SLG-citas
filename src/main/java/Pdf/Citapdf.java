@@ -174,13 +174,13 @@ public class Citapdf {
                 for (Cita cita : listCita) {
                     if (cita.getFechacita().equals(fechaCom) && cita.getHora().getHour() == ohora) {
                         aux = false;
-                        if (cita.getNombrepaciente() != null) {
+                        if (cita.getPersona().getNombres()!= null) {
                             if (UnaVez) {
                                 TableHoraDia.addCell(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo));
                                 UnaVez = false;
 
                             }
-                            String datos = cita.getNombrepaciente();
+                            String datos = cita.getPersona().getNombres();
                             if (datos.length() > 11) {
                                 datos = datos.substring(0, 11);
                                 datos = datos + "...";
@@ -324,12 +324,12 @@ public class Citapdf {
                 for (Cita cita : listCita) {
                     if (cita.getFechacita().equals(fechaCom) && cita.getHora().getHour() == ohora) {
                         aux = false;
-                        if (cita.getNombrepaciente() != null) {
+                        if (cita.getPersona() != null) {
                             if (UnaVez) {
                                 TableHoraDia.addCell(new Cell(1, 4).add(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo)).addStyle(styleCell));
                                 UnaVez = false;
                             }
-                            String datos = cita.getNombrepaciente();
+                            String datos = cita.getPersona().getNombres();
                             if (datos.length() > 15) {
                                 datos = datos.substring(0, 15);
                                 datos = datos + "...";
@@ -496,12 +496,12 @@ public class Citapdf {
                 for (Cita cita : listCita) {
                     if (cita.getDoctor().getPersona().getIdpersona() == odoctor.getIdpersona() && cita.getHora().getHour() == ohora) {
                         aux = false;
-                        if (cita.getNombrepaciente() != null) {
+                        if (cita.getPersona()!= null) {
                             if (UnaVez) {
                                 TableHoraDia.addCell(getCell(cita.getLugar().getNombrelugar(), styleTextCenter8, styleCell, subrayadoNo));
                                 UnaVez = false;
                             }
-                            String datos = cita.getNombrepaciente();
+                            String datos = cita.getPersona().getNombres();
                             if (datos.length() > 13) {
                                 datos = datos.substring(0, 13);
                                 datos = datos + "...";

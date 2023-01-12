@@ -564,7 +564,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
                         boolean isOcupado = false;
                         double tam = 48.16;
                         for (Cita cita : listCita) {
-                            isOcupado = cita.getNombrepaciente() == null;
+                            isOcupado = cita.getPersona()== null;
                             if (isOcupado) {
                                 Label ocupadoLabel = new Label("OCUPADO");
                                 ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));

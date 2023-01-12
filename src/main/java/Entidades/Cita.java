@@ -14,7 +14,6 @@ import java.time.LocalTime;
 public class Cita {
 
     private int idcita;
-    private String nombrepaciente;
     private LocalDate fechacita;
     private Doctor doctor;
     private Persona persona;
@@ -53,14 +52,6 @@ public class Cita {
 
     public void setIdcita(int idcita) {
         this.idcita = idcita;
-    }
-
-    public String getNombrepaciente() {
-        return nombrepaciente;
-    }
-
-    public void setNombrepaciente(String nombrepaciente) {
-        this.nombrepaciente = nombrepaciente;
     }
 
     public LocalDate getFechacita() {
@@ -118,5 +109,15 @@ public class Cita {
     public void setRazon(String razon) {
         this.razon = razon;
     }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+    
+    
 
 }

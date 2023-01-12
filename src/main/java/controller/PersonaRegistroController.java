@@ -11,6 +11,7 @@ import Util.UtilClass;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -53,8 +54,9 @@ public class PersonaRegistroController implements Initializable {
 
     @FXML
     private JFXTextField jtf_telefono;
-    
-    UtilClass oUtilClass=new UtilClass();
+
+    UtilClass oUtilClass = new UtilClass();
+    CitaAgregarController oCitaAgregarController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -65,8 +67,10 @@ public class PersonaRegistroController implements Initializable {
         initRestricciones();
     }
 
-    public void setController(String dni) {
+    public void setController(CitaAgregarController ocitaAgregarController, String dni) {
+        this.oCitaAgregarController = ocitaAgregarController;
         jtf_dni.setText(dni);
+        jtf_lugar_procedencia.setText("Huanta");
         consultar(dni);
 
     }
@@ -74,25 +78,17 @@ public class PersonaRegistroController implements Initializable {
     void consultar(String dni) {
         if (dni.length() == 8) {
             PersonaReniec opersonareniec = http.consultarDNI(dni);
-            if (opersonareniec != null) {
+            if (opersonareniec.getNombres() != null) {
                 jtf_nombres.setText(opersonareniec.getNombres());
                 jtf_ap_paterno.setText(opersonareniec.getApellidoPaterno());
                 jtf_ap_materno.setText(opersonareniec.getApellidoMaterno());
 
             } else {
-                /*
-                alertWarning.setHeaderText(null);
-                alertWarning.setTitle("Búsqueda");
-                alertWarning.setContentText("Sin conexión a internet ");
-                alertWarning.showAndWait();*/
+
             }
 
         } else {
-            /*
-            alertWarning.setHeaderText(null);
-            alertWarning.setTitle("Búsqueda");
-            alertWarning.setContentText("Ingrese un DNI válido");
-            alertWarning.showAndWait();*/
+
         }
     }
 
@@ -114,6 +110,15 @@ public class PersonaRegistroController implements Initializable {
             opersona.setOcupacion(jcb_ocupacion.getSelectionModel().getSelectedItem());
             opersona.setLugar_de_procedencia(jtf_lugar_procedencia.getText());
             opersona.setDomicilio(jtf_domicilio.getText());
+            HttpResponse<String> response = http.AddObject(Persona.class, opersona, "/AddPersona");
+            if (response.statusCode() == 201) {
+                oUtilClass.mostrar_alerta_success("Exitoso", "Registrado ");
+                opersona.setIdpersona(Integer.parseInt(response.body()));
+                oCitaAgregarController.actualizar_dni_datospersona_after_register(opersona);
+            } else {
+                oUtilClass.mostrar_alerta_warning("Código error: " + response.statusCode(), "No se guardó");
+            }
+            cerrar();
         }
 
     }
@@ -126,14 +131,14 @@ public class PersonaRegistroController implements Initializable {
         } else {
             jtf_nombres.setStyle("");
         }
-        
+
         if (jtf_ap_paterno.getText().trim().length() == 0) {
             jtf_ap_paterno.setStyle("-fx-border-color: #ff052b");
             aux = false;
         } else {
             jtf_ap_paterno.setStyle("");
         }
-        
+
         if (jtf_ap_materno.getText().trim().length() == 0) {
             jtf_ap_materno.setStyle("-fx-border-color: #ff052b");
             aux = false;
@@ -223,7 +228,7 @@ public class PersonaRegistroController implements Initializable {
         }
         return aux;
     }
-    
+
     void initRestricciones() {
         jtf_nombres.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloLetras(event));
         jtf_telefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
@@ -236,6 +241,7 @@ public class PersonaRegistroController implements Initializable {
 
     @FXML
     void cerrar() {
+        oCitaAgregarController.lockedPantalla();
         ((Stage) ap.getScene().getWindow()).close();
     }
 

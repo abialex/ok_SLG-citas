@@ -573,7 +573,7 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
                         boolean isOcupado = false;
                         double tam = 48.16;
                         for (Cita cita : listCita) {
-                            isOcupado = cita.getNombrepaciente() == null;
+                            isOcupado = cita.getPersona() == null;
                             if (isOcupado) {
                                 Label ocupadoLabel = new Label("OCUPADO");
                                 ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));
@@ -589,12 +589,12 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute()) + " " + cita.getNombrepaciente());
+                            buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute()) + " " + cita.getPersona().getNombres());
                             if (cita.getLugar().getIdlugar() != oLugar.getIdlugar()) {
                                 buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute()) + " " + cita.getLugar().getNombrelugar());
 
                             } else {
-                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getCelular() == null ? "sin número" : cita.getCelular()));
+                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono()== null ? "sin número" : cita.getCelular()));
                                 buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                                 tooltipCelular.setShowDelay(Duration.seconds(0.2));
                                 buttonCita.setTooltip(tooltipCelular);

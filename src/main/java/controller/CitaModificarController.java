@@ -153,7 +153,7 @@ public class CitaModificarController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle("Info");
-        alert.setContentText("¿Desea eliminar al paciente: " + oCita.getNombrepaciente() + "?");
+        alert.setContentText("¿Desea eliminar al paciente: " + oCita.getPersona().getNombres() + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             http.DeleteObject(Cita.class, "/DeleteCita", oCita.getIdcita() + "");
@@ -185,7 +185,7 @@ public class CitaModificarController implements Initializable {
 
         }
         jtfminuto.setText(oCita.getHora().getMinute()+"");
-        jtfPaciente.setText(oCita.getNombrepaciente());
+        jtfPaciente.setText(oCita.getPersona().getNombres());
         jtfrazon.setText(oCita.getRazon());
         jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
     }
