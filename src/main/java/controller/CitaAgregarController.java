@@ -8,7 +8,7 @@ import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.Lugar;
 import Entidades.Persona;
-import Entidades.Usuario;
+import Entidades.User;
 import EntidadesAux.PersonaReniec;
 import Util.HttpMethods;
 import Util.UtilClass;
@@ -69,7 +69,7 @@ public class CitaAgregarController implements Initializable {
     Integer horaAtencionpurga;
     Doctor oDoctorpersona;
     LocalDate oFechaCita;
-    Usuario oUsuario;
+    User oUsuario;
     Persona oPersona;
     List<Lugar> list_lugar;
     TableView<Integer> table;
@@ -93,7 +93,7 @@ public class CitaAgregarController implements Initializable {
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
 
-    public void setPersona(Integer oHora, Doctor odoctor, LocalDate oFecha, Usuario persona, List<Lugar> lugares) {
+    public void setPersona(Integer oHora, Doctor odoctor, LocalDate oFecha, User persona, List<Lugar> lugares) {
         this.horaAtencionpurga = oHora;
         this.oDoctorpersona = odoctor;
         this.oFechaCita = oFecha;

@@ -5,7 +5,7 @@
 package controllerDoctor;
 
 import Entidades.Persona;
-import Entidades.Usuario;
+import Entidades.User;
 import Util.HttpMethods;
 import Util.UtilClass;
 

@@ -85,7 +85,6 @@ public class UtilClass {
     }
 
     public Object mostrarVentana(Class generico, String nameFXML, Stage st) {
-        System.out.println(generico);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(generico.getResource(nameFXML + ".fxml"));
         Parent root = null;
@@ -288,6 +287,10 @@ public class UtilClass {
 
     public String toformat00(int hora) {
         return hora > 10 ? hora + "" : "0" + hora;
+    }
+    
+    public String toformatAMPM(int hora){
+        return hora > 11 ? "PM":"AM";
     }
 
     public void mostrar_alerta_warning(String title,String mensaje) {

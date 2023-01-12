@@ -9,7 +9,7 @@ import Entidades.Doctor;
 import Entidades.Lugar;
 import Entidades.Persona;
 import Entidades.Rol;
-import Entidades.Usuario;
+import Entidades.User;
 import Pdf.Citapdf;
 
 import Util.FileImagUtil;
@@ -52,9 +52,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -142,8 +144,8 @@ public class CitaVerController implements Initializable, Runnable {
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    List<Lugar> list_lugar=new ArrayList<>();
-    Usuario oUsuario = new Usuario();
+    List<Lugar> list_lugar = new ArrayList<>();
+    User oUsuario = new User();
 
     @Override
     public void run() {
@@ -163,7 +165,7 @@ public class CitaVerController implements Initializable, Runnable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         updateListHoraatencion();
-        System.out.println("INICIO");
+
         listpersonaDoctorG = http.getList(Doctor.class, "/DoctorAll");
         cargarDoctor();
         tableDoctor1.setItems(listHoraatencion);
@@ -185,7 +187,7 @@ public class CitaVerController implements Initializable, Runnable {
 
     }
 
-    public void setController(Usuario osuario, Rol orol, ArrayList<Lugar> list_lugar) {
+    public void setController(User osuario, Rol orol, ArrayList<Lugar> list_lugar) {
         this.oUsuario = osuario;
         this.list_lugar = list_lugar;
         lblInfoUser.setText(osuario.getPersona().getNombres() + " " + osuario.getPersona().getAp_paterno() + " " + osuario.getPersona().getAp_materno());
@@ -611,11 +613,12 @@ public class CitaVerController implements Initializable, Runnable {
                             }
                         }
                         FlowPane fp = new FlowPane();
+                        fp.setRowValignment(VPos.CENTER);
                         //fp.setStyle("-fx-background-color: #b2caf7");
                         boolean isOcupado = false;
                         double tam = 48.16;
                         for (Cita cita : listCita) {
-                            isOcupado = cita.getPersona()== null;
+                            isOcupado = cita.getPersona() == null;
                             if (isOcupado) {
                                 Label ocupadoLabel = new Label("OCUPADO");
                                 ocupadoLabel.setFont(new Font("Times New Roman Bold", 22));
@@ -633,11 +636,12 @@ public class CitaVerController implements Initializable, Runnable {
                             buttonCita.setMaxHeight(9);
                             buttonCita.setText(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + cita.getPersona().getNombres());
                             buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
-                            Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono() == null ? "sin número" : cita.getCelular()));
+                            Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono() == null ? "sin número" : cita.getPersona().getTelefono()));
                             tooltipCelular.setShowDelay(Duration.seconds(0.2));
                             buttonCita.setTooltip(tooltipCelular);
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);
+
                         }
                         fp.setMinHeight(tam);
                         setGraphic(fp);
@@ -745,7 +749,7 @@ public class CitaVerController implements Initializable, Runnable {
                     CitaAgregarController oCitaAgregarController = (CitaAgregarController) oUtilClass.mostrarVentana(CitaAgregarController.class,
                             "CitaAgregar", ap);
                     oCitaAgregarController.setController(odc, table);
-                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oUsuario,list_lugar);
+                    oCitaAgregarController.setPersona(oHora, jcb.getSelectionModel().getSelectedItem(), oFecha, oUsuario, list_lugar);
                     lockedPantalla();
                 }
 
@@ -1133,7 +1137,7 @@ public class CitaVerController implements Initializable, Runnable {
         }
 
     }
-    
+
     void mostrarDias_especial_navidad(int Dias) {
         fpDias.getChildren().clear();
         LocalDate fechaNow = LocalDate.now();

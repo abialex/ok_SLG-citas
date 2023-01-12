@@ -19,31 +19,29 @@ public class Cita {
     private Persona persona;
     private LocalTime hora;
     private Lugar lugar;
-    private String celular;
     private String razon;
-    private Usuario usuario;
+    private User user;
 
     public Cita() {
     }
 
-    public Cita(Doctor doctor, LocalTime horaatencion, LocalDate fechacita, String razon, Lugar lugar, Usuario usuario) {
+    public Cita(Doctor doctor, LocalTime horaatencion, LocalDate fechacita, String razon, Lugar lugar, User usuario) {
         this.fechacita = fechacita;
         this.doctor = doctor;
         this.hora = horaatencion;
         this.lugar = lugar;
         this.razon = razon;
-        this.usuario = usuario;
+        this.user = usuario;
     }
 
-    public Cita(Doctor oDoctor, Persona persona_paciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, Lugar lugar, Usuario personauser) {
+    public Cita(Doctor oDoctor, Persona persona_paciente, LocalTime horaAtencion, LocalDate oFechaCita, String razon, Lugar lugar, User personauser) {
         this.doctor = oDoctor;
         this.persona = persona_paciente;
         this.hora = horaAtencion;
         this.fechacita = oFechaCita;
         this.razon = razon;
-        this.celular = celular;
         this.lugar = lugar;
-        this.usuario = personauser;
+        this.user = personauser;
     }
 
     public int getIdcita() {
@@ -70,12 +68,12 @@ public class Cita {
         this.doctor = doctor;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUser(User usuario) {
+        this.user = usuario;
     }
 
     public LocalTime getHora() {
@@ -92,14 +90,6 @@ public class Cita {
 
     public void setLugar(Lugar lugar) {
         this.lugar = lugar;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
     }
 
     public String getRazon() {

@@ -9,7 +9,7 @@ import Entidades.Doctor;
 import Entidades.Lugar;
 import Entidades.Persona;
 import Entidades.Rol;
-import Entidades.Usuario;
+import Entidades.User;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXButton;
@@ -118,7 +118,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    Usuario oUsuario = new Usuario();
+    User oUsuario = new User();
     List<Lugar> list_lugar=new ArrayList<>();
     Lugar oLugar = new Lugar();
 
@@ -165,7 +165,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
 
     }
 
-    public void setController(Usuario ousuario, Rol orol, ArrayList<Lugar> list_lugar) {
+    public void setController(User ousuario, Rol orol, ArrayList<Lugar> list_lugar) {
         this.oUsuario = ousuario;
         this.list_lugar= list_lugar;
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()) + " - SEDE: HUANTA");
@@ -617,7 +617,7 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                                 buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute()) + " " + cita.getLugar().getNombrelugar());
 
                             } else {
-                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono()== null ? "sin número" : cita.getCelular()));
+                                Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono()== null ? "sin número" : cita.getPersona().getTelefono()));
                                 tooltipCelular.setShowDelay(Duration.seconds(0.2));
                                 buttonCita.setTooltip(tooltipCelular);
                                 buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));

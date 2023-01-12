@@ -81,8 +81,6 @@ public class CitaModificarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
          cargarHora();
         initRestricciones();
-        
-        especial_navidad();
     }
 
     void initRestricciones() {
@@ -104,30 +102,29 @@ public class CitaModificarController implements Initializable {
 
     @FXML
     void changueHora() {
-        //lblAMPM.setText(jcbHora.getSelectionModel().getSelectedItem().getAbreviatura());
+        lblAMPM.setText(oUtilClass.toformatAMPM(jcbHora.getSelectionModel().getSelectedItem()));
     }
 
     @FXML
     void modificarCita() {
         if (isComplete()) {
             JsonObject citaAtributesJson = new JsonObject();
-            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getPersona().getIdpersona());
+            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
             citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson.addProperty("razon", "OCUPADO");
             citaAtributesJson.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
 
             JsonObject citaAtributesJson4 = new JsonObject();
-            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getPersona().getIdpersona());
+            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
             citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
             citaAtributesJson4.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
             List<Cita> listCita4 = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson4);
 
             if (listCitaOcupada.isEmpty()) {
-                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHora().getHour()) {
+                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHora().getHour()) {              
                     oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), Integer.parseInt(jtfminuto.getText())));
                     oCita.setRazon(jtfrazon.getText());
-                    oCita.setCelular(jtftelefono.getText());
                     oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), Integer.parseInt(jtfminuto.getText())));
                     http.UpdateObject(Cita.class, oCita, "/UpdateCita");
                     oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
@@ -174,7 +171,7 @@ public class CitaModificarController implements Initializable {
     public void setCita(Cita oCita) {
         
         this.oCita = oCita;
-        jtfDoctor.setText(oCita.getDoctor().getPersona().getNombres() + " " + oCita.getDoctor().getPersona().getAp_paterno());
+        jtfDoctor.setText(oCita.getDoctor().getPersona().getNombres() + " " + oCita.getDoctor().getPersona().getAp_paterno() +" "+ oCita.getDoctor().getPersona().getAp_materno());
         jtfFecha.setText(oCita.getFechacita() + "");
         for (Integer hora : listHora) {
             if (hora == oCita.getHora().getHour()) {
@@ -184,10 +181,11 @@ public class CitaModificarController implements Initializable {
             }
 
         }
-        jtfminuto.setText(oCita.getHora().getMinute()+"");
-        jtfPaciente.setText(oCita.getPersona().getNombres());
+        jtfminuto.setText(oUtilClass.toformat00(oCita.getHora().getMinute()));
+        jtfPaciente.setText(oCita.getPersona().getNombres()+" "+oCita.getPersona().getAp_paterno()+" "+oCita.getPersona().getAp_materno());
         jtfrazon.setText(oCita.getRazon());
-        jtftelefono.setText(oCita.getCelular() == null ? "" : oCita.getCelular());
+        jtftelefono.setText(oCita.getPersona().getTelefono()== null ? "" : oCita.getPersona().getTelefono());
+        lblAMPM.setText(oUtilClass.toformatAMPM(jcbHora.getSelectionModel().getSelectedItem()));
     }
 
     boolean isComplete() {

@@ -7,7 +7,7 @@ package Perspectiva;
 import Entidades.Cita;
 import Entidades.Doctor;
 import Entidades.Persona;
-import Entidades.Usuario;
+import Entidades.User;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXButton;
@@ -116,7 +116,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
     HttpMethods http = new HttpMethods();
     Thread h1;
     UtilClass oUtilClass = new UtilClass(x, y);
-    Usuario oUsuario = new Usuario();
+    User oUsuario = new User();
 
     @FXML
     private BorderPane bp_citas;
@@ -162,7 +162,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
 
     }
 
-    public void setController(Usuario osuario) {
+    public void setController(User osuario) {
         this.oUsuario = osuario;
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
         lblInfoUser.setText(osuario.getPersona().getNombres() + " " + osuario.getPersona().getAp_paterno() + " " + osuario.getPersona().getAp_materno());

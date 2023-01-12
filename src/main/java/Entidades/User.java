@@ -8,14 +8,14 @@ package Entidades;
  *
  * @author alexis
  */
-public class Usuario {
+public class User {
     private int id;
     private String username;
     private String email;
     private Persona persona;
     private boolean admin;
 
-    public Usuario() {
+    public User() {
     }
 
     public String getUsername() {

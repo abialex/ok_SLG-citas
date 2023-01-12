@@ -7,7 +7,7 @@ package controllerLogin;
 import Entidades.Lugar;
 import Entidades.Persona;
 import Entidades.Rol;
-import Entidades.Usuario;
+import Entidades.User;
 import Perspectiva.CitaVerHuamangaController;
 import Perspectiva.CitaVerHuantaController;
 import Perspectiva.CitaVerObservadorController;
@@ -62,7 +62,7 @@ public class LoginController implements Initializable {
     public void validarWithCookie() {
         HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
         if (response != null) {
-            Usuario ousuario = json.fromJson(response.body(), Usuario.class);
+            User ousuario = json.fromJson(response.body(), User.class);
             if (response.statusCode() == 226) {
                 lblMensaje.setText("Ya está logueado");
                 ingresar(ousuario);
@@ -78,7 +78,7 @@ public class LoginController implements Initializable {
             if (response != null) {
                 switch (response.statusCode()) {
                     case 200:
-                        Usuario osuario = json.fromJson(response.body(), Usuario.class);
+                        User osuario = json.fromJson(response.body(), User.class);
                         /* validar que exista el header
                          validar que haya mas de 43 caracteres */
                         if (response.headers().allValues("set-cookie").size() > 1) {
@@ -121,7 +121,7 @@ public class LoginController implements Initializable {
         return new Lugar();
     }
 
-    void ingresar(Usuario osuario) {
+    void ingresar(User osuario) {
         Stage stage = new Stage();
         List<Rol> list_rol = http.getList(Rol.class, "/RolUserAll");
         List<Lugar> list_lugar = http.getList(Lugar.class, "/LugarUserAll");

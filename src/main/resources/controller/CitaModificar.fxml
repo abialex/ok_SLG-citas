@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="380.0" prefWidth="450.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaModificarController">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="422.0" prefWidth="629.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaModificarController">
    <children>
       <BorderPane layoutX="12.0" layoutY="12.0" prefHeight="412.0" prefWidth="612.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -90,19 +90,20 @@
          <center>
             <GridPane BorderPane.alignment="CENTER">
                <columnConstraints>
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints maxHeight="204.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <GridPane>
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="255.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="10.0" prefWidth="193.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -134,8 +135,8 @@
                         </GridPane>
                         <GridPane GridPane.columnIndex="1">
                            <columnConstraints>
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="35.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -157,8 +158,8 @@
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="253.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0" prefWidth="195.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -166,8 +167,8 @@
                      <children>
                         <GridPane GridPane.columnIndex="1">
                            <columnConstraints>
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="35.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="109.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
                               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
                            </columnConstraints>
@@ -195,7 +196,7 @@
                                     <Font name="System Bold" size="16.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets left="5.0" top="15.0" />
+                                    <Insets bottom="5.0" left="5.0" top="15.0" />
                                  </GridPane.margin>
                               </Label>
                            </children>
@@ -225,8 +226,8 @@
                   </GridPane>
                   <GridPane GridPane.rowIndex="2">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="289.0" minWidth="10.0" prefWidth="253.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="256.0" minWidth="10.0" prefWidth="195.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="200.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -255,8 +256,8 @@
                         </GridPane>
                         <GridPane GridPane.columnIndex="1">
                            <columnConstraints>
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="35.0" prefWidth="35.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="42.0" minWidth="35.0" prefWidth="42.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="273.0" minWidth="10.0" prefWidth="271.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -267,7 +268,7 @@
                                     <Image url="@../imagenes/icons/icon-phone.png" />
                                  </image>
                               </ImageView>
-                              <JFXTextField fx:id="jtftelefono" focusColor="WHITE" labelFloat="true" promptText="Teléfono" styleClass="field-forma1" unFocusColor="BLACK" GridPane.columnIndex="1">
+                              <JFXTextField fx:id="jtftelefono" editable="false" focusColor="WHITE" labelFloat="true" promptText="Teléfono" styleClass="field-forma1" unFocusColor="BLACK" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets left="5.0" right="10.0" />
                                  </GridPane.margin>
@@ -289,6 +290,11 @@
                         <JFXButton fx:id="modificarCita" minWidth="0.0" onAction="#modificarCita" prefHeight="33.0" prefWidth="127.0" styleClass="button-forma3" text="Modificar Cita" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
+                  <Label text="NOTA: para modificar los datos del paciente se hace desde el programa de historia clinica" textFill="#721515" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </GridPane>
          </center>
