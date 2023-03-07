@@ -4,6 +4,7 @@
  */
 package controllerDoctor;
 
+import Entidades.Doctor;
 import Entidades.Persona;
 import Entidades.User;
 import Util.HttpMethods;
@@ -66,15 +67,15 @@ public class DoctorVerController implements Initializable {
     private JFXTextField jtfNombres;
 
     @FXML
-    private TableView<Persona> tableDoctor;
+    private TableView<User> tableDoctor;
 
     @FXML
-    private TableColumn<Persona, Persona> columnNombres;
+    private TableColumn<User, User> columnNombres;
 
     @FXML
-    private TableColumn<Persona, Persona> columnEstado, columnnUsername;
+    private TableColumn<User, User> columnEstado, columnnUsername;
      
-    ObservableList<Persona> listDoctor = FXCollections.observableArrayList();
+    ObservableList<User> listDoctor = FXCollections.observableArrayList();
     private double x = 0;
     private double y = 0;
     DoctorVerController oDoctorVerController = this;
@@ -93,9 +94,9 @@ public class DoctorVerController implements Initializable {
 
     @FXML
     void updateListDoctor() {
-        List<Persona> olistDoc = http.getList(Persona.class, "/DoctorAll");
+        List<User> olistDoc = http.getList(User.class, "/UsuarioAll");
         listDoctor.clear();
-        for (Persona oDoc : olistDoc) {
+        for (User oDoc : olistDoc) {
             listDoctor.add(oDoc);
         }
     }
@@ -114,14 +115,14 @@ public class DoctorVerController implements Initializable {
     }
 
     void initTableView() {
-        columnNombres.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
-        columnEstado.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
-        columnnUsername.setCellValueFactory(new PropertyValueFactory<Persona, Persona>("persona"));
+        columnNombres.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
+        columnEstado.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
+        columnnUsername.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
 
         columnNombres.setCellFactory(column -> {
-            TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
+            TableCell<User, User> cell = new TableCell<User, User>() {
                 @Override
-                protected void updateItem(Persona item, boolean empty) {
+                protected void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setGraphic(null);
@@ -130,7 +131,7 @@ public class DoctorVerController implements Initializable {
                         Label olabel = new Label();
                         olabel.setStyle("-fx-text-fill: white");
                         olabel.setUserData(item);
-                        olabel.setText(item.getNombres()+" "+item.getAp_paterno()+" "+item.getAp_materno());
+                        olabel.setText(item.getPersona().getNombres()+" "+item.getPersona().getAp_paterno()+" "+item.getPersona().getAp_materno());
                         //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
                         //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
                         olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -176,9 +177,9 @@ public class DoctorVerController implements Initializable {
         });
         
         columnnUsername.setCellFactory(column -> {
-            TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
+            TableCell<User, User> cell = new TableCell<User, User>() {
                 @Override
-                protected void updateItem(Persona item, boolean empty) {
+                protected void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setGraphic(null);
@@ -187,7 +188,7 @@ public class DoctorVerController implements Initializable {
                         Label olabel = new Label();
                         olabel.setStyle("-fx-text-fill: white; -fx-alignment: center" );
                         olabel.setUserData(item);
-                        olabel.setText("falta aqui");
+                        olabel.setText(item.getUsername());
                         //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
                         //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
                         olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -232,12 +233,12 @@ public class DoctorVerController implements Initializable {
             return cell;
         });
 
-        Callback<TableColumn<Persona, Persona>, TableCell<Persona, Persona>> cellFoctory = (TableColumn<Persona, Persona> param) -> {
+        Callback<TableColumn<User, User>, TableCell<User, User>> cellFoctory = (TableColumn<User, User> param) -> {
             // make cell containing buttons
-            final TableCell<Persona, Persona> cell = new TableCell<Persona, Persona>() {
+            final TableCell<User, User> cell = new TableCell<User, User>() {
 
                 @Override
-                public void updateItem(Persona item, boolean empty) {
+                public void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -278,6 +279,7 @@ public class DoctorVerController implements Initializable {
                 }
 
                 void mostrarEliminar(MouseEvent event) {
+                    /*
                     ImageView imag = (ImageView) event.getSource();
                     oDoctorEliminar = (Persona) imag.getUserData();
                     indexEliminar = listDoctor.indexOf(oDoctorEliminar);
@@ -289,16 +291,17 @@ public class DoctorVerController implements Initializable {
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         eliminar();
                         updateListDoctor();
-                    }
+                    }*/
 
                 }
 
                 void mostrarModificar(MouseEvent event) {
+                    /*
                     ImageView imag = (ImageView) event.getSource();
                     Persona odoctor = (Persona) imag.getUserData();
                     DoctorModificarController oDoctorModificarController = (DoctorModificarController) oUtilClass.mostrarVentana(DoctorModificarController.class, "DoctorModificar", ap);
                     oDoctorModificarController.setController(oDoctorVerController, odoctor);
-                    lockedPantalla();
+                    lockedPantalla();*/
 
                 }
 
