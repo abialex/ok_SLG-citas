@@ -4,10 +4,12 @@
  */
 package controller;
 
+import Entidades.Doctor;
 import Entidades.Persona;
 import EntidadesAux.PersonaReniec;
 import Util.HttpMethods;
 import Util.UtilClass;
+import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
@@ -55,7 +57,10 @@ public class PersonaRegistroController implements Initializable {
     @FXML
     private JFXTextField jtf_telefono;
 
+
+
     UtilClass oUtilClass = new UtilClass();
+    Doctor oDoctor = new Doctor();
     CitaAgregarController oCitaAgregarController;
 
     @Override
@@ -67,7 +72,8 @@ public class PersonaRegistroController implements Initializable {
         initRestricciones();
     }
 
-    public void setController(CitaAgregarController ocitaAgregarController, String dni) {
+    public void setController(CitaAgregarController ocitaAgregarController, String dni, Doctor odoctor) {
+        this.oDoctor=odoctor;
         this.oCitaAgregarController = ocitaAgregarController;
         jtf_dni.setText(dni);
         jtf_lugar_procedencia.setText("Huanta");
@@ -95,24 +101,36 @@ public class PersonaRegistroController implements Initializable {
     @FXML
     void registrar() {
         if (isCompleto()) {
-            LocalDate fechaNacimiento = LocalDate.of(
-                    Integer.parseInt(jtf_anio.getText().trim()),
-                    Integer.parseInt(jtf_mes.getText().trim()),
-                    Integer.parseInt(jtf_dia.getText().trim()));
-            Persona opersona = new Persona();
-            opersona.setDni(jtf_dni.getText());
-            opersona.setNombres(jtf_nombres.getText());
-            opersona.setAp_paterno(jtf_ap_paterno.getText());
-            opersona.setAp_materno(jtf_ap_materno.getText());
-            opersona.setTelefono(jtf_telefono.getText());
-            opersona.setSexo(jcb_sexo.getSelectionModel().getSelectedItem());
-            opersona.setFecha_cumple(fechaNacimiento);
-            opersona.setOcupacion(jcb_ocupacion.getSelectionModel().getSelectedItem());
-            opersona.setLugar_de_procedencia(jtf_lugar_procedencia.getText());
-            opersona.setDomicilio(jtf_domicilio.getText());
-            HttpResponse<String> response = http.AddObject(Persona.class, opersona, "/AddPersona");
-            if (response.statusCode() == 201) {
+            JsonObject responseJSON = new JsonObject();
+            JsonObject opersonaJSON = new JsonObject();
+            opersonaJSON.addProperty("dni", jtf_dni.getText());
+            opersonaJSON.addProperty("nombres", jtf_nombres.getText());
+            opersonaJSON.addProperty("ap_paterno", jtf_ap_paterno.getText());
+            opersonaJSON.addProperty("ap_materno", jtf_ap_materno.getText());
+            opersonaJSON.addProperty("telefono", jtf_telefono.getText());
+            opersonaJSON.addProperty("sexo", jcb_sexo.getSelectionModel().getSelectedItem());
+            opersonaJSON.addProperty("fecha_cumple_formato", LocalDate.of(Integer.parseInt(jtf_anio.getText()), Integer.parseInt(jtf_mes.getText()), Integer.parseInt(jtf_dia.getText())).toString());
+            opersonaJSON.addProperty("ocupacion", jcb_ocupacion.getSelectionModel().getSelectedItem());
+            opersonaJSON.addProperty("lugar_de_procedencia", jtf_lugar_procedencia.getText());
+            opersonaJSON.addProperty("domicilio", jtf_domicilio.getText());
+            responseJSON.add("persona", opersonaJSON);
+
+            JsonObject ohistoria_clinicaJSON = new JsonObject();
+            ohistoria_clinicaJSON.addProperty("doctor_id", oDoctor.getIddoctor() );
+            ohistoria_clinicaJSON.addProperty("motivo_consulta", "");
+            ohistoria_clinicaJSON.addProperty("enfermedad_actual", "");
+            ohistoria_clinicaJSON.addProperty("examen_intraoral", "");
+            ohistoria_clinicaJSON.addProperty("examen_radiografico", "");
+            ohistoria_clinicaJSON.addProperty("antecedentes", "");
+            ohistoria_clinicaJSON.addProperty("diagnostico", "");
+            responseJSON.add("historia_clinica", ohistoria_clinicaJSON);
+
+
+
+            HttpResponse<String> response = http.AddObjects(responseJSON, "historia_clinica/RegistrarHistoriaClinica");
+            if (response.statusCode() == 200) {
                 oUtilClass.mostrar_alerta_success("Exitoso", "Registrado ");
+                Persona opersona=new Persona();
                 opersona.setIdpersona(Integer.parseInt(response.body()));
                 oCitaAgregarController.actualizar_dni_datospersona_after_register(opersona);
             } else {

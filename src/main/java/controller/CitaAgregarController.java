@@ -201,7 +201,7 @@ public class CitaAgregarController implements Initializable {
     @FXML
     void abrir_registrar_persona() {
         PersonaRegistroController oPersonaRegistroController = (PersonaRegistroController) oUtilClass.mostrarVentana(PersonaRegistroController.class, "PersonaRegistro", ap);
-        oPersonaRegistroController.setController(oCitaAgregarController,jtf_dni.getText());
+        oPersonaRegistroController.setController(oCitaAgregarController,jtf_dni.getText(), oDoctorpersona);
         lockedPantalla();
     }
      public void lockedPantalla() {

@@ -634,7 +634,7 @@ public class CitaVerController implements Initializable, Runnable {
                             buttonCita.setPrefWidth(110);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
-                            buttonCita.setText(cita.getHora().getHour() + ":" + cita.getHora().getMinute() + " " + cita.getPersona().getNombres());
+                            buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute())+ " " + cita.getPersona().getNombres());
                             buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                             Tooltip tooltipCelular = new Tooltip("Celular: " + (cita.getPersona().getTelefono() == null ? "sin número" : cita.getPersona().getTelefono()));
                             tooltipCelular.setShowDelay(Duration.seconds(0.2));
@@ -766,7 +766,7 @@ public class CitaVerController implements Initializable, Runnable {
                     }
 
                     if (listCitaOcupada.isEmpty()) {
-                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", new Lugar(), oUsuario);
+                        Cita ocita = new Cita(jcb.getSelectionModel().getSelectedItem(), lt_hora, oFecha, "OCUPADO", list_lugar.get(0), oUsuario);
                         http.AddObject(Cita.class, ocita, "/AddCita");
                         actualizarListMesCita();
                         getTableView().refresh();

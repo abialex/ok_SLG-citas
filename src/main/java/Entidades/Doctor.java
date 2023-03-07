@@ -27,8 +27,8 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(String persona) {
-        this.cop = persona;
+    public Doctor(Persona persona) {
+        this.persona = persona;
     }
 
     public int getIddoctor() {
