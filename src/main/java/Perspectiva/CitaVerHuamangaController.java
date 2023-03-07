@@ -1061,6 +1061,11 @@ public class CitaVerHuamangaController implements Initializable, Runnable {
     }
 
     @FXML
+    void  minimizar(){
+        ((Stage) ap.getScene().getWindow()).setIconified(true);
+    }
+
+    @FXML
     void cerrar() {
         stop();
         ((Stage) ap.getScene().getWindow()).close();

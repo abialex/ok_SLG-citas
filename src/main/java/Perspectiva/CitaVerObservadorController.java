@@ -4,10 +4,7 @@
  */
 package Perspectiva;
 
-import Entidades.Cita;
-import Entidades.Doctor;
-import Entidades.Persona;
-import Entidades.User;
+import Entidades.*;
 import Util.HttpMethods;
 import Util.UtilClass;
 import com.jfoenix.controls.JFXButton;
@@ -162,7 +159,7 @@ public class CitaVerObservadorController implements Initializable, Runnable {
 
     }
 
-    public void setController(User osuario) {
+    public void setController(User osuario, Rol orol, ArrayList<Lugar> list_lugar) {
         this.oUsuario = osuario;
         lblfecha.setText(getNombreDia(oFecha.getDayOfWeek().getValue()) + " " + oFecha.getDayOfMonth() + " DE " + getMesNum(oFecha.getMonthValue()));
         lblInfoUser.setText(osuario.getPersona().getNombres() + " " + osuario.getPersona().getAp_paterno() + " " + osuario.getPersona().getAp_materno());
@@ -1042,6 +1039,11 @@ public class CitaVerObservadorController implements Initializable, Runnable {
 
     public void stop() {
         h1.stop();
+    }
+
+    @FXML
+    void  minimizar(){
+        ((Stage) ap.getScene().getWindow()).setIconified(true);
     }
 
     @FXML
