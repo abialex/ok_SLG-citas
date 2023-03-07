@@ -643,7 +643,7 @@ public class CitaVerController implements Initializable, Runnable {
                             fp.getChildren().add(buttonCita);
 
                         }
-                        fp.setMinHeight(tam);
+                        setPrefHeight(50);
                         setGraphic(fp);
                         setText(null);
                         //setStyle("-fx-pref-height: 0px;   -fx-background-color:  linear-gradient(from 41px 39px to 50px 50px, reflect,  #b7cdf7 30%, #bfd5ff  47%);");

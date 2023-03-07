@@ -39,7 +39,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -622,10 +624,11 @@ public class CitaVerHuantaController implements Initializable, Runnable {
                                 buttonCita.setTooltip(tooltipCelular);
                                 buttonCita.addEventHandler(ActionEvent.ACTION, event -> modificarCita(event, getTableView()));
                             }
+                            //fp.setStyle("-fx-border-color: #000000");
                             FlowPane.setMargin(buttonCita, new Insets(1, 1, 1, 1));
                             fp.getChildren().add(buttonCita);
                         }
-                        fp.setMinHeight(tam);
+                        setPrefHeight(50);
                         setGraphic(fp);
                         setText(null);
                         setStyle("-fx-pref-height: 0px;   -fx-background-color:  linear-gradient(from 41px 39px to 50px 50px, reflect,  #b7cdf7 30%, #bfd5ff  47%);");
