@@ -108,7 +108,7 @@ public class CitaAgregarController implements Initializable {
         jtfDoctor.setText(odoctor.getPersona().getNombres() + " " + odoctor.getPersona().getAp_paterno() + " " + odoctor.getPersona().getAp_materno());
         jtfFecha.setText(oFecha.toString());
         jtfHora.setText(oHora + "");
-        //lblAMPM.setText(oHora.getAbreviatura());
+        lblAMPM.setText(oUtilClass.toformatAMPM(oHora));
         jtfminuto.setText("00");
     }
 
