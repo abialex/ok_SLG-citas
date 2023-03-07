@@ -132,6 +132,11 @@ public class PersonaRegistroController implements Initializable {
                 oUtilClass.mostrar_alerta_success("Exitoso", "Registrado ");
                 Persona opersona=new Persona();
                 opersona.setIdpersona(Integer.parseInt(response.body()));
+                opersona.setNombres(jtf_nombres.getText());
+                opersona.setAp_paterno(jtf_ap_paterno.getText());
+                opersona.setAp_materno(jtf_ap_materno.getText());
+                opersona.setTelefono(jtf_telefono.getText());
+                opersona.setDni(jtf_dni.getText());
                 oCitaAgregarController.actualizar_dni_datospersona_after_register(opersona);
             } else {
                 oUtilClass.mostrar_alerta_warning("Código error: " + response.statusCode(), "No se guardó");

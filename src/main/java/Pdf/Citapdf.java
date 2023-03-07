@@ -56,20 +56,20 @@ public class Citapdf {
     static HttpMethods http = new HttpMethods();
     static UtilClass oUtilClass=new UtilClass();
 
-    public static String ImprimirCita(Persona odoctor, LocalDate fecha) {
+    public static String ImprimirCita(Doctor odoctor, LocalDate fecha) {
         LocalDate fechaInicio = fecha.minusDays(fecha.getDayOfWeek().getValue() - 1);
         LocalDate fechaFin = fechaInicio.plusDays(5);
         ObservableList<Integer> listHoraatencion = FXCollections.observableArrayList();
         listHoraatencion.addAll(9, 10, 11, 12, 16, 17, 18, 19, 20);
 
         JsonObject citaAtributesJson = new JsonObject();
-        citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
         citaAtributesJson.addProperty("fechaInicio", fechaInicio.toString());
         citaAtributesJson.addProperty("fechaFin", fechaFin.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
         int volumen = 163;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres() + "_" + fechaInicio + "-" + fechaFin + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getPersona().getNombres() + "_" + fechaInicio + "-" + fechaFin + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -148,7 +148,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres() + " " + odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getPersona().getNombres() + " " + odoctor.getPersona().getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);
@@ -213,16 +213,17 @@ public class Citapdf {
         return urlWrite;
     }
 
-    public static String ImprimirCitaHoy(Persona odoctor, LocalDate fecha, String tipo) {
+    public static String ImprimirCitaHoy(Doctor odoctor, LocalDate fecha, String tipo) {
         ObservableList<Integer> listHoraatencion = FXCollections.observableArrayList();
         listHoraatencion.addAll(9, 10, 11, 12, 16, 17, 18, 19, 20);
         JsonObject citaAtributesJson = new JsonObject();
-        citaAtributesJson.addProperty("iddoctor", odoctor.getIdpersona());
+        citaAtributesJson.addProperty("iddoctor", odoctor.getIddoctor());
         citaAtributesJson.addProperty("fechaInicio", fecha.toString());
         List<Cita> listCita = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
+        System.out.println(listCita.size());
         int volumen = 115;
         PdfWriter writer = null;
-        String urlWrite = "Pdf\\cita_de_" + odoctor.getNombres() + "_" + fecha + "_" + tipo + ".pdf";
+        String urlWrite = "Pdf\\cita_de_" + odoctor.getPersona().getNombres() + "_" + fecha + "_" + tipo + ".pdf";
         try {
             writer = new PdfWriter(urlWrite);
         } catch (FileNotFoundException e) {
@@ -302,7 +303,7 @@ public class Citapdf {
         TableHC.addCell(new Cell().add(CabeceraParrafo2).addStyle(styleCell));
 
         Table Cabecera = new Table(new float[]{volumen * 1.75f, volumen * 1.5f, volumen * 1.75f});
-        Cabecera.addCell(getCell("Dr(a). " + odoctor.getNombres() + " " + odoctor.getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
+        Cabecera.addCell(getCell("Dr(a). " + odoctor.getPersona().getNombres() + " " + odoctor.getPersona().getAp_paterno(), styleTextCenter, styleCell, subrayadoNo).addStyle(styleTextCenterVertical));
         Cabecera.addCell(new Cell().add(cellimagUp.setPaddingTop(-5)).addStyle(styleCell));
         Cabecera.addCell(new Cell().add(TableHC).addStyle(styleCell));
         Cabecera.setMarginBottom(2.5f);

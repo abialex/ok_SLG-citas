@@ -83,7 +83,7 @@ public class ImprimirHorarioController implements Initializable {
         if (!jcbDoctor.getSelectionModel().getSelectedItem().getPersona().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
-            abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem().getPersona(), lc, "HOY"));
+            abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "HOY"));
         } else {
             jcbDoctor.setStyle("-fx-border-color: red");
         }
@@ -97,10 +97,10 @@ public class ImprimirHorarioController implements Initializable {
             String url = "";
             if (LocalDate.now().getDayOfWeek().getValue() == 6) {
                 lc = lc.plusDays(2);
-                abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem().getPersona(), lc, "PASADO MAÑANA"));
+                abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "PASADO MAÑANA"));
             } else {
                 lc = lc.plusDays(1);
-                abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem().getPersona(), lc, "MAÑANA"));
+                abrirArchivo(Citapdf.ImprimirCitaHoy(jcbDoctor.getSelectionModel().getSelectedItem(), lc, "MAÑANA"));
             }
 
         } else {
@@ -113,7 +113,7 @@ public class ImprimirHorarioController implements Initializable {
         if (!jcbDoctor.getSelectionModel().getSelectedItem().getPersona().getNombres().equals("NINGUNO")) {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
-            abrirArchivo(Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem().getPersona(), lc));
+            abrirArchivo(Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem(), lc));
 
         } else {
             jcbDoctor.setStyle("-fx-border-color: red");
@@ -127,7 +127,7 @@ public class ImprimirHorarioController implements Initializable {
             jcbDoctor.setStyle("");
             LocalDate lc = LocalDate.now();
             lc = lc.plusDays(7);
-            abrirArchivo(Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem().getPersona(), lc));
+            abrirArchivo(Citapdf.ImprimirCita(jcbDoctor.getSelectionModel().getSelectedItem(), lc));
 
         } else {
             jcbDoctor.setStyle("-fx-border-color: red");
