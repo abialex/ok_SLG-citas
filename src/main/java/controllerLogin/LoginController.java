@@ -23,9 +23,15 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -43,10 +49,10 @@ public class LoginController implements Initializable {
     private JFXTextField jtfNickname;
 
     @FXML
-    private JFXPasswordField jtfcontrasenia;
+    private JFXPasswordField jtf_password;
 
     @FXML
-    private Label lblMensaje;
+    private Label lblMensaje, lbl_password_show;
     private double x = 0;
     private double y = 0;
     UtilClass oUtilClass = new UtilClass(x, y);
@@ -56,29 +62,43 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        lbl_password_show.setVisible(false);
 
     }
 
     public void validarWithCookie() {
-        HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
+        HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtf_password.getText());
+
         if (response != null) {
             User ousuario = json.fromJson(response.body(), User.class);
             if (response.statusCode() == 226) {
                 lblMensaje.setText("Ya está logueado");
                 ingresar(ousuario);
-
             }
         }
+        else {
+            lblMensaje.setText("no hay conexión al servidor");
+        }
     }
+
+   /* @FXML
+    public void togglevisiblePassword(ActionEvent event) {
+        if (pass_toggle.isSelected()) {
+            jtf_password.setVisible(false);
+            return;
+        }
+        jtf_password.setVisible(true);
+
+    }*/
 
     @FXML
     void validar() {
         if (isCompleto()) {
-            HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtfcontrasenia.getText());
+            HttpResponse<String> response = http.loguear(jtfNickname.getText(), jtf_password.getText());
             if (response != null) {
+                User osuario = json.fromJson(response.body(), User.class);
                 switch (response.statusCode()) {
-                    case 200:
-                        User osuario = json.fromJson(response.body(), User.class);
+                    case 200 :
                         /* validar que exista el header
                          validar que haya mas de 43 caracteres */
                         if (response.headers().allValues("set-cookie").size() > 1) {
@@ -93,7 +113,8 @@ public class LoginController implements Initializable {
                         break;
 
                     case 226:
-                        lblMensaje.setText("Ya está logueado");
+                        lblMensaje.setText("Bienvenido");
+                        ingresar(osuario);
                         break;
                     case 406:
                         lblMensaje.setText("Credenciales incorrectos");
@@ -168,11 +189,11 @@ public class LoginController implements Initializable {
         } else {
             jtfNickname.setStyle("");
         }
-        if (jtfcontrasenia.getText().isEmpty()) {
-            jtfcontrasenia.setStyle("-fx-border-color:red");
+        if (jtf_password.getText().isEmpty()) {
+            jtf_password.setStyle("-fx-border-color:red");
             aux = false;
         } else {
-            jtfcontrasenia.setStyle("");
+            jtf_password.setStyle("");
         }
         return aux;
     }
@@ -185,6 +206,35 @@ public class LoginController implements Initializable {
     public void cerrar() {
         ((Stage) ap.getScene().getWindow()).close();
 
+    }
+
+    boolean visible = false;
+
+    @FXML
+    void passwordFieldTyped(KeyEvent event) {
+        lbl_password_show.setText(jtf_password.getText());
+
+    }
+    @FXML
+    void changue_visible_password(MouseEvent event) {
+        ImageView imag = (ImageView) event.getSource();
+        if(visible) {
+            imag.setImage(new Image(getClass().getResource("/imagenes/visible-1.png").toExternalForm()));
+            lbl_password_show.setVisible(false);
+            visible = false;
+        }
+
+        else {
+            imag.setImage(new Image(getClass().getResource("/imagenes/visible-2.png").toExternalForm()));
+            lbl_password_show.setVisible(true);
+            visible = true;
+        }
+    }
+
+    @FXML
+    void imagAddpacienteFuera(MouseEvent event) {
+        ImageView imag = (ImageView) event.getSource();
+        imag.setImage(new Image(getClass().getResource("/imagenes/visible-1.png").toExternalForm()));
     }
 
 }
