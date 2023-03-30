@@ -96,7 +96,7 @@ public class CitaModificarController implements Initializable {
     }
 
     void cargarHora() {
-        listHora.addAll(9,10,11,12,16,17,18,19,20);
+        listHora.addAll(8,9,10,11,12,15,16,17,18,19,20);
         jcbHora.setItems(listHora);
     }
 

@@ -204,10 +204,12 @@ public class CitaVerController implements Initializable, Runnable {
         //olistHoraatencion = http.getList(HoraAtencion.class, "/HoraAtencionAll");
         listHoraatencion.clear();
         listHoraatencion.addAll(
+                LocalTime.of(8, 0),
                 LocalTime.of(9, 0),
                 LocalTime.of(10, 0),
                 LocalTime.of(11, 0),
                 LocalTime.of(12, 0),
+                LocalTime.of(15, 0),
                 LocalTime.of(16, 0),
                 LocalTime.of(17, 0),
                 LocalTime.of(18, 0),
@@ -576,7 +578,7 @@ public class CitaVerController implements Initializable, Runnable {
                         label.setFont(new Font("Times New Roman Bold", 13));
                         LocalTime time = LocalTime.now();
                         if (item == time.getHour()) {
-                            setStyle("-fx-background-color:#334ccc");
+                            setStyle("-fx-background-color:#348bf7");
                         }
                         label.setStyle("-fx-text-fill: white");
 
@@ -631,7 +633,7 @@ public class CitaVerController implements Initializable, Runnable {
                             }
                             JFXButton buttonCita = new JFXButton();
                             buttonCita.setUserData(cita);
-                            buttonCita.setPrefWidth(110);
+                            buttonCita.setPrefWidth(100);
                             buttonCita.getStyleClass().add("button-forma2");
                             buttonCita.setMaxHeight(9);
                             buttonCita.setText(oUtilClass.toformat12horas(cita.getHora().getHour()) + ":" + oUtilClass.toformat00(cita.getHora().getMinute())+ " " + cita.getPersona().getNombres());
@@ -651,7 +653,10 @@ public class CitaVerController implements Initializable, Runnable {
 
                         LocalTime time = LocalTime.now();
                         if (item == time.getHour()) {
-                            setStyle("-fx-background-color:#334ccc");
+                            setStyle("-fx-background-color:#348bf7;");
+                        }
+                        else if( item>13){
+                            setStyle("-fx-background-color:#728fb3;");
                         }
                     }
                 }
@@ -735,7 +740,7 @@ public class CitaVerController implements Initializable, Runnable {
                         }
                         LocalTime time = LocalTime.now();
                         if (item == time.getHour()) {
-                            setStyle("-fx-background-color:#334ccc");
+                            setStyle("-fx-background-color:#348bf7");
                         }
                         setText(null);
 

@@ -34,7 +34,7 @@
                     <children>
                         <GridPane style="-fx-background-color: none;">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -64,34 +64,34 @@
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <TableView fx:id="tableDoctor1" prefHeight="200.0" prefWidth="200.0" styleClass="table-forma1" GridPane.rowIndex="1">
+                                <TableView fx:id="tableDoctor1" maxWidth="1.7976931348623157E308" prefHeight="250.0" prefWidth="200.0" styleClass="table-forma1" GridPane.rowIndex="1">
                                     <columns>
                                         <TableColumn fx:id="columnHoraAtencion1" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                                        <TableColumn fx:id="columnCitas1" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                                        <TableColumn fx:id="columnCitas1" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
                                         <TableColumn fx:id="columnEstado1" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                                     </columns>
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                 </TableView>
-                        <TableView fx:id="tableDoctor2" prefHeight="200.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor2" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion2" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas2" editable="false" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnCitas2" editable="false" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
                               <TableColumn fx:id="columnEstado2" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="tableDoctor3" prefHeight="200.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor3" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion3" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas3" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnCitas3" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
                               <TableColumn fx:id="columnEstado3" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="tableDoctor4" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: none;" styleClass="table-forma1" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor4" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" style="-fx-border-color: none;" styleClass="table-forma1" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion4" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas4" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnCitas4" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
                               <TableColumn fx:id="columnEstado4" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>                                      
