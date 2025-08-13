@@ -5,7 +5,7 @@
 
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.100.6:5432/Cita"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/Cita"/>
       <property name="javax.persistence.jdbc.password" value="admin"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="hibernate.show_sql" value="false"/>

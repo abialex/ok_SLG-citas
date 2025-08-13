@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -16,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="485.0" prefWidth="467.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerDoctor.DoctorVerController">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="485.0" prefWidth="467.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerDoctor.DoctorVerController">
    <children>
       <BorderPane layoutX="120.0" layoutY="116.0" prefHeight="552.0" prefWidth="883.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -38,12 +39,15 @@
                       <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <JFXTextField fx:id="jtfNombres" labelFloat="true" promptText="Nombres y Apellidos">
+                        <JFXTextField fx:id="jtfNombres" focusColor="BLACK" labelFloat="true" promptText="Nombres y Apellidos" styleClass="field-forma1" unFocusColor="WHITE">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
                         </JFXTextField>
-                        <JFXButton onAction="#guardarDoctor" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Guardar" GridPane.rowIndex="1">
+                        <JFXButton onAction="#abrirUrl" styleClass="button-forma3" text="Guardar" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -52,28 +56,31 @@
                   </GridPane>
                   <TableView fx:id="tableDoctor" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn fx:id="columnNombres" prefWidth="355.0" text="Nombres y Apellidos" />
-                      <TableColumn fx:id="columnEstado" prefWidth="35.0" />
-                        <TableColumn fx:id="columnActivo" prefWidth="65.0" text="Activo" />
+                      <TableColumn fx:id="columnNombres" editable="false" prefWidth="290.0" sortable="false" style="-fx-background-color: #5b8eba; -fx-text-fill: white;" text="Nombres y Apellidos" />
+                        <TableColumn fx:id="columnnUsername" editable="false" prefWidth="104.0" sortable="false" style="-fx-background-color: #5b8eba; -fx-alignment: center;" text="Username" />
+                      <TableColumn fx:id="columnEstado" prefWidth="60.0" sortable="false" style="-fx-background-color: #5b8eba;" />
                     </columns>
                      <GridPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
                      </GridPane.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </TableView>
                </children>
             </GridPane>
          </center>
          <top>
-            <GridPane prefHeight="81.0" prefWidth="465.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="58.0" prefWidth="465.0" BorderPane.alignment="CENTER">
               <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="440.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="DOCTOR" GridPane.rowIndex="1">
+                  <Label text="DOCTORES" textFill="WHITE" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="31.0" />
                      </font>
@@ -84,40 +91,35 @@
                   <GridPane>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <GridPane style="-fx-background-color: #337ab7;">
-                          <columnConstraints>
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <ImageView fitHeight="19.0" fitWidth="21.0" onMouseClicked="#cerrar" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../imagenes/error.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" right="5.0" />
-                                 </GridPane.margin>
-                              </ImageView>
-                           </children>
-                        </GridPane>
+                        <ImageView fitHeight="19.0" fitWidth="21.0" onMouseClicked="#cerrar" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                           <image>
+                              <Image url="@../imagenes/error.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <GridPane.margin>
+                              <Insets bottom="5.0" right="10.0" top="30.0" />
+                           </GridPane.margin>
+                        </ImageView>
                      </children>
                   </GridPane>
                </children>
             </GridPane>
          </top>
          <bottom>
-            <Label text="presione &quot;ENTER&quot; para guardar cambios o &quot;ESC&quot; para deshacer" BorderPane.alignment="CENTER" />
+            <Label text="." BorderPane.alignment="CENTER" />
          </bottom>
       </BorderPane>
    </children>
+   <styleClass>
+      <String fx:value="root" />
+      <String fx:value="gradient-background" />
+   </styleClass>
 </AnchorPane>

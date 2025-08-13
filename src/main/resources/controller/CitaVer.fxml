@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -19,11 +20,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="700.0" prefWidth="1242.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaVerController">
+<AnchorPane id="AnchorPane" fx:id="ap" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1240.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CitaVerController">
     <children>
-        <BorderPane layoutX="173.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane fx:id="bp_citas" layoutX="173.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <center>
-                <GridPane style="-fx-background-color: #337ab7;" BorderPane.alignment="CENTER">
+                <GridPane BorderPane.alignment="CENTER">
                     <columnConstraints>
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -31,9 +32,9 @@
                         <RowConstraints maxHeight="569.0" minHeight="10.0" prefHeight="564.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <GridPane>
+                        <GridPane style="-fx-background-color: none;">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -43,55 +44,55 @@
                                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="520.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <JFXComboBox fx:id="jcbDoctor1" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox1" promptText="Doctor 1" style="-fx-background-color: #ffffff;" unFocusColor="WHITE">
+                                <JFXComboBox fx:id="jcbDoctor1" cache="true" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox1" promptText="Doctor 1" styleClass="combobox-forma1" unFocusColor="WHITE">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor2" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox2" promptText="Doctor 2" style="-fx-background-color: #ffffff;" unFocusColor="WHITE" GridPane.columnIndex="1">
+                                <JFXComboBox fx:id="jcbDoctor2" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox2" promptText="Doctor 2" styleClass="combobox-forma1" unFocusColor="WHITE" GridPane.columnIndex="1">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor3" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox3" promptText="Doctor 3" style="-fx-background-color: #ffffff; -fx-text-fill: white;" unFocusColor="WHITE" GridPane.columnIndex="2">
+                                <JFXComboBox fx:id="jcbDoctor3" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox3" promptText="Doctor 3" styleClass="combobox-forma1" unFocusColor="WHITE" GridPane.columnIndex="2">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <JFXComboBox fx:id="jcbDoctor4" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox4" promptText="Doctor 4" style="-fx-background-color: #ffffff;" unFocusColor="WHITE" GridPane.columnIndex="3">
+                                <JFXComboBox fx:id="jcbDoctor4" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#setFechaComboBox4" promptText="Doctor 4" styleClass="combobox-forma1" unFocusColor="WHITE" GridPane.columnIndex="3">
                                     <GridPane.margin>
                                         <Insets left="5.0" right="5.0" />
                                     </GridPane.margin>
                                 </JFXComboBox>
-                                <TableView fx:id="tableDoctor1" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #000000;" GridPane.rowIndex="1">
+                                <TableView fx:id="tableDoctor1" maxWidth="1.7976931348623157E308" prefHeight="250.0" prefWidth="200.0" styleClass="table-forma1" GridPane.rowIndex="1">
                                     <columns>
                                         <TableColumn fx:id="columnHoraAtencion1" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                                        <TableColumn fx:id="columnCitas1" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
-                                        <TableColumn fx:id="columnEstado1" prefWidth="32.8" sortable="false" style="-fx-background-color: #337ab7;" />
+                                        <TableColumn fx:id="columnCitas1" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                                        <TableColumn fx:id="columnEstado1" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                                     </columns>
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                 </TableView>
-                        <TableView fx:id="tableDoctor2" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #000000;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor2" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion2" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas2" editable="false" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
-                              <TableColumn fx:id="columnEstado2" prefWidth="32.8" sortable="false" style="-fx-background-color: #337ab7;" />
+                              <TableColumn fx:id="columnCitas2" editable="false" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnEstado2" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="tableDoctor3" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #000000;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor3" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" styleClass="table-forma1" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion3" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas3" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
-                              <TableColumn fx:id="columnEstado3" prefWidth="32.8" sortable="false" style="-fx-background-color: #337ab7;" />
+                              <TableColumn fx:id="columnCitas3" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnEstado3" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="tableDoctor4" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #000000;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TableView fx:id="tableDoctor4" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="200.0" style="-fx-border-color: none;" styleClass="table-forma1" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <columns>
                               <TableColumn fx:id="columnHoraAtencion4" prefWidth="42.0" sortable="false" style="-fx-background-color: #337ab7;" text="Hora" />
-                              <TableColumn fx:id="columnCitas4" prefWidth="230.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
-                              <TableColumn fx:id="columnEstado4" prefWidth="32.8" sortable="false" style="-fx-background-color: #337ab7;" />
+                              <TableColumn fx:id="columnCitas4" prefWidth="220.0" sortable="false" style="-fx-background-color: #337ab7;" text="Citas" />
+                              <TableColumn fx:id="columnEstado4" prefWidth="35.0" sortable="false" style="-fx-background-color: #337ab7;" />
                            </columns>
                         </TableView>                                      
                             </children>
@@ -117,17 +118,17 @@
                                 <Insets />
                             </GridPane.margin>
                         </FlowPane>
-                        <JFXComboBox fx:id="jcbMes" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Mes" style="-fx-background-color: #81bdf0; -fx-border-color: #000000;" GridPane.columnIndex="3">
+                        <JFXComboBox fx:id="jcbMes" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Mes" styleClass="combobox-forma1" GridPane.columnIndex="3">
                             <GridPane.margin>
                                 <Insets left="5.0" right="5.0" />
                             </GridPane.margin>
                         </JFXComboBox>
-                        <JFXComboBox fx:id="jcbAnio" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Año" style="-fx-background-color: #81bdf0; -fx-border-color: #000000;" GridPane.columnIndex="2">
+                        <JFXComboBox fx:id="jcbAnio" focusColor="WHITE" labelFloat="true" maxWidth="1.7976931348623157E308" onAction="#changueMes" promptText="Año" styleClass="combobox-forma1" GridPane.columnIndex="2">
                             <GridPane.margin>
                                 <Insets left="5.0" right="5.0" />
                             </GridPane.margin>
                         </JFXComboBox>
-                  <JFXButton fx:id="btnHoy" onAction="#reiniciar" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Hoy" GridPane.columnIndex="1">
+                  <JFXButton fx:id="btnHoy" onAction="#reiniciar" styleClass="button-forma3" text="Hoy" GridPane.columnIndex="1">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -166,9 +167,9 @@
                 </GridPane>
             </bottom>
          <top>
-            <GridPane prefHeight="32.0" prefWidth="1240.0" style="-fx-background-color: #337ab7;" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="32.0" prefWidth="1240.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="400.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
               </columnConstraints>
@@ -178,15 +179,21 @@
                <children>
                   <GridPane GridPane.columnIndex="2">
                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ImageView fitHeight="19.0" fitWidth="21.0" onMouseClicked="#cerrar" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                        <ImageView fitHeight="19.0" fitWidth="21.0" onMouseClicked="#cerrar" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                            <image>
                               <Image url="@../imagenes/error.png" />
                            </image>
@@ -194,37 +201,57 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <GridPane.margin>
-                              <Insets bottom="15.0" right="5.0" />
+                              <Insets right="12.0" />
                            </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" onMouseClicked="#cerrarSesion" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/logout.png" />
+                           </image>
+                           <GridPane.margin>
+                              <Insets top="2.0" />
+                           </GridPane.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                        <ImageView fitHeight="19.0" fitWidth="21.0" onMouseClicked="#minimizar" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                           <image>
+                              <Image url="@../imagenes/minimizar.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </ImageView>
                      </children>
                   </GridPane>
                   <GridPane>
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="241.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Label fx:id="lblInfoUser" text="Label" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold Italic" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
                   </GridPane>
                   <HBox alignment="CENTER" prefHeight="22.0" prefWidth="647.0" GridPane.columnIndex="1">
                      <children>
-                            <Label text="CITAS DEL " textFill="WHITE">
-                                <font>
-                                    <Font name="System Bold" size="21.0" />
-                                </font>
-                            </Label>
-                                <Label fx:id="lblfecha" text="JUEVES DE SETIEMBRE DE 30" textFill="WHITE">
+                                <Label fx:id="lblfecha" styleClass="label-navidad" text="JUEVES DE SETIEMBRE DE 30" textFill="WHITE">
                                     <font>
                                         <Font name="System Bold" size="21.0" />
                                     </font>
                                 </Label>
+                        <ImageView fx:id="img_adorno" fitHeight="35.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" rotate="9.0" visible="false">
+                           <image>
+                              <Image url="@../imagenes/icons_navidad/icon_gorro_navidad.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </HBox>
                </children>
@@ -233,4 +260,8 @@
       
         </BorderPane>
     </children>
+   <styleClass>
+      <String fx:value="root" />
+      <String fx:value="gradient-background" />
+   </styleClass>
 </AnchorPane>

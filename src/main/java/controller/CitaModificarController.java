@@ -5,12 +5,17 @@
 package controller;
 
 import Entidades.Cita;
-import Entidades.HoraAtencion;
+import Util.HttpMethods;
+import Util.UtilClass;
+import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import controller.App;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,7 +31,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -47,55 +55,79 @@ public class CitaModificarController implements Initializable {
     private JFXTextField jtfDoctor;
 
     @FXML
-    private JFXTextField jtfFecha;
+    private JFXTextField jtfFecha, jtfminuto, jtfPaciente, jtfrazon, jtftelefono;
 
     @FXML
-    private JFXComboBox<HoraAtencion> jcbHora;
+    private JFXComboBox<Integer> jcbHora;
 
     @FXML
-    private JFXTextField jtfminuto;
+    private Label lblAMPM;
 
     @FXML
-    private JFXTextField jtfPaciente;
-
+    private ImageView img_user_doctor, img_calendario, img_user_paciente, img_reloj, img_razon, img_telefono;
+    
     @FXML
-    private JFXTextField jtfrazon;
+    private ImageView img_icon_1, img_icon_2;
 
-    CitaVerController oCitaVerController;
-    Cita Cita;
-    TableView<HoraAtencion> table;
+    Object oObjetoController;
+    Cita oCita;
+    TableView<Integer> table;
     Alert alert = new Alert(Alert.AlertType.WARNING);
-    private double x = 0;
-    private double y = 0;
+    ObservableList<Integer> listHora = FXCollections.observableArrayList();
+    HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass = new UtilClass();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarHora();
+         cargarHora();
         initRestricciones();
+    }
+
+    void initRestricciones() {
+        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros2(event));
+        jtftelefono.addEventHandler(KeyEvent.KEY_TYPED, event -> oUtilClass.SoloNumerosEnteros9(event));
+    }
+
+    public void setController(Object odc, TableView<Integer> table) {
+        this.table = table;
+        this.oObjetoController = odc;
+       
+        ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
+    }
+
+    void cargarHora() {
+        listHora.addAll(8,9,10,11,12,15,16,17,18,19,20);
+        jcbHora.setItems(listHora);
+    }
+
+    @FXML
+    void changueHora() {
+        lblAMPM.setText(oUtilClass.toformatAMPM(jcbHora.getSelectionModel().getSelectedItem()));
     }
 
     @FXML
     void modificarCita() {
         if (isComplete()) {
-            List<Cita> listCitaOcupada = App.jpa.createQuery("select p from Cita p where "
-                    + " idhoraatencion= " + jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion()
-                    + "and  fechacita= " + " '" + Cita.getFechacita() + "' "
-                    + "and  iddoctor= " + Cita.getDoctor().getIddoctor()
-                    + "and razon='OCUPADO'").getResultList();
+            JsonObject citaAtributesJson = new JsonObject();
+            citaAtributesJson.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson.addProperty("fechaInicio", oCita.getFechacita() + "");
+            citaAtributesJson.addProperty("razon", "OCUPADO");
+            citaAtributesJson.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
+            List<Cita> listCitaOcupada = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson);
 
-            List<Cita> listCita4 = App.jpa.createQuery("select p from Cita p where "
-                    + " idhoraatencion= " + jcbHora.getSelectionModel().getSelectedItem().getIdhoraatencion()
-                    + "and  fechacita= " + " '" + Cita.getFechacita() + "' "
-                    + "and  iddoctor= " + Cita.getDoctor().getIddoctor()).getResultList();
+            JsonObject citaAtributesJson4 = new JsonObject();
+            citaAtributesJson4.addProperty("iddoctor", oCita.getDoctor().getIddoctor());
+            citaAtributesJson4.addProperty("fechaInicio", oCita.getFechacita() + "");
+            citaAtributesJson4.addProperty("hora", jcbHora.getSelectionModel().getSelectedItem());
+            List<Cita> listCita4 = http.getCitaFilter(Cita.class, "/CitaFilter", citaAtributesJson4);
+
             if (listCitaOcupada.isEmpty()) {
-                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == Cita.getHoraatencion()) {
-                    Cita.setHoraatencion(jcbHora.getSelectionModel().getSelectedItem());
-                    Cita.setMinuto(jtfminuto.getText());
-                    Cita.setRazon(jtfrazon.getText());
-                    App.jpa.getTransaction().begin();
-                    App.jpa.persist(Cita);
-                    App.jpa.getTransaction().commit();
-                    oCitaVerController.actualizarListMesCita();
+                if (listCita4.size() < 4 || jcbHora.getSelectionModel().getSelectedItem() == oCita.getHora().getHour()) {              
+                    oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), Integer.parseInt(jtfminuto.getText())));
+                    oCita.setRazon(jtfrazon.getText());
+                    oCita.setHora(LocalTime.of(jcbHora.getSelectionModel().getSelectedItem(), Integer.parseInt(jtfminuto.getText())));
+                    http.UpdateObject(Cita.class, oCita, "/UpdateCita");
+                    oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
                     table.refresh();
                     cerrar();
                 } else {
@@ -107,7 +139,7 @@ public class CitaModificarController implements Initializable {
             } else {
                 alert.setHeaderText(null);
                 alert.setTitle(null);
-                alert.setContentText("El Dr. está ocupado a las " + listCitaOcupada.get(0).getHoraatencion().getHora() + ":00 " + listCitaOcupada.get(0).getHoraatencion().getAbreviatura());
+                alert.setContentText("El Dr. está ocupado a las " + listCitaOcupada.get(0).getHora().getHour() + ":00 " /*+ listCitaOcupada.get(0).getHora().getAbreviatura()*/);
                 alert.showAndWait();
             }
         }
@@ -118,20 +150,14 @@ public class CitaModificarController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle("Info");
-        alert.setContentText("¿Desea eliminar al paciente: " + Cita.getNombrepaciente() + "?");
+        alert.setContentText("¿Desea eliminar al paciente: " + oCita.getPersona().getNombres() + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            eliminar();
+            http.DeleteObject(Cita.class, "/DeleteCita", oCita.getIdcita() + "");
+            oUtilClass.ejecutarMetodo(oObjetoController, "actualizarListMesCita");
+            table.refresh();
+            cerrar();
         }
-    }
-
-    public void eliminar() {
-        App.jpa.getTransaction().begin();
-        App.jpa.remove(Cita);
-        App.jpa.getTransaction().commit();
-        oCitaVerController.actualizarListMesCita();
-        table.refresh();
-        cerrar();
     }
 
     public void lockedPantalla() {
@@ -142,50 +168,24 @@ public class CitaModificarController implements Initializable {
         }
     }
 
-    void cargarHora() {
-        List<HoraAtencion> listHora = App.jpa.createQuery("select p from HoraAtencion p order by idhoraatencion asc").getResultList();
-        ObservableList<HoraAtencion> listhora = FXCollections.observableArrayList();
-        for (HoraAtencion oHora : listHora) {
-            listhora.add(oHora);
-        }
-        jcbHora.setItems(listhora);
-    }
-
-    void setController(CitaVerController odc, TableView<HoraAtencion> table) {
-        this.table = table;
-        this.oCitaVerController = odc;
-        ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
-    }
-
-    void setCita(Cita oCita) {
-        this.Cita = oCita;
-        jtfDoctor.setText(oCita.getDoctor().getNombredoctor());
+    public void setCita(Cita oCita) {
+        
+        this.oCita = oCita;
+        jtfDoctor.setText(oCita.getDoctor().getPersona().getNombres() + " " + oCita.getDoctor().getPersona().getAp_paterno() +" "+ oCita.getDoctor().getPersona().getAp_materno());
         jtfFecha.setText(oCita.getFechacita() + "");
-        jcbHora.getSelectionModel().select(oCita.getHoraatencion());
-        jtfminuto.setText(oCita.getMinuto());
-        jtfPaciente.setText(oCita.getNombrepaciente());
+        for (Integer hora : listHora) {
+            if (hora == oCita.getHora().getHour()) {
+                jcbHora.getSelectionModel().select(hora);
+                //lblAMPM.setText(oCita.getHora().getAbreviatura());
+                break;
+            }
+
+        }
+        jtfminuto.setText(oUtilClass.toformat00(oCita.getHora().getMinute()));
+        jtfPaciente.setText(oCita.getPersona().getNombres()+" "+oCita.getPersona().getAp_paterno()+" "+oCita.getPersona().getAp_materno());
         jtfrazon.setText(oCita.getRazon());
-    }
-
-    void initRestricciones() {
-        jtfminuto.addEventHandler(KeyEvent.KEY_TYPED, event -> SoloNumerosEnteros2(event));
-    }
-
-    void SoloNumerosEnteros2(KeyEvent event) {
-        JFXTextField o = (JFXTextField) event.getSource();
-        char key = event.getCharacter().charAt(0);
-        if (!Character.isDigit(key)) {
-            event.consume();
-        }
-        if (o.getText().length() >= 2) {
-            event.consume();
-        }
-    }
-
-    @FXML
-    void cerrar() {
-        oCitaVerController.lockedPantalla();
-        ((Stage) ap.getScene().getWindow()).close();
+        jtftelefono.setText(oCita.getPersona().getTelefono()== null ? "" : oCita.getPersona().getTelefono());
+        lblAMPM.setText(oUtilClass.toformatAMPM(jcbHora.getSelectionModel().getSelectedItem()));
     }
 
     boolean isComplete() {
@@ -207,37 +207,21 @@ public class CitaModificarController implements Initializable {
         return aux;
     }
 
-    public Object mostrarVentana(Class generico, String nameFXML) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
-        }
-        Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
-        Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initOwner(((Stage) ap.getScene().getWindow()));
-        stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.show();
-        return loader.getController();
+    @FXML
+    void cerrar() {
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
+        ((Stage) ap.getScene().getWindow()).close();
     }
 
+    void especial_navidad() {
+        //img_user_doctor.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_doctor_navidad.png").toExternalForm()));
+        img_calendario.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_calendario_navidad.png").toExternalForm()));
+        //img_user_paciente.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_paciente_navidad.png").toExternalForm()));
+        img_reloj.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_reloj_navidad.png").toExternalForm()));
+        img_razon.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_motivo_navidad.png").toExternalForm()));
+        img_telefono.setImage(new Image(getClass().getResource("/imagenes/icons_navidad/icon_telefono_navidad.png").toExternalForm()));
+        img_icon_1.setVisible(true);
+        img_icon_2.setVisible(true);
+
+    }
 }

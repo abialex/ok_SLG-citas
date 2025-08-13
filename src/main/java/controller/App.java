@@ -1,8 +1,14 @@
 package controller;
 
+import Perspectiva.CitaVerObservadorController;
+import Util.HttpMethods;
 import Util.JPAUtil;
+import Util.UtilClass;
+import controllerLogin.LoginController;
 import controllerVistaEtc.CargandoVistaController;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +24,8 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import javax.persistence.EntityManager;
 
@@ -27,79 +35,62 @@ import javax.persistence.EntityManager;
 public class App extends Application {
 
     private static Scene scene;
-    public static EntityManager jpa = JPAUtil.getEntityManagerFactory().createEntityManager();
     private double x = 0;
     private double y = 0;
-    CitaVerController oCitaVerController;
-    public static Stage stagePrincpal;
     CargandoVistaController oCargandoVistaController;
     Stage stage;
+    UtilClass oUtilClass = new UtilClass(x, y);
+    HttpMethods http = new HttpMethods();
+    LoginController oLoginController; 
 
     public class Proceso extends Thread {
 
         @Override
         public void run() {
             Platform.runLater(() -> {
-                try {
-                    procesoMostrar();
-                } catch (IOException ex) {
-                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                procesoMostrar();
             });
         }
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        this.stage = stage;
+    public void start(Stage st) throws IOException {
+        this.stage = st;
         oCargandoVistaController = (CargandoVistaController) mostrarVentana(CargandoVistaController.class, "CargandoVista");
         CrearArchivos();
         new Proceso().start();
     }
 
-    void procesoMostrar() throws IOException {
-        stagePrincpal = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("VerPaciente.fxml"));
-        fxmlLoader.setLocation(App.class.getResource("CitaVer.fxml"));
-        Parent root = fxmlLoader.load();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/css/bootstrap3.css").toExternalForm());
-        oCitaVerController = (CitaVerController) fxmlLoader.getController(); //esto depende de (1)
-        //oCitaVerController.setStagePrincipall(stage);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
+    void procesoMostrar() {
+        
+        /*
+        Address oaddress = http.getAddress();
+        if (oaddress.getRol().getRolname().equals("ADMINISTRADOR")) {
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerController.class, "CitaVer", stage);
+
+        } else if (oaddress.getRol().getRolname().equals("ASISTENTA")) {
+            if (oaddress.getLugar().getNombrelugar().equals("HUANTA")) {
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuanta", stage);
+
+            } else if (oaddress.getLugar().getNombrelugar().equals("HUAMANGA")) {
+                oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerHuamanga", stage);
+
+            } else if (oaddress.getLugar().getNombrelugar().equals("ORTOGNATICA")) {
+                //oControllerVista = oUtilClass.mostrarVentana(CitaVerOrtognaticaController.class, "CitaVerOrtognatica", stage);
             }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setOnCloseRequest(event -> {
-        });
-        stage.show();
+
+        } else if (oaddress.getRol().getRolname().equals("OBSERVADOR")) {
+            oControllerVista = oUtilClass.mostrarVentana(CitaVerObservadorController.class, "CitaVerObservador", stage);
+
+        }*/
+        oLoginController = (LoginController) oUtilClass.mostrarVentana(LoginController.class, "Login", stage);
+        oLoginController.validarWithCookie();
         oCargandoVistaController.cerrar();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
-    public static void main(String[] args) {
-        launch();
+    @Override
+    public void stop() {
+        oLoginController.stop();
     }
 
     static void CrearArchivos() {
@@ -125,11 +116,14 @@ public class App extends Application {
         Scene scene = new Scene(root);//instancia el controlador (!)
         Stage stage = new Stage();//creando la base vací
         stage.initStyle(StageStyle.UNDECORATED);
+
         stage.getIcons().add(new Image(getClass().getResource("/imagenes/logo.png").toExternalForm()));
-        stage.initOwner(this.stage);
         stage.setScene(scene);
         stage.show();
         return loader.getController();
     }
 
+    public static void main(String[] args) {
+        launch();
+    }
 }

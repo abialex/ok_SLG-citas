@@ -5,6 +5,10 @@
 package controllerDoctor;
 
 import Entidades.Doctor;
+import Entidades.Persona;
+import Entidades.User;
+import Util.HttpMethods;
+import Util.UtilClass;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
@@ -32,6 +36,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -62,24 +67,23 @@ public class DoctorVerController implements Initializable {
     private JFXTextField jtfNombres;
 
     @FXML
-    private TableView<Doctor> tableDoctor;
+    private TableView<User> tableDoctor;
 
     @FXML
-    private TableColumn<Doctor, Doctor> columnNombres;
+    private TableColumn<User, User> columnNombres;
 
     @FXML
-    private TableColumn<Doctor, Doctor> columnEstado;
-
-    @FXML
-    private TableColumn<Doctor, Doctor> columnActivo;
-
-    ObservableList<Doctor> listDoctor = FXCollections.observableArrayList();
+    private TableColumn<User, User> columnEstado, columnnUsername;
+     
+    ObservableList<User> listDoctor = FXCollections.observableArrayList();
     private double x = 0;
     private double y = 0;
-    DoctorVerController odc = this;
-    Doctor oDoctorEliminar;
+    DoctorVerController oDoctorVerController = this;
+    Persona oDoctorEliminar;
     int indexEliminar;
-    CitaVerController oCitaVerController;
+    Object oObjetoController;
+    HttpMethods http = new HttpMethods();
+    UtilClass oUtilClass = new UtilClass(x, y);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,9 +94,9 @@ public class DoctorVerController implements Initializable {
 
     @FXML
     void updateListDoctor() {
-        List<Doctor> olistDoc = App.jpa.createQuery("select p from Doctor p where flag = false order by iddoctor ASC").setMaxResults(10).getResultList();
+        List<User> olistDoc = http.getList(User.class, "/UsuarioAll");
         listDoctor.clear();
-        for (Doctor oDoc : olistDoc) {
+        for (User oDoc : olistDoc) {
             listDoctor.add(oDoc);
         }
     }
@@ -100,82 +104,47 @@ public class DoctorVerController implements Initializable {
     @FXML
     void guardarDoctor() {
         if (jtfNombres.getText().length() != 0) {
-            Doctor odoctor = new Doctor();
-            odoctor.setNombredoctor(jtfNombres.getText());
-            odoctor.setActivo(true);
-            App.jpa.getTransaction().begin();
-            App.jpa.persist(odoctor);
-            App.jpa.getTransaction().commit();
+            Persona odoctor = new Persona();
+            odoctor.setNombres(jtfNombres.getText());
+            //odoctor.setActivo(true);
+            http.AddObject(Persona.class, odoctor, "/AddDoctor");
             updateListDoctor();
-            this.oCitaVerController.cargarDoctor();
+            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
+            jtfNombres.setText("");
         }
     }
 
     void initTableView() {
-        columnNombres.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-        columnEstado.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-        columnActivo.setCellValueFactory(new PropertyValueFactory<Doctor, Doctor>("doctor"));
-
-        columnActivo.setCellFactory(column -> {
-            TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
-                @Override
-                protected void updateItem(Doctor item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                        setText("");
-                    } else {
-                        JFXCheckBox checkbox = new JFXCheckBox();
-                        checkbox.setUserData(item);
-                        checkbox.setStyle("-fx-alignment: center; -fx-max-width:999; -fx-cursor: hand;");
-                        checkbox.addEventHandler(ActionEvent.ACTION, event -> changueActivo(event));
-                        checkbox.setSelected(item.isActivo());
-                        setGraphic(checkbox);
-                        setText(null);
-                    }
-                }
-
-                void changueActivo(ActionEvent event) {
-                    JFXCheckBox check = (JFXCheckBox) event.getSource();
-                    Doctor odoc = (Doctor) check.getUserData();
-                    odoc.setActivo(check.isSelected());
-                    App.jpa.getTransaction().begin();
-                    App.jpa.persist(odoc);
-                    App.jpa.getTransaction().commit();
-                    oCitaVerController.cargarDoctor();
-                }
-
-            };
-
-            return cell;
-        });
+        columnNombres.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
+        columnEstado.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
+        columnnUsername.setCellValueFactory(new PropertyValueFactory<User, User>("user"));
 
         columnNombres.setCellFactory(column -> {
-            TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
+            TableCell<User, User> cell = new TableCell<User, User>() {
                 @Override
-                protected void updateItem(Doctor item, boolean empty) {
+                protected void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setGraphic(null);
                         setText("");
                     } else {
-                        JFXTextField field = new JFXTextField();
-                        field.setUserData(item);
-                        field.setText(item.getNombredoctor());
-                        field.setEditable(false);
-                        field.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
-                        field.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
-                        field.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                        Label olabel = new Label();
+                        olabel.setStyle("-fx-text-fill: white");
+                        olabel.setUserData(item);
+                        olabel.setText(item.getPersona().getNombres()+" "+item.getPersona().getAp_paterno()+" "+item.getPersona().getAp_materno());
+                        //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
+                        //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
+                        olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
                             @Override
                             public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
                                 if (newPropertyValue) {
-                                    field.setStyle("-fx-border-color:BLACK;");
+                                    olabel.setStyle("-fx-border-color:WHITE;");
                                 } else {
-                                    field.setStyle("");
+                                    olabel.setStyle("");
                                 }
                             }
                         });
-                        setGraphic(field);
+                        setGraphic(olabel);
                         setText(null);
                     }
                 }
@@ -190,15 +159,70 @@ public class DoctorVerController implements Initializable {
 
                 void modificar(KeyEvent event) {
                     JFXTextField check = (JFXTextField) event.getSource();
-                    Doctor doc = (Doctor) check.getUserData();
+                    Persona doc = (Persona) check.getUserData();
                     if (event.getCode() == (KeyCode.ENTER)) {
                         if (check.getText().length() != 0) {
-                            doc.setNombredoctor(check.getText());
-                            App.jpa.getTransaction().begin();
-                            App.jpa.persist(doc);
-                            App.jpa.getTransaction().commit();
+                            doc.setNombres(check.getText());
+                            http.UpdateObject(Persona.class, doc, "/UpdateDoctor");
                             updateListDoctor();
-                            oCitaVerController.cargarDoctor();
+                            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
+                        }
+                    }
+                    if (event.getCode() == (KeyCode.ESCAPE)) {
+                        updateListDoctor();
+                    }
+                }
+            };
+            return cell;
+        });
+        
+        columnnUsername.setCellFactory(column -> {
+            TableCell<User, User> cell = new TableCell<User, User>() {
+                @Override
+                protected void updateItem(User item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
+                        Label olabel = new Label();
+                        olabel.setStyle("-fx-text-fill: white; -fx-alignment: center" );
+                        olabel.setUserData(item);
+                        olabel.setText(item.getUsername());
+                        //olabel.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changueActivo(event));
+                        //olabel.addEventHandler(KeyEvent.KEY_RELEASED, event -> modificar(event));
+                        olabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                                if (newPropertyValue) {
+                                    olabel.setStyle("-fx-border-color:WHITE;");
+                                } else {
+                                    olabel.setStyle("");
+                                }
+                            }
+                        });
+                        setGraphic(olabel);
+                        setText(null);
+                    }
+                }
+
+                void changueActivo(MouseEvent event) {
+                    JFXTextField check = (JFXTextField) event.getSource();
+                    check.setStyle("-fx-border-color:BLACK;");
+
+                    check.setEditable(true);
+
+                }
+
+                void modificar(KeyEvent event) {
+                    JFXTextField check = (JFXTextField) event.getSource();
+                    Persona doc = (Persona) check.getUserData();
+                    if (event.getCode() == (KeyCode.ENTER)) {
+                        if (check.getText().length() != 0) {
+                            doc.setNombres(check.getText());
+                            http.UpdateObject(Persona.class, doc, "/UpdateDoctor");
+                            updateListDoctor();
+                            oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
                         }
                     }
                     if (event.getCode() == (KeyCode.ESCAPE)) {
@@ -209,12 +233,12 @@ public class DoctorVerController implements Initializable {
             return cell;
         });
 
-        Callback<TableColumn<Doctor, Doctor>, TableCell<Doctor, Doctor>> cellFoctory = (TableColumn<Doctor, Doctor> param) -> {
+        Callback<TableColumn<User, User>, TableCell<User, User>> cellFoctory = (TableColumn<User, User> param) -> {
             // make cell containing buttons
-            final TableCell<Doctor, Doctor> cell = new TableCell<Doctor, Doctor>() {
+            final TableCell<User, User> cell = new TableCell<User, User>() {
 
                 @Override
-                public void updateItem(Doctor item, boolean empty) {
+                public void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     //that cell created only on non-empty rows                    
                     if (empty) {
@@ -226,12 +250,18 @@ public class DoctorVerController implements Initializable {
 
                         ImageView editIcon = newImage("delete-1.png", tamHightImag, tamWidthImag, item);
                         editIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarEliminar(event));
-                        editIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagModificarMoved(event));
-                        editIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagModificarFuera(event));
+                        editIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagEliminarMoved(event));
+                        editIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagEliminarFuera(event));
 
-                        HBox managebtn = new HBox(editIcon);
+                        ImageView configIcon = newImage("modify-1.png", tamHightImag, tamWidthImag, item);
+                        configIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mostrarModificar(event));
+                        configIcon.addEventHandler(MouseEvent.MOUSE_MOVED, event -> imagModificarMoved(event));
+                        configIcon.addEventHandler(MouseEvent.MOUSE_EXITED, event -> imagModificarFuera(event));
+
+                        HBox managebtn = new HBox(configIcon, editIcon);
                         managebtn.setStyle("-fx-alignment:center");
                         HBox.setMargin(editIcon, new Insets(0, 2.75, 0, 2.75));
+                        HBox.setMargin(configIcon, new Insets(0, 2.75, 0, 2.75));
                         setGraphic(managebtn);
                         setText(null);
                     }
@@ -249,29 +279,50 @@ public class DoctorVerController implements Initializable {
                 }
 
                 void mostrarEliminar(MouseEvent event) {
+                    /*
                     ImageView imag = (ImageView) event.getSource();
-                    oDoctorEliminar = (Doctor) imag.getUserData();
+                    oDoctorEliminar = (Persona) imag.getUserData();
                     indexEliminar = listDoctor.indexOf(oDoctorEliminar);
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setHeaderText(null);
                     alert.setTitle("Info");
-                    alert.setContentText("¿Desea eliminar al Dr(a): " + oDoctorEliminar.getNombredoctor() + "?");
+                    alert.setContentText("¿Desea eliminar al Dr(a): " + oDoctorEliminar.getNombres()+" "+oDoctorEliminar.getAp_paterno()+" ?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         eliminar();
                         updateListDoctor();
-                    }
+                    }*/
 
                 }
 
-                private void imagModificarMoved(MouseEvent event) {
+                void mostrarModificar(MouseEvent event) {
+                    /*
+                    ImageView imag = (ImageView) event.getSource();
+                    Persona odoctor = (Persona) imag.getUserData();
+                    DoctorModificarController oDoctorModificarController = (DoctorModificarController) oUtilClass.mostrarVentana(DoctorModificarController.class, "DoctorModificar", ap);
+                    oDoctorModificarController.setController(oDoctorVerController, odoctor);
+                    lockedPantalla();*/
+
+                }
+
+                private void imagEliminarMoved(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/delete-2.png").toExternalForm()));
                 }
 
-                private void imagModificarFuera(MouseEvent event) {
+                private void imagEliminarFuera(MouseEvent event) {
                     ImageView imag = (ImageView) event.getSource();
                     imag.setImage(new Image(getClass().getResource("/imagenes/delete-1.png").toExternalForm()));
+                }
+
+                private void imagModificarMoved(MouseEvent event) {
+                    ImageView imag = (ImageView) event.getSource();
+                    imag.setImage(new Image(getClass().getResource("/imagenes/modify-2.png").toExternalForm()));
+                }
+
+                private void imagModificarFuera(MouseEvent event) {
+                    ImageView imag = (ImageView) event.getSource();
+                    imag.setImage(new Image(getClass().getResource("/imagenes/modify-1.png").toExternalForm()));
                 }
 
             };
@@ -282,46 +333,14 @@ public class DoctorVerController implements Initializable {
 
     public void eliminar() {
         if (indexEliminar != -1) {
-            oDoctorEliminar.setFlag(true);
-            App.jpa.getTransaction().begin();
-            App.jpa.persist(oDoctorEliminar);
-            App.jpa.getTransaction().commit();
-            listDoctor.remove(indexEliminar);
+            //oDoctorEliminar.setFlag(true);
+            http.UpdateObject(Persona.class, oDoctorEliminar, "/UpdateDoctor");
             updateListDoctor();
         }
     }
 
-    public Object mostrarVentana(Class generico, String nameFXML) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(generico.getResource(nameFXML + ".fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(generico.getName()).log(Level.SEVERE, null, ex);
-        }
-        Scene scene = new Scene(root);//instancia el controlador (!)
-        scene.getStylesheets().add(generico.getResource("/css/bootstrap3.css").toExternalForm());;
-        Stage stage = new Stage();//creando la base vací
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initOwner((Stage) ap.getScene().getWindow());
-        stage.setScene(scene);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                x = event.getX();
-                y = event.getY();
-            }
-        });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() - x);
-                stage.setY(event.getScreenY() - y);
-            }
-        });
-        stage.show();
-        return loader.getController();
+    public void UpdatecargarDoctor() {
+        oUtilClass.ejecutarMetodo(oObjetoController, "UpdatecargarDoctor");
     }
 
     public void lockedPantalla() {
@@ -332,14 +351,20 @@ public class DoctorVerController implements Initializable {
         }
     }
 
-    public void setController(CitaVerController odc) {
-        this.oCitaVerController = odc;
+    public void setController(Object odc) {
+        this.oObjetoController = odc;
         ap.getScene().getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> cerrar());
     }
+    @FXML
+    public void abrirUrl(){
+        oUtilClass.abrirURL("http://localhost:8000/admin/modulo1/persona/add/");
+    }
+    
+    
 
     @FXML
     void cerrar() {
-        oCitaVerController.lockedPantalla();
+        oUtilClass.ejecutarMetodo(oObjetoController, "lockedPantalla");
         ((Stage) ap.getScene().getWindow()).close();
     }
 
